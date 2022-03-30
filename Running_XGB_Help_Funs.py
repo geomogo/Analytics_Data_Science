@@ -22,7 +22,8 @@ def main_XGB_all_directions(data):
         temp_data = data[data['direction'] == directions[i]].reset_index(drop = True)
         
         ## Appending results 
-        results_all_directions.append(main_XGB_all_directions_help(temp_data))
+        print(main_XGB_all_directions_help(temp_data))
+#         results_all_directions.append(main_XGB_all_directions_help(temp_data))
         
         
 def main_XGB_all_directions_help(data):
@@ -39,6 +40,7 @@ def main_XGB_all_directions_help(data):
         for j in range(0, len(y_values)):
             
             temp_data = data[(data['x'] == x_values[i]) & (data['y'] == y_values[j])].reset_index(drop = True)
+            print(temp_data.shape)
             
             
 
