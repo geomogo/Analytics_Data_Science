@@ -38,14 +38,21 @@ def main_XGB_all_directions_help(data):
         
         for j in range(0, len(y_values)):
             
-            temp_data = data[(data['x'] == x_values[i]) & (data['y'] == y_values[j])]
+            temp_data = data[(data['x'] == x_values[i]) & (data['y'] == y_values[j])].reset_index(drop = True)
             
             
 
 def main_XGB_all_directions_help_help(data):            
     
+    ## Defining train & validation datasets
+    X_train = data.loc[0:13023, ['day', 'hour', 'minute']]
+    Y_train = data.loc[0:13023, ['congestion']]
+
+    X_val = data.loc[13023:13059, ['day', 'hour', 'minute']]
+    Y_val = data.loc[13023:13059, ['congestion']]
+    
     ## Defining the hyper-parameter grid
-    XGBoost_param_grid = {'n_estimators': [500],
+    XGBoost_param_grid = {'n_estimators': [300],
                           'max_depth': [5, 7],
                           'min_child_weight': [5, 7, 10],
                           'learning_rate': [0.01],
@@ -59,7 +66,8 @@ def main_XGB_all_directions_help_help(data):
     ## Extracting the best model
     XGBoost_md = XGBoost_grid_search.best_estimator_
 
-            
+    ## Predicting on validation 
+    XGBoost_pred = XGBoost_md.predict(X_val)
             
             
             
