@@ -28,3 +28,15 @@ test = pd.read_csv(file_content_stream_test)
 train['time'] = pd.to_datetime(train['time'], format = '%Y-%m-%d %H:%M:%S')
 test['time'] = pd.to_datetime(test['time'], format = '%Y-%m-%d %H:%M:%S')
 
+## Extracting day, hour and minute
+train['day'] = train['time'].dt.dayofweek
+train['hour'] = train['time'].dt.hour
+train['minute'] = train['time'].dt.minute
+
+test['day'] = test['time'].dt.dayofweek
+test['hour'] = test['time'].dt.hour
+test['minute'] = test['time'].dt.minute
+
+## Changing direction to dummies
+train = pd.concat([train, pd.get_dummies(train['direction'])], axis = 1)
+test = pd.concat([test, pd.get_dummies(train['direction'])], axis = 1)
