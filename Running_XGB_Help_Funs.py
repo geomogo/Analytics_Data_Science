@@ -56,8 +56,9 @@ def main_XGB_all_directions_help_help(data):
     ## Performing grid search with 5 folds
     XGBoost_grid_search = GridSearchCV(XGBRegressor(), XGBoost_param_grid, cv = 5, scoring = 'neg_mean_squared_error').fit(X_train, Y_train)
 
-    ## Extracting the best hyper-parameter combination 
-    XGBoost_grid_search.best_params_
+    ## Extracting the best model
+    XGBoost_md = XGBoost_grid_search.best_estimator_
+
             
             
             
