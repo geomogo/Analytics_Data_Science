@@ -1,7 +1,6 @@
+import boto3
 import pandas as pd 
 import numpy as np
-from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV
-from xgboost import XGBRegressor
 
 ## Defining the bucket 
 s3 = boto3.resource('s3')
