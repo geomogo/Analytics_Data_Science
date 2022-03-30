@@ -4,33 +4,33 @@ from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSe
 from xgboost import XGBRegressor
 
 
-def main_XGB_all_directions(data):
+def main_XGB_all_directions(train, test):
     
     '''
     This function
     '''
     
     ## Defining all the directions
-    directions = data['direction'].unique()
+    directions = train['direction'].unique()
     
     ## Defining list to store results
     results_all_directions = list()
     
     for i in range(0, len(directions)):
         
-        ## Subsetting data based on directions
-        temp_data = data[data['direction'] == directions[i]].reset_index(drop = True)
+        ## Subsetting train based on directions
+        temp_train = train[train['direction'] == directions[i]].reset_index(drop = True)
         
         ## Appending results 
-        print(main_XGB_all_directions_help(temp_data))
-#         results_all_directions.append(main_XGB_all_directions_help(temp_data))
+        print(main_XGB_all_directions_help(temp_train))
+#         results_all_directions.append(main_XGB_all_directions_help(temp_train))
         
         
-def main_XGB_all_directions_help(data):
+def main_XGB_all_directions_help(train):
         
     ## Defining locations 
-    x_values = data['x'].unique()
-    y_values = data['y'].unique()
+    x_values = train['x'].unique()
+    y_values = train['y'].unique()
     
     ## Defining list to store results
     results_all_locations = list()
@@ -39,19 +39,19 @@ def main_XGB_all_directions_help(data):
         
         for j in range(0, len(y_values)):
             
-            temp_data = data[(data['x'] == x_values[i]) & (data['y'] == y_values[j])].reset_index(drop = True)
-            print(temp_data.shape)
+            temp_train = train[(train['x'] == x_values[i]) & (train['y'] == y_values[j])].reset_index(drop = True)
+            print(temp_train.shape)
             
             
 
-def main_XGB_all_directions_help_help(data):            
+def main_XGB_all_directions_help_help(train):            
     
-    ## Defining train & validation datasets
-    X_train = data.loc[0:13023, ['day', 'hour', 'minute']]
-    Y_train = data.loc[0:13023, ['congestion']]
+    ## Defining train & validation trainsets
+    X_train = train.loc[0:13023, ['day', 'hour', 'minute']]
+    Y_train = train.loc[0:13023, ['congestion']]
 
-    X_val = data.loc[13023:13059, ['day', 'hour', 'minute']]
-    Y_val = data.loc[13023:13059, ['congestion']]
+    X_val = train.loc[13023:13059, ['day', 'hour', 'minute']]
+    Y_val = train.loc[13023:13059, ['congestion']]
     
     ## Defining the hyper-parameter grid
     XGBoost_param_grid = {'n_estimators': [300],
@@ -68,8 +68,9 @@ def main_XGB_all_directions_help_help(data):
     ## Extracting the best model
     XGBoost_md = XGBoost_grid_search.best_estimator_
 
-    ## Predicting on validation 
+    ## Predicting on validation & test 
     XGBoost_pred = XGBoost_md.predict(X_val)
+    
             
             
             
