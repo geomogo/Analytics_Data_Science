@@ -13,21 +13,30 @@ def main_XGB_all_directions(train, test):
     ## Defining all the directions
     directions = train['direction'].unique()
     
-    ## Defining list to store results
-    results_all_directions = list()
+    ## Defining lists to store results
+    results_all_directions_val = list()
+    results_all_directions_test = list()
     
     for i in range(0, len(directions)):
         
-        ## Subsetting train based on directions
+        ## Subsetting train & test based on directions
         temp_train = train[train['direction'] == directions[i]].reset_index(drop = True)
+        temp_test = test[test['direction'] == directions[i]].reset_index(drop = True)
         
         ## Appending results 
-        print(main_XGB_all_directions_help(temp_train))
-#         results_all_directions.append(main_XGB_all_directions_help(temp_train))
+        results = main_XGB_all_directions_help(temp_train, temp_test)
+        results_all_directions_val.append(results[0])
+        results_all_directions_test.append(results[1])
+            
+    return [pd.DataFrame(results_all_directions_val), pd.DataFrame(results_all_directions_test)]
         
         
-def main_XGB_all_directions_help(train):
-        
+def main_XGB_all_directions_help(train, test):
+    
+    ## Defining lists to store results
+    results_all_locations_val = list()
+    results_all_locations_test = list()
+    
     ## Defining locations 
     x_values = train['x'].unique()
     y_values = train['y'].unique()
@@ -39,19 +48,28 @@ def main_XGB_all_directions_help(train):
         
         for j in range(0, len(y_values)):
             
+            ## Subsetting train & test based on locaitons
             temp_train = train[(train['x'] == x_values[i]) & (train['y'] == y_values[j])].reset_index(drop = True)
-            print(temp_train.shape)
+            temp_test = test[(test['x'] == x_values[i]) & (test['y'] == y_values[j])].reset_index(drop = True)
             
+            ## Modeling building and prediction at location (x, y)
+            results = main_XGB_all_directions_help_help(temp_train, temp_test)
+            results_all_locations_val.append(results[0])
+            results_all_locations_test.append(results[1])
+            
+    return [pd.DataFrame(results_all_locations_val), pd.DataFrame(results_all_locations_test)]
             
 
-def main_XGB_all_directions_help_help(train):            
+def main_XGB_all_directions_help_help(train, test):            
     
-    ## Defining train & validation trainsets
+    ## Defining train, validation, and test datasets
     X_train = train.loc[0:13023, ['day', 'hour', 'minute']]
     Y_train = train.loc[0:13023, ['congestion']]
 
     X_val = train.loc[13023:13059, ['day', 'hour', 'minute']]
     Y_val = train.loc[13023:13059, ['congestion']]
+    
+    X_test = test[['day', 'hour', 'minute']]
     
     ## Defining the hyper-parameter grid
     XGBoost_param_grid = {'n_estimators': [300],
@@ -63,14 +81,21 @@ def main_XGB_all_directions_help_help(train):
                           'colsample_bytree': [1]}
 
     ## Performing grid search with 5 folds
-    XGBoost_grid_search = GridSearchCV(XGBRegressor(), XGBoost_param_grid, cv = 5, scoring = 'neg_mean_squared_error').fit(X_train, Y_train)
+    XGBoost_grid_search = GridSearchCV(XGBRegressor(), XGBoost_param_grid, cv = 5, scoring = 'neg_mean_absolute_error').fit(X_train, Y_train)
 
     ## Extracting the best model
     XGBoost_md = XGBoost_grid_search.best_estimator_
 
     ## Predicting on validation & test 
-    XGBoost_pred = XGBoost_md.predict(X_val)
+    XGBoost_val_pred = XGBoost_md.predict(X_val)
+    XGBoost_test_pred = XGBoost_md.predict(X_test)
     
+    ## Appending predictions on validation and test
+    data_out = train.loc[13023:13059].reset_index(drop = True)
+    data_out['congestion_pred'] = XGBoost_val_pred
+    test['congestion_pred'] = XGBoost_test_pred
+    
+    return [data_out, test]
             
             
             
