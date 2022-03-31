@@ -19,7 +19,7 @@ def main_XGB_all_directions(train, test):
     
     for i in range(0, len(directions)):
         
-        ## Subsetting train based on directions
+        ## Subsetting train & test based on directions
         temp_train = train[train['direction'] == directions[i]].reset_index(drop = True)
         temp_test = test[test['direction'] == directions[i]].reset_index(drop = True)
         
@@ -27,15 +27,11 @@ def main_XGB_all_directions(train, test):
         results = main_XGB_all_directions_help(temp_train, temp_test)
         results_all_directions_val.append(results[0])
         results_all_directions_test.append(results[1])
-        
-    ## Changing list to data-frames
-    results_all_directions_val = pd.DataFrame(results_all_directions_val)
-    results_all_directions_test = pd.DataFrame(results_all_directions_test)
-    
-    return [results_all_directions_val, results_all_directions_test]
+            
+    return [pd.DataFrame(results_all_directions_val), pd.DataFrame(results_all_directions_test)]
         
         
-def main_XGB_all_directions_help(train):
+def main_XGB_all_directions_help(train, test):
         
     ## Defining locations 
     x_values = train['x'].unique()
@@ -48,8 +44,11 @@ def main_XGB_all_directions_help(train):
         
         for j in range(0, len(y_values)):
             
+            ## Subsetting train & test based on locaitons
             temp_train = train[(train['x'] == x_values[i]) & (train['y'] == y_values[j])].reset_index(drop = True)
-            print(temp_train.shape)
+            temp_test = test[(test['x'] == x_values[i]) & (test['y'] == y_values[j])].reset_index(drop = True)
+            
+            ## Modeling building and prediction at location (x, y)
             
             
 
