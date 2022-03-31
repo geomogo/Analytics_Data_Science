@@ -55,6 +55,11 @@ def main_XGB_all_directions_help(train, test):
             temp_train = train[(train['x'] == x_values[i]) & (train['y'] == y_values[j])].reset_index(drop = True)
             temp_test = test[(test['x'] == x_values[i]) & (test['y'] == y_values[j])].reset_index(drop = True)
             
+            ## Sanity check
+            if (temp_train.shape[0] == 0):
+                
+                continue
+            
             ## Modeling building and prediction at location (x, y)
             results = main_XGB_all_directions_help_help(temp_train, temp_test)
             results_all_locations_val.append(results[0])
