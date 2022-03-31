@@ -31,7 +31,7 @@ def main_XGB_all_directions(train, test):
         results_all_directions_val.append(results[0])
         results_all_directions_test.append(results[1])
             
-    return [pd.DataFrame(results_all_directions_val), pd.DataFrame(results_all_directions_test)]
+    return [pd.concat(results_all_directions_val), pd.concat(results_all_directions_test)]
         
         
 def main_XGB_all_directions_help(train, test):
