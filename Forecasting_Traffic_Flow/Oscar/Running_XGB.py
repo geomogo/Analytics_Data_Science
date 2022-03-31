@@ -1,6 +1,7 @@
 import boto3
 import pandas as pd 
 import numpy as np
+from Running_XGB_Help_Funs import main_XGB_all_directions
 
 ## Defining the bucket 
 s3 = boto3.resource('s3')
@@ -39,3 +40,6 @@ test['minute'] = test['time'].dt.minute
 ## Changing direction to dummies
 train = pd.concat([train, pd.get_dummies(train['direction'])], axis = 1)
 test = pd.concat([test, pd.get_dummies(train['direction'])], axis = 1)
+
+## Modeling 
+results = 
