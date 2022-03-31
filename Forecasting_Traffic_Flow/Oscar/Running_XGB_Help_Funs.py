@@ -13,17 +13,26 @@ def main_XGB_all_directions(train, test):
     ## Defining all the directions
     directions = train['direction'].unique()
     
-    ## Defining list to store results
-    results_all_directions = list()
+    ## Defining lists to store results
+    results_all_directions_val = list()
+    results_all_directions_test = list()
     
     for i in range(0, len(directions)):
         
         ## Subsetting train based on directions
         temp_train = train[train['direction'] == directions[i]].reset_index(drop = True)
+        temp_test = test[test['direction'] == directions[i]].reset_index(drop = True)
         
         ## Appending results 
-        print(main_XGB_all_directions_help(temp_train))
-#         results_all_directions.append(main_XGB_all_directions_help(temp_train))
+        results = main_XGB_all_directions_help(temp_train, temp_test)
+        results_all_directions_val.append(results[0])
+        results_all_directions_test.append(results[1])
+        
+    ## Changing list to data-frames
+    results_all_directions_val = pd.DataFrame(results_all_directions_val)
+    results_all_directions_test = pd.DataFrame(results_all_directions_test)
+    
+    return [results_all_directions_val, results_all_directions_test]
         
         
 def main_XGB_all_directions_help(train):
