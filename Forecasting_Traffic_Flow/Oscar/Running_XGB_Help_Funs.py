@@ -50,7 +50,7 @@ def main_XGB_all_directions_help(train, test):
     for i in range(0, len(x_values)):
         
         for j in range(0, len(y_values)):
-            print('location: (', x_values[i], ',', y_values[j], ')')
+            print('location: (',x_values[i],',',y_values[j],')')
             ## Subsetting train & test based on locaitons
             temp_train = train[(train['x'] == x_values[i]) & (train['y'] == y_values[j])].reset_index(drop = True)
             temp_test = test[(test['x'] == x_values[i]) & (test['y'] == y_values[j])].reset_index(drop = True)
