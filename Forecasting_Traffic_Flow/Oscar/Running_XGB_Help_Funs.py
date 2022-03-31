@@ -52,14 +52,16 @@ def main_XGB_all_directions_help(train, test):
             
             
 
-def main_XGB_all_directions_help_help(train):            
+def main_XGB_all_directions_help_help(train, test):            
     
-    ## Defining train & validation trainsets
+    ## Defining train, validation, and test datasets
     X_train = train.loc[0:13023, ['day', 'hour', 'minute']]
     Y_train = train.loc[0:13023, ['congestion']]
 
     X_val = train.loc[13023:13059, ['day', 'hour', 'minute']]
     Y_val = train.loc[13023:13059, ['congestion']]
+    
+    X_test = test[['day', 'hour', 'minute']]
     
     ## Defining the hyper-parameter grid
     XGBoost_param_grid = {'n_estimators': [300],
