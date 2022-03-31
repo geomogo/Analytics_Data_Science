@@ -21,7 +21,7 @@ def main_XGB_all_directions(train, test):
     results_all_directions_test = list()
     
     for i in range(0, len(directions)):
-        
+        print('Working on direction:', directions[i])
         ## Subsetting train & test based on directions
         temp_train = train[train['direction'] == directions[i]].reset_index(drop = True)
         temp_test = test[test['direction'] == directions[i]].reset_index(drop = True)
@@ -50,7 +50,7 @@ def main_XGB_all_directions_help(train, test):
     for i in range(0, len(x_values)):
         
         for j in range(0, len(y_values)):
-            
+            print('location: (', x_values[i], ',', y_values[i], ')')
             ## Subsetting train & test based on locaitons
             temp_train = train[(train['x'] == x_values[i]) & (train['y'] == y_values[j])].reset_index(drop = True)
             temp_test = test[(test['x'] == x_values[i]) & (test['y'] == y_values[j])].reset_index(drop = True)
