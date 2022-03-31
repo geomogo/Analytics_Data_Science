@@ -79,8 +79,15 @@ def main_XGB_all_directions_help_help(train, test):
     XGBoost_md = XGBoost_grid_search.best_estimator_
 
     ## Predicting on validation & test 
-    XGBoost_pred = XGBoost_md.predict(X_val)
+    XGBoost_val_pred = XGBoost_md.predict(X_val)
+    XGBoost_test_pred = XGBoost_md.predict(X_test)
     
+    ## Appending predictions on validation and test
+    data_out = train.loc[13023:13059].reset_index(drop = True)
+    data_out['congestion_pred'] = XGBoost_val_pred
+    test['congestion_pred'] = XGBoost_test_pred
+    
+    return [data_out, test]
             
             
             
