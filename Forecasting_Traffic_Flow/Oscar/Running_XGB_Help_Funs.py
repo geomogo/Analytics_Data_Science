@@ -60,7 +60,7 @@ def main_XGB_all_directions_help(train, test):
             results_all_locations_val.append(results[0])
             results_all_locations_test.append(results[1])
             
-    return [pd.DataFrame(results_all_locations_val), pd.DataFrame(results_all_locations_test)]
+    return [pd.concat(results_all_locations_val), pd.concat(results_all_locations_test)]
             
 
 def main_XGB_all_directions_help_help(train, test):            
