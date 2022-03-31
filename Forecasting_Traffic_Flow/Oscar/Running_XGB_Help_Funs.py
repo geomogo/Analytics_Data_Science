@@ -7,7 +7,10 @@ from xgboost import XGBRegressor
 def main_XGB_all_directions(train, test):
     
     '''
-    This function
+    This function loops through all the directions and locations. 
+    It takes two arguments:
+    train: this is the train data-frame.
+    test: this is the test data-frame.
     '''
     
     ## Defining all the directions
