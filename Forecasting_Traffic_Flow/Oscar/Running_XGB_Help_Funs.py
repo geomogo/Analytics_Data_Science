@@ -32,7 +32,11 @@ def main_XGB_all_directions(train, test):
         
         
 def main_XGB_all_directions_help(train, test):
-        
+    
+    ## Defining lists to store results
+    results_all_locations_val = list()
+    results_all_locations_test = list()
+    
     ## Defining locations 
     x_values = train['x'].unique()
     y_values = train['y'].unique()
@@ -49,7 +53,11 @@ def main_XGB_all_directions_help(train, test):
             temp_test = test[(test['x'] == x_values[i]) & (test['y'] == y_values[j])].reset_index(drop = True)
             
             ## Modeling building and prediction at location (x, y)
+            results = main_XGB_all_directions_help_help(temp_train, temp_test)
+            results_all_locations_val.append(results[0])
+            results_all_locations_test.append(results[1])
             
+    return [pd.DataFrame(results_all_locations_val), pd.DataFrame(results_all_locations_test)]
             
 
 def main_XGB_all_directions_help_help(train, test):            
@@ -73,7 +81,7 @@ def main_XGB_all_directions_help_help(train, test):
                           'colsample_bytree': [1]}
 
     ## Performing grid search with 5 folds
-    XGBoost_grid_search = GridSearchCV(XGBRegressor(), XGBoost_param_grid, cv = 5, scoring = 'neg_mean_squared_error').fit(X_train, Y_train)
+    XGBoost_grid_search = GridSearchCV(XGBRegressor(), XGBoost_param_grid, cv = 5, scoring = 'neg_mean_absolute_error').fit(X_train, Y_train)
 
     ## Extracting the best model
     XGBoost_md = XGBoost_grid_search.best_estimator_
