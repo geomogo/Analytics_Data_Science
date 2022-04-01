@@ -103,7 +103,7 @@ def main_XGB_all_directions_help_help(train, test):
     data_out['congestion_pred'] = XGBoost_val_pred
     test['congestion_pred'] = XGBoost_test_pred
     
-    return [data_out, test]
+    return [data_out[['row_id', 'time', 'x', 'y', 'direction', 'congestion', 'congestion_pred']], test[['row_id', 'time', 'x', 'y', 'direction', 'congestion', 'congestion_pred']]]
             
             
             
