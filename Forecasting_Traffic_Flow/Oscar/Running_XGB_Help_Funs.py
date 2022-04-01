@@ -7,7 +7,10 @@ from xgboost import XGBRegressor
 def main_XGB_all_directions(train, test):
     
     '''
-    This function
+    This function loops through all the directions and locations. 
+    It takes two arguments:
+    train: this is the train data-frame.
+    test: this is the test data-frame.
     '''
     
     ## Defining all the directions
@@ -18,7 +21,7 @@ def main_XGB_all_directions(train, test):
     results_all_directions_test = list()
     
     for i in range(0, len(directions)):
-        
+        print('Working on direction:', directions[i])
         ## Subsetting train & test based on directions
         temp_train = train[train['direction'] == directions[i]].reset_index(drop = True)
         temp_test = test[test['direction'] == directions[i]].reset_index(drop = True)
@@ -28,7 +31,7 @@ def main_XGB_all_directions(train, test):
         results_all_directions_val.append(results[0])
         results_all_directions_test.append(results[1])
             
-    return [pd.DataFrame(results_all_directions_val), pd.DataFrame(results_all_directions_test)]
+    return [pd.concat(results_all_directions_val), pd.concat(results_all_directions_test)]
         
         
 def main_XGB_all_directions_help(train, test):
@@ -47,17 +50,22 @@ def main_XGB_all_directions_help(train, test):
     for i in range(0, len(x_values)):
         
         for j in range(0, len(y_values)):
-            
+            print('location: (',x_values[i],',',y_values[j],')')
             ## Subsetting train & test based on locaitons
             temp_train = train[(train['x'] == x_values[i]) & (train['y'] == y_values[j])].reset_index(drop = True)
             temp_test = test[(test['x'] == x_values[i]) & (test['y'] == y_values[j])].reset_index(drop = True)
+            
+            ## Sanity check
+            if (temp_train.shape[0] == 0):
+                
+                continue
             
             ## Modeling building and prediction at location (x, y)
             results = main_XGB_all_directions_help_help(temp_train, temp_test)
             results_all_locations_val.append(results[0])
             results_all_locations_test.append(results[1])
             
-    return [pd.DataFrame(results_all_locations_val), pd.DataFrame(results_all_locations_test)]
+    return [pd.concat(results_all_locations_val), pd.concat(results_all_locations_test)]
             
 
 def main_XGB_all_directions_help_help(train, test):            
