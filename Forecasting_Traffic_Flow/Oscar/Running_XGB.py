@@ -45,5 +45,5 @@ test = pd.concat([test, pd.get_dummies(train['direction'])], axis = 1)
 results = main_XGB_all_directions(train, test)
 
 # ## Storing results
-# results[0].to_csv('results_validation.csv', index = False)
-# results[1].to_csv('results_test.csv', index = False)
+results[0].to_csv('results_validation.csv', index = False)
+results[1].to_csv('results_test.csv', index = False)
