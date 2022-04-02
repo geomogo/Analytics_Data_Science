@@ -78,7 +78,7 @@ def main_rf_help_help(train, test):
     X_test = test[['day', 'hour', 'minute']]
     
     ## Defining the hyper-parameter grid
-    rf_param_grid = {'n_estimators': [100, 300, 500], 'max_depth': [3, 5, 7], 'criterion': ['mae'], 'min_samples_split': [2, 6, 10], 'min_samples_leaf': [1, 5, 9], 'n_jobs': [-1]}
+    rf_param_grid = {'n_estimators': [100, 300, 500], 'max_depth': [3, 5, 7], 'min_samples_split': [2, 6, 10], 'min_samples_leaf': [1, 5, 9], 'n_jobs': [-1]}
 
     ## Performing grid search with 5 folds
     rf_grid_search = GridSearchCV(RandomForestRegressor(), rf_param_grid, cv = 5, scoring = 'neg_mean_absolute_error').fit(X_train, Y_train)
