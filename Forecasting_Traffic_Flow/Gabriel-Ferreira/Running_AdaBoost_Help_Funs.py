@@ -74,9 +74,11 @@ def main_ADA_all_directions_help_help(train, test):
     ## Defining train, validation, and test datasets
     X_train = train.loc[0:13023, ['day', 'hour', 'minute']]
     Y_train = train.loc[0:13023, ['congestion']]
+    Y_train = Y_train['congestion']
 
     X_val = train.loc[13023:13059, ['day', 'hour', 'minute']]
     Y_val = train.loc[13023:13059, ['congestion']]
+    Y_val = Y_val['congestion']
     
     X_test = test[['day', 'hour', 'minute']]
     
