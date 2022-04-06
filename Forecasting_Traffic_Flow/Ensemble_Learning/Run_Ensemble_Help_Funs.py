@@ -101,7 +101,6 @@ def Run_Ensemble_help_help(train, test, model):
         ## Minimum number of samples required at each leaf node
         min_samples_leaf = [3, 5]
 
-
         ## Creating the dictionary of hyper-parameters
         param_grid = {'n_estimators': n_estimators,
                       'max_features': max_features,
