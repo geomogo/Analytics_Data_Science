@@ -14,4 +14,23 @@ def Run_Ensemble(train, test, model):
     model: model to be used to ensemble the predictions 
     """
     
+    ## Defining all the directions
+    directions = train['direction'].unique()
+    
+    ## Defining lists to store results
+    results_all_directions_val = list()
+    results_all_directions_test = list()
+    
+    for i in range(0, len(directions)):
+        print('Working on direction:', directions[i])
+        ## Subsetting train & test based on directions
+        temp_train = train[train['direction'] == directions[i]].reset_index(drop = True)
+        temp_test = test[test['direction'] == directions[i]].reset_index(drop = True)
+        
+        ## Appending results 
+        results = Run_Ensemble_help(temp_train, temp_test)
+        results_all_directions_val.append(results[0])
+        results_all_directions_test.append(results[1])
+            
+    return [pd.concat(results_all_directions_val), pd.concat(results_all_directions_test)]
     
