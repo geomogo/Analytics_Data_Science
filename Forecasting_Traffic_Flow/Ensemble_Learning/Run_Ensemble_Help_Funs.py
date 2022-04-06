@@ -28,9 +28,13 @@ def Run_Ensemble(train, test, model):
         temp_test = test[test['direction'] == directions[i]].reset_index(drop = True)
         
         ## Appending results 
-        results = Run_Ensemble_help(temp_train, temp_test)
+        results = Run_Ensemble_help(temp_train, temp_test, model)
         results_all_directions_val.append(results[0])
         results_all_directions_test.append(results[1])
             
     return [pd.concat(results_all_directions_val), pd.concat(results_all_directions_test)]
+    
+    
+def Run_Ensemble_help(train, test, model):
+    
     
