@@ -72,4 +72,39 @@ def Run_Ensemble_help(train, test, model):
 
 def Run_Ensemble_help_help(train, test, model):
     
+    """
+    This function conducts leave-one-out cross validation to 
+    tuned the model hyper-parameters. It takes three arguments
+    train: train dataset
+    test: test dataset 
+    model: model to be considered
+    """
     
+    if (model == 'RF'):
+        
+        ###############################################
+        ## Defining hyer-parameters to be considered ##
+        ###############################################
+
+        ## Number of trees in random forest
+        n_estimators = [100, 300, 500]
+
+        ## Number of features to consider at every split
+        max_features = [3, 4]
+
+        ## Maximum number of levels in tree
+        max_depth = [3, 5]
+
+        ## Minimum number of samples required to split a node
+        min_samples_split = [5, 7]
+
+        ## Minimum number of samples required at each leaf node
+        min_samples_leaf = [3, 5]
+
+
+        ## Creating the dictionary of hyper-parameters
+        param_grid = {'n_estimators': n_estimators,
+                      'max_features': max_features,
+                      'max_depth': max_depth,
+                      'min_samples_split': min_samples_split,
+                      'min_samples_leaf': min_samples_leaf}
