@@ -168,19 +168,3 @@ def Run_Ensemble_help_help(train, test, model):
         test['congestion_ensemble_pred'] = svm_test_pred
         
         return [train, test]
-    
-    
-    if (model == 'w-avg'):
-        
-        ## Computing the mse of each model
-        mse = X_train.apply(lambda x: mean_squared_error(x, Y_train), axis = 0)
-        
-        w0 = 1 / mse[0]
-        w1 = 1 / mse[1]
-        w2 = 1 / mse[2]
-        w3 = 1 / mse[3]
-        wtot = w0 + w1 + w2 + w3
-        w0 = w0 / wtot
-        w1 = w1 / wtot
-        w2 = w2 / wtot
-        w3 = w3 / wtot
