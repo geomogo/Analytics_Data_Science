@@ -37,4 +37,33 @@ def Run_Ensemble(train, test, model):
     
 def Run_Ensemble_help(train, test, model):
     
+    ## Defining lists to store results
+    results_all_locations_val = list()
+    results_all_locations_test = list()
     
+    ## Defining locations 
+    x_values = train['x'].unique()
+    y_values = train['y'].unique()
+    
+    ## Defining list to store results
+    results_all_locations = list()
+    
+    for i in range(0, len(x_values)):
+        
+        for j in range(0, len(y_values)):
+            print('location: (',x_values[i],',',y_values[j],')')
+            ## Subsetting train & test based on locaitons
+            temp_train = train[(train['x'] == x_values[i]) & (train['y'] == y_values[j])].reset_index(drop = True)
+            temp_test = test[(test['x'] == x_values[i]) & (test['y'] == y_values[j])].reset_index(drop = True)
+            
+            ## Sanity check
+            if (temp_train.shape[0] == 0):
+                
+                continue
+            
+            ## Modeling building and prediction at location (x, y)
+            results = Run_Ensemble_help_help(temp_train, temp_test, model)
+            results_all_locations_val.append(results[0])
+            results_all_locations_test.append(results[1])
+            
+    return [pd.concat(results_all_locations_val), pd.concat(results_all_locations_test)]
