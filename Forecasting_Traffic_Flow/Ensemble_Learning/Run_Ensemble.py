@@ -48,7 +48,7 @@ test = pd.merge(test, test_3, on = ['row_id'], how = 'left')
 test = pd.merge(test, test_4, on = ['row_id'], how = 'left')
 
 ## Modeling 
-results = main_XGB_all_directions(validation, test, 'RF')
+results = Run_Ensemble(validation, test, 'RF')
 
 ## Storing results
 results[0].to_csv('ensemble_results_validation.csv', index = False)

@@ -1,6 +1,9 @@
 import pandas as pd 
 import numpy as np
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import LeaveOneOut, GridSearchCV
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.svm import SVR
 
 
 def Run_Ensemble(train, test, model):
@@ -71,4 +74,97 @@ def Run_Ensemble_help(train, test, model):
 
 def Run_Ensemble_help_help(train, test, model):
     
+    """
+    This function conducts leave-one-out cross validation to 
+    tuned the model hyper-parameters. It takes three arguments
+    train: train dataset
+    test: test dataset 
+    model: model to be considered
+    """
     
+    ## Defining the input & targets
+    X_train = train[['congestion_pred_1', 'congestion_pred_2', 'congestion_pred_3', 'congestion_pred_4']]
+    X_test = test[['congestion_pred_1', 'congestion_pred_2', 'congestion_pred_3', 'congestion_pred_4']]
+    Y_train = train['congestion']
+    
+    
+    if (model == 'RF'):
+        
+        ###############################################
+        ## Defining hyer-parameters to be considered ##
+        ###############################################
+
+        ## Number of trees in random forest
+        n_estimators = [100, 300, 500]
+
+        ## Number of features to consider at every split
+        max_features = [3, 4]
+
+        ## Maximum number of levels in tree
+        max_depth = [3, 5]
+
+        ## Minimum number of samples required to split a node
+        min_samples_split = [5, 7]
+
+        ## Minimum number of samples required at each leaf node
+        min_samples_leaf = [3, 5]
+
+        ## Creating the dictionary of hyper-parameters
+        RF_param_grid = {'n_estimators': n_estimators,
+                         'max_features': max_features,
+                         'max_depth': max_depth,
+                         'min_samples_split': min_samples_split,
+                         'min_samples_leaf': min_samples_leaf}
+        
+        ## Running leave-one-out cross validation 
+        RF_grid_search = GridSearchCV(RandomForestRegressor(), RF_param_grid, cv = LeaveOneOut(), scoring = 'neg_mean_squared_error', n_jobs = -1).fit(X_train, Y_train)
+
+        ## Extraciting the best model 
+        RF_md = RF_grid_search.best_estimator_
+        
+        ## Predicting on validation and test
+        RF_val_pred = RF_md.predict(X_train)
+        RF_test_pred = RF_md.predict(X_test)
+        
+        ## Appending results 
+        train['congestion_ensemble_pred'] = RF_val_pred
+        test['congestion_ensemble_pred'] = RF_test_pred
+        
+        return [train, test]
+    
+    
+    if (model == 'svm'):
+        
+        ###############################################
+        ## Defining hyer-parameters to be considered ##
+        ###############################################
+
+        ## Kernel
+        kernel = ['rbf', 'poly', 'sigmoid']
+
+        ## Regularization parameter
+        C = [0.01, 0.1, 1, 10]
+
+        ## Gamma
+        gamma = [0.001, 0.01, 0.1, 1]
+
+        ## Creating the dictionary of hyper-parameters
+        SVM_param_grid = {'kernel': kernel,
+                          'C': C,
+                          'gamma': gamma}
+        
+        ## Running leave-one-out cross validation 
+        svm_grid_search = GridSearchCV(SVR(), SVM_param_grid, cv = LeaveOneOut(), scoring = 'neg_mean_squared_error', n_jobs = -1).fit(X_train, Y_train)
+
+        ## Extraciting the best model 
+        svm_md = svm_grid_search.best_estimator_
+        
+        ## Predicting on validation and test
+        svm_val_pred = svm_md.predict(X_train)
+        svm_test_pred = svm_md.predict(X_test)
+        
+        ## Appending results 
+        train['congestion_ensemble_pred'] = svm_val_pred
+        test['congestion_ensemble_pred'] = svm_test_pred
+        
+        return [train, test]
