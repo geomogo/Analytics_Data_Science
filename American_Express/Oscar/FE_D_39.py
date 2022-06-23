@@ -64,4 +64,19 @@ for i in range(2, (len(D_variables) + 2)):
 
 train_deli = train[to_select]
 
+## Computing average at the customer level
+data_avg = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39', 'target'].mean())
+data_avg['customer_ID'] = data_avg.index
+data_avg = data_avg.reset_index(drop = True)
+data_avg = data_avg[['customer_ID', 'target', 'D_39']]
+data_avg.columns = ['customer_ID', 'target', 'D_39_avg']
 
+## Computing average change at the customer level
+data_change = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].apply(lambda x: pd.Series(x.to_list()).pct_change().mean()))
+data_change['customer_ID'] = data_change.index
+data_change = data_change.reset_index(drop = True)
+data_change.columns = ['D_39_change', 'customer_ID']
+
+## Joind the to dataset
+data_out = pd.merge(data_avg, data_change, on = 'customer_ID', how = 'left')
+data_out.to_csv('Deliquency_Features.csv', index = False)
