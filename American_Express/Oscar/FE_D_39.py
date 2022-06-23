@@ -72,7 +72,7 @@ data_avg = data_avg[['customer_ID', 'target', 'D_39']]
 data_avg.columns = ['customer_ID', 'target', 'D_39_mean']
 
 ## Computing median at the customer level
-data_median = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].median()
+data_median = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].median())
 data_median['customer_ID'] = data_median.index
 data_median = data_median.reset_index(drop = True)
 data_median.columns = ['D_39_median', 'customer_ID']
