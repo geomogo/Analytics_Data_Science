@@ -69,7 +69,13 @@ data_avg = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39', 'target'].me
 data_avg['customer_ID'] = data_avg.index
 data_avg = data_avg.reset_index(drop = True)
 data_avg = data_avg[['customer_ID', 'target', 'D_39']]
-data_avg.columns = ['customer_ID', 'target', 'D_39_avg']
+data_avg.columns = ['customer_ID', 'target', 'D_39_mean']
+
+## Computing median at the customer level
+data_median = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].median()
+data_median['customer_ID'] = data_median.index
+data_median = data_median.reset_index(drop = True)
+data_median.columns = ['D_39_median', 'customer_ID']
 
 ## Computing average change at the customer level
 data_change = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].apply(lambda x: pd.Series(x.to_list()).pct_change().mean()))
@@ -78,5 +84,6 @@ data_change = data_change.reset_index(drop = True)
 data_change.columns = ['D_39_change', 'customer_ID']
 
 ## Joind the to dataset
-data_out = pd.merge(data_avg, data_change, on = 'customer_ID', how = 'left')
+data_out = pd.merge(data_avg, data_median, on = 'customer_ID', how = 'left')
+data_out = pd.merge(data_out, data_change, on = 'customer_ID', how = 'left')
 data_out.to_csv('Deliquency_Features.csv', index = False)
