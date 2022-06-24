@@ -87,6 +87,4 @@ data_change.columns = ['D_41_change', 'customer_ID']
 data_out = pd.merge(data_avg, data_median, on = 'customer_ID', how = 'left')
 data_out = pd.merge(data_out, data_change, on = 'customer_ID', how = 'left')
 
-
-
 data_out.to_csv('Deliquency_Features.csv', index = False)
