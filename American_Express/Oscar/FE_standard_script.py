@@ -84,6 +84,8 @@ def summary_stats(x):
     return pd.Series(d, index = ['D_39_mean', 'D_39_median', 'D_39_min', 'D_39_max', 'D_39_range', 'D_39_IQR', 'D_39_positive_count', 'D_39_values_above_mean'])
 
 data_out = train_deli.groupby('customer_ID').apply(summary_stats)
+data_out['customer_ID'] = data_out.index
+data_out = data_out.reset_index(drop = True)
 
 # ## Computing average change at the customer level
 # data_change = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].apply(lambda x: pd.Series(x.to_list()).pct_change().mean()))
