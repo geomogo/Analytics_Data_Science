@@ -77,6 +77,23 @@ data_median['customer_ID'] = data_median.index
 data_median = data_median.reset_index(drop = True)
 data_median.columns = ['D_39_median', 'customer_ID']
 
+## Computing minimum at customer level
+data_min = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].min())
+data_min['customer_ID'] = data_min.index
+data_min = data_min.reset_index(drop = True)
+data_min.columns = ['D_39_min', 'customer_ID']
+
+## Computing maximum at customer level
+data_max = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].max())
+data_max['customer_ID'] = data_max.index
+data_max = data_max.reset_index(drop = True)
+data_max.columns = ['D_39_max', 'customer_ID']
+
+## Computing 
+
+
+
+
 ## Computing average change at the customer level
 data_change = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].apply(lambda x: pd.Series(x.to_list()).pct_change().mean()))
 data_change['customer_ID'] = data_change.index
