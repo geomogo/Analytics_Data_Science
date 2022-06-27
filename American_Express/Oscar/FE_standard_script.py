@@ -64,52 +64,44 @@ for i in range(2, (len(D_variables) + 2)):
 
 train_deli = train[to_select]
 
-## Computing average at the customer level
-data_avg = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39', 'target'].mean())
-data_avg['customer_ID'] = data_avg.index
-data_avg = data_avg.reset_index(drop = True)
-data_avg = data_avg[['customer_ID', 'target', 'D_39']]
-data_avg.columns = ['customer_ID', 'target', 'D_39_mean']
+## Selecting unique customer_ID and target
+customer_target = train[['customer_ID', 'target']].drop_duplicates().reset_index(drop = True)
 
-## Computing median at the customer level
-data_median = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].median())
-data_median['customer_ID'] = data_median.index
-data_median = data_median.reset_index(drop = True)
-data_median.columns = ['D_39_median', 'customer_ID']
+## Computing basic summary-stats features
+def summary_stats(x):
+    
+    d = {}
+    d['D_39_mean'] = x['D_39'].mean()
+    d['D_39_median'] = x['D_39'].median()
+    d['D_39_min'] = x['D_39'].min()
+    d['D_39_max'] = x['D_39'].max()
+    d['D_39_range'] = x['D_39'].max() - x['D_39'].min()
+    d['D_39_IQR'] = np.percentile(x['D_39'], 75) - np.percentile(x['D_39'], 25)
+#     d['D_39_negative_count'] = np.sum(x['D_39'] < 0) 
+    d['D_39_positive_count'] = np.sum(x['D_39'] > 0)
+    d['D_39_values_above_mean'] = np.sum(x['D_39'] > x['D_39'].mean())
+    
+    return pd.Series(d, index = ['D_39_mean', 'D_39_median', 'D_39_min', 'D_39_max', 'D_39_range', 'D_39_IQR', 'D_39_positive_count', 'D_39_values_above_mean'])
 
-## Computing minimum at customer level
-data_min = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].min())
-data_min['customer_ID'] = data_min.index
-data_min = data_min.reset_index(drop = True)
-data_min.columns = ['D_39_min', 'customer_ID']
+data_out = train_deli.groupby('customer_ID').apply(summary_stats)
 
-## Computing maximum at customer level
-data_max = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].max())
-data_max['customer_ID'] = data_max.index
-data_max = data_max.reset_index(drop = True)
-data_max.columns = ['D_39_max', 'customer_ID']
+# ## Computing average change at the customer level
+# data_change = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].apply(lambda x: pd.Series(x.to_list()).pct_change().mean()))
+# data_change['customer_ID'] = data_change.index
+# data_change = data_change.reset_index(drop = True)
+# data_change.columns = ['D_39_change', 'customer_ID']
 
-## Computing 
+# ## Computing change from first to last month
+# data_change_first_last = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].apply(lambda x: pd.Series(x.iloc[[0, -1]].to_list()).pct_change())).unstack()
+# data_change_first_last = data_change_first_last.drop(columns = ('D_39', 0), axis = 1)
+# data_change_first_last['customer_ID'] = data_change_first_last.index
+# data_change_first_last = data_change_first_last.reset_index(drop = True)
+# data_change_first_last.columns = ['D_39_change_first_last', 'customer_ID']
 
-
-
-
-## Computing average change at the customer level
-data_change = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].apply(lambda x: pd.Series(x.to_list()).pct_change().mean()))
-data_change['customer_ID'] = data_change.index
-data_change = data_change.reset_index(drop = True)
-data_change.columns = ['D_39_change', 'customer_ID']
-
-## Computing change from first to last month
-data_change_first_last = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].apply(lambda x: pd.Series(x.iloc[[0, -1]].to_list()).pct_change())).unstack()
-data_change_first_last = data_change_first_last.drop(columns = ('D_39', 0), axis = 1)
-data_change_first_last['customer_ID'] = data_change_first_last.index
-data_change_first_last = data_change_first_last.reset_index(drop = True)
-data_change_first_last.columns = ['D_39_change_first_last', 'customer_ID']
-
-## Joind the to dataset
-data_out = pd.merge(data_avg, data_median, on = 'customer_ID', how = 'left')
-data_out = pd.merge(data_out, data_change, on = 'customer_ID', how = 'left')
-data_out = pd.merge(data_out, data_change_first_last, on = 'customer_ID', how = 'left')
+## Joining the to datasets
+data_out = pd.merge(customer_target, data_out, on = 'customer_ID', how = 'left')
+# data_out = pd.merge(data_avg, data_median, on = 'customer_ID', how = 'left')
+# data_out = pd.merge(data_out, data_change, on = 'customer_ID', how = 'left')
+# data_out = pd.merge(data_out, data_change_first_last, on = 'customer_ID', how = 'left')
 
 data_out.to_csv('Delinquency_Features.csv', index = False)
