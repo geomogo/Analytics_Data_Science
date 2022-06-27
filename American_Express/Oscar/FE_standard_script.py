@@ -84,7 +84,7 @@ data_change = data_change.reset_index(drop = True)
 data_change.columns = ['D_39_change', 'customer_ID']
 
 ## Computing change from first to last month
-data_change_first_last = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].apply(lambda x: pd.Series(x..iloc[[0, -1]].to_list()).pct_change())).unstack()
+data_change_first_last = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].apply(lambda x: pd.Series(x.iloc[[0, -1]].to_list()).pct_change())).unstack()
 data_change_first_last = data_change_first_last.drop(columns = ('D_39', 0), axis = 1)
 data_change_first_last['customer_ID'] = data_change_first_last.index
 data_change_first_last = data_change_first_last.reset_index(drop = True)
