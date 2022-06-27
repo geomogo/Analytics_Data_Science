@@ -95,4 +95,4 @@ data_out = pd.merge(data_avg, data_median, on = 'customer_ID', how = 'left')
 data_out = pd.merge(data_out, data_change, on = 'customer_ID', how = 'left')
 data_out = pd.merge(data_out, data_change_first_last, on = 'customer_ID', how = 'left')
 
-data_out.to_csv('Deliquency_Features.csv', index = False)
+data_out.to_csv('Delinquency_Features.csv', index = False)
