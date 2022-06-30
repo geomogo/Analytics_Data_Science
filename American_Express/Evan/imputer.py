@@ -3,6 +3,7 @@ import boto3
 import pandas as pd
 import numpy as np
 from sklearn.impute import KNNImputer
+import miceforest as mf
 
 ## Defining the bucket
 s3 = boto3.resource('s3')
@@ -28,25 +29,49 @@ dtype_dict = {'customer_ID': "object", 'S_2': "object", 'P_2': 'float16', 'D_39'
 train = pd.read_csv(file_content_stream, dtype = dtype_dict)
 test = pd.read_csv(file_content_stream2, dtype = dtype_dict)
 
-## Defining the input variables and dropping categorical variables
-knn_train = train.drop(columns = ['customer_ID', 'S_2', 'D_63', 'D_64', 'target'])
-knn_test = test.drop(columns = ['customer_ID', 'S_2', 'D_63', 'D_64'])
+## -------------------------------------
 
-## Building the KNN models
-knn_train_clean = KNNImputer(n_neighbors = 5).fit_transform(knn_train)
-knn_test_clean = KNNImputer(n_neighbors = 5).fit_transform(knn_test)
+## KNN Imputer:
 
-## Defining data-frames to store results
-train_DF1 = train[['customer_ID', 'S_2', 'D_63', 'D_64', 'target']].reset_index(drop = True)
-train_DF2 = pd.DataFrame(knn_train_clean, columns = knn_train.columns)
+# ## Defining the input variables and dropping categorical variables
+# knn_train = train.drop(columns = ['customer_ID', 'S_2', 'D_63', 'D_64'])
+# knn_test = test.drop(columns = ['customer_ID', 'S_2', 'D_63', 'D_64'])
 
-test_DF1 = test[['customer_ID', 'S_2', 'D_63', 'D_64']].reset_index(drop = True)
-test_DF2 = pd.DataFrame(knn_test_clean, columns = knn_test.columns)
+# ## Building the KNN models
+# knn_train_clean = KNNImputer(n_neighbors = 5).fit_transform(knn_train)
+# knn_test_clean = KNNImputer(n_neighbors = 5).fit_transform(knn_test)
 
-## Assigning final data-frames
-training = pd.concat([train_DF1, train_DF2], axis = 1)
-testing = pd.concat([test_DF1, test_DF2], axis = 1)
+# ## Defining data-frames to store results
+# train_DF1 = train[['customer_ID', 'S_2', 'D_63', 'D_64', 'target']].reset_index(drop = True)
+# train_DF2 = pd.DataFrame(knn_train_clean, columns = knn_train.columns)
 
-## Returning final data-frames as csv files
-training.to_csv('amex_train_cleaned.csv', index = False)
-testing.to_csv('amex_test_cleaned.csv', index = False)
+# test_DF1 = test[['customer_ID', 'S_2', 'D_63', 'D_64']].reset_index(drop = True)
+# test_DF2 = pd.DataFrame(knn_test_clean, columns = knn_test.columns)
+
+# ## Assigning final data-frames
+# training = pd.concat([train_DF1, train_DF2], axis = 1)
+# testing = pd.concat([test_DF1, test_DF2], axis = 1)
+
+# ## Returning final data-frames as csv files
+# training.to_csv('amex_train_cleaned.csv', index = False)
+# testing.to_csv('amex_test_cleaned.csv', index = False)
+
+## -------------------------------------
+
+## MiceForest Imputation
+
+# ## Defining the input variables and dropping categorical variables
+# mf_train = train.drop(columns = ['customer_ID', 'S_2', 'D_63', 'D_64'])
+# mf_test = test.drop(columns = ['customer_ID', 'S_2', 'D_63', 'D_64'])
+
+# # Building the miceforest kernel
+# kernel_train = mf.ImputationKernel(mf_train, datasets = 5, save_all_iterations = True)
+# kernel_test = mf.ImputationKernel(mf_test, datasets = 5, save_all_iterations = True)
+
+# ## Assigning the final imputed data-frames
+# training = kernel_train.complete_data(dataset = 0, inplace = False)
+# testing = kernel_test.complete_data(dataset = 0, inplace = False)
+
+# ## Returning final data-frames as csv files
+# training.to_csv('amex_train_cleaned.csv', index = False)
+# testing.to_csv('amex_test_cleaned.csv', index = False)
