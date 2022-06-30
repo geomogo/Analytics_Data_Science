@@ -2,7 +2,10 @@ import numpy as np
 import pandas as pd
 
 def amex_metric(y_true: pd.DataFrame, y_pred: pd.DataFrame) -> float:
-
+    
+    y_true = pd.DataFrame(y_true)
+    y_pred = pd.DataFrame(y_pred)
+    
     def top_four_percent_captured(y_true: pd.DataFrame, y_pred: pd.DataFrame) -> float:
         df = (pd.concat([y_true, y_pred], axis = 'columns')
               .sort_values('prediction', ascending = False))
