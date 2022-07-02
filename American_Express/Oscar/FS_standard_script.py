@@ -30,4 +30,5 @@ for i in range(0, 2):
     ## Appending results 
     features_to_select.append(X_train.columns[RF_auto_feature.support_])
     
-print(features_to_select)
+## Putting results as data-frame
+features_to_select = pd.DataFrame(features_to_select)
