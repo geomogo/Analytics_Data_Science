@@ -80,7 +80,7 @@ def summary_stats(x):
 #     d['D_39_negative_count'] = np.sum(x['D_39'] < 0) 
 #     d['D_39_positive_count'] = np.sum(x['D_39'] > 0)
     d['D_39_values_above_mean'] = np.sum(x['D_39'] > x['D_39'].mean())
-    d['']
+    d['D_39_pct_positive_increases'] = pd.Series(x['D_39'].to_list()).pct_change() / (len(x['D_39'].to_list()) - 1)
     
     return pd.Series(d, index = ['D_39_mean', 'D_39_median', 'D_39_min', 'D_39_max', 'D_39_range', 'D_39_IQR', 'D_39_values_above_mean'])
 
