@@ -22,7 +22,7 @@ amex_function = make_scorer(amex_metric, greater_is_better = True, needs_proba =
 ## Defining list to store results
 features_to_select = list()
 
-for i in range(0, 2):
+for i in range(0, 10):
     
     ## Running RFE with Random forest
     RF_auto_feature = RFECV(estimator = RandomForestClassifier(n_estimators = 300, max_depth = 3), step = 1, scoring = amex_function, min_features_to_select = 5, cv = 3).fit(X_train, Y_train)
