@@ -77,7 +77,7 @@ def summary_stats(x):
     d['D_39_max'] = x['D_39'].max()
     d['D_39_range'] = x['D_39'].max() - x['D_39'].min()
     d['D_39_IQR'] = np.percentile(x['D_39'], 75) - np.percentile(x['D_39'], 25)
-    d['D_39_std'] = np.
+    d['D_39_std'] = np.std(x['D_39'], ddof = 1)
 #     d['D_39_negative_count'] = np.sum(x['D_39'] < 0) 
 #     d['D_39_positive_count'] = np.sum(x['D_39'] > 0)
     d['D_39_values_above_mean'] = np.sum(x['D_39'] > x['D_39'].mean())
