@@ -76,12 +76,12 @@ def summary_stats(x):
     d['D_39_min'] = x['D_39'].min()
     d['D_39_max'] = x['D_39'].max()
     d['D_39_range'] = np.where(x['D_39'].shape[0] == 1, 0, x['D_39'].max() - x['D_39'].min())
-    d['D_39_IQR'] = = np.where(x['D_39'].shape[0] == 1, 0,np.percentile(x['D_39'], 75) - np.percentile(x['D_39'], 25))
-    d['D_39_std'] = = np.where(x['D_39'].shape[0] == 1, 0, np.std(x['D_39'], ddof = 1))
+    d['D_39_IQR'] = np.where(x['D_39'].shape[0] == 1, 0,np.percentile(x['D_39'], 75) - np.percentile(x['D_39'], 25))
+    d['D_39_std'] = np.where(x['D_39'].shape[0] == 1, 0, np.std(x['D_39'], ddof = 1))
 #     d['D_39_negative_count'] = np.sum(x['D_39'] < 0) 
 #     d['D_39_positive_count'] = np.sum(x['D_39'] > 0)
-    d['D_39_values_above_mean'] = = np.where(x['D_39'].shape[0] == 1, 0, np.sum(x['D_39'] > x['D_39'].mean()))
-    d['D_39_avg_pct_change'] = = np.where(x['D_39'].shape[0] == 1, 0, pd.Series(x['D_39'].to_list()).pct_change().mean()
+    d['D_39_values_above_mean'] = np.where(x['D_39'].shape[0] == 1, 0, np.sum(x['D_39'] > x['D_39'].mean()))
+    d['D_39_avg_pct_change'] = np.where(x['D_39'].shape[0] == 1, 0, pd.Series(x['D_39'].to_list()).pct_change().mean()
     
     return pd.Series(d, index = ['D_39_mean', 'D_39_median', 'D_39_min', 'D_39_max', 'D_39_range', 'D_39_IQR', 'D_39_std', 'D_39_values_above_mean', 'D_39_avg_pct_change'])
 
