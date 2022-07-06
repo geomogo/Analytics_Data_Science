@@ -29,6 +29,12 @@ dtype_dict = {'customer_ID': "object", 'S_2': "object", 'P_2': 'float16', 'D_39'
 train = pd.read_csv(file_content_stream, dtype = dtype_dict)
 test = pd.read_csv(file_content_stream2, dtype = dtype_dict)
 
+## Subsetting the data for Payment and Spend variables
+train = train[['customer_ID', 'P_2', 'P_3', 'P_4', 'S_3', 'S_5', 'S_6', 'S_7', 'S_8', 'S_9', 'S_11', 'S_12', 'S_13', 'S_15', 'S_16', 'S_17', 
+               'S_18', 'S_19', 'S_20', 'S_22', 'S_23', 'S_24', 'S_25', 'S_26', 'S_27', 'target']]
+test = test[['customer_ID', 'P_2', 'P_3', 'P_4', 'S_3', 'S_5', 'S_6', 'S_7', 'S_8', 'S_9', 'S_11', 'S_12', 'S_13', 'S_15', 'S_16', 'S_17', 
+               'S_18', 'S_19', 'S_20', 'S_22', 'S_23', 'S_24', 'S_25', 'S_26', 'S_27']]
+
 ## -------------------------------------
 
 ## KNN Imputer:
@@ -60,18 +66,22 @@ test = pd.read_csv(file_content_stream2, dtype = dtype_dict)
 
 ## MiceForest Imputation
 
-# ## Defining the input variables and dropping categorical variables
-# mf_train = train.drop(columns = ['customer_ID', 'S_2', 'D_63', 'D_64'])
-# mf_test = test.drop(columns = ['customer_ID', 'S_2', 'D_63', 'D_64'])
+## Defining the input variables and dropping categorical variables
+mf_train = train.drop(columns = ['customer_ID', 'target'])
+mf_test = test.drop(columns = ['customer_ID'])
 
-# # Building the miceforest kernel
-# kernel_train = mf.ImputationKernel(mf_train, datasets = 5, save_all_iterations = True)
-# kernel_test = mf.ImputationKernel(mf_test, datasets = 5, save_all_iterations = True)
+# Building the miceforest kernel
+kernel_train = mf.ImputationKernel(mf_train, datasets = 5, save_all_iterations = True)
+kernel_test = mf.ImputationKernel(mf_test, datasets = 5, save_all_iterations = True)
 
-# ## Assigning the final imputed data-frames
-# training = kernel_train.complete_data(dataset = 0, inplace = False)
-# testing = kernel_test.complete_data(dataset = 0, inplace = False)
+## Assigning the final imputed data-frames
+training = kernel_train.complete_data(dataset = 0, inplace = False)
+testing = kernel_test.complete_data(dataset = 0, inplace = False)
 
-# ## Returning final data-frames as csv files
-# training.to_csv('amex_train_cleaned.csv', index = False)
-# testing.to_csv('amex_test_cleaned.csv', index = False)
+## Adding "customer_ID" back into the data-frames
+training = pd.concat([mf_train[['customer_ID', 'target']], training], axis = 1)
+testing = pd.concat([mf_train['customer_ID'], training], axis = 1)
+
+## Returning final data-frames as csv files
+training.to_csv('amex_train_cleaned.csv', index = False)
+testing.to_csv('amex_test_cleaned.csv', index = False)
