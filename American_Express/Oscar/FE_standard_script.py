@@ -106,12 +106,13 @@ data_out = data_out.reset_index(drop = True)
 
 ## Joining the to datasets
 data_out = pd.merge(customer_target, data_out, on = 'customer_ID', how = 'left')
-data_out = data_out.drop(columns = ['target'], axis = 1)
+# data_out = data_out.drop(columns = ['target'], axis = 1)
 
-delinquency_features = pd.merge(delinquency_features, data_out, on = 'customer_ID', how = 'left')
+# delinquency_features = pd.merge(delinquency_features, data_out, on = 'customer_ID', how = 'left')
 
 # data_out = pd.merge(data_avg, data_median, on = 'customer_ID', how = 'left')
 # data_out = pd.merge(data_out, data_change, on = 'customer_ID', how = 'left')
 # data_out = pd.merge(data_out, data_change_first_last, on = 'customer_ID', how = 'left')
 
+data_out.to_csv('Delinquency_Features.csv', index = False)
 delinquency_features.to_csv('Delinquency_Features.csv', index = False)
