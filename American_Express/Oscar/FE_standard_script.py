@@ -82,10 +82,10 @@ def summary_stats(x):
     d['D_44_std'] = np.where(x['D_44'].shape[0] == 1, 0, np.std(x['D_44'], ddof = 1))
 #     d['D_44_negative_count'] = np.sum(x['D_44'] < 0) 
 #     d['D_44_positive_count'] = np.sum(x['D_44'] > 0)
-    d['D_44_values_above_mean'] = np.where(x['D_44'].shape[0] == 1, 0, np.sum(x['D_44'] > x['D_44'].mean())/x['D_44'].shape[0])
+    d['D_44_pct_values_above_mean'] = np.where(x['D_44'].shape[0] == 1, 0, np.sum(x['D_44'] > x['D_44'].mean())/x['D_44'].shape[0])
     d['D_44_avg_pct_change'] = np.where(x['D_44'].shape[0] == 1, 0, pd.Series(x['D_44'].to_list()).pct_change().mean())
     
-    return pd.Series(d, index = ['D_44_mean', 'D_44_median', 'D_44_min', 'D_44_max', 'D_44_range', 'D_44_IQR', 'D_44_std', 'D_44_values_above_mean', 'D_44_avg_pct_change'])
+    return pd.Series(d, index = ['D_44_mean', 'D_44_median', 'D_44_min', 'D_44_max', 'D_44_range', 'D_44_IQR', 'D_44_std', 'D_44_pct_values_above_mean', 'D_44_avg_pct_change'])
 
 data_out = train_deli.groupby('customer_ID').apply(summary_stats)
 data_out['customer_ID'] = data_out.index
