@@ -3,7 +3,7 @@
 ## Importing libraries
 import pandas as pd
 
-
+## Defining the "create_var" function
 def create_var(data, variable, method, new_name):
     
     ## Calculating the mean
