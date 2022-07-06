@@ -52,7 +52,7 @@ dtype_dict = {'customer_ID': "object", 'S_2': "object", 'P_2': 'float16', 'D_44'
 train = pd.read_csv(file_content_stream_1, dtype = dtype_dict)
 target = pd.read_csv(file_content_stream_2)
 
-delinquency_features = pd.read_csv('Delinquency_Features.csv')
+# delinquency_features = pd.read_csv('Delinquency_Features.csv')
 
 ## Appending target variables
 train = pd.merge(train, target, on = 'customer_ID', how = 'left')
@@ -82,7 +82,7 @@ def summary_stats(x):
     d['D_44_std'] = np.where(x['D_44'].shape[0] == 1, 0, np.std(x['D_44'], ddof = 1))
 #     d['D_44_negative_count'] = np.sum(x['D_44'] < 0) 
 #     d['D_44_positive_count'] = np.sum(x['D_44'] > 0)
-    d['D_44_values_above_mean'] = np.where(x['D_44'].shape[0] == 1, 0, np.sum(x['D_44'] > x['D_44'].mean()))
+    d['D_44_values_above_mean'] = np.where(x['D_44'].shape[0] == 1, 0, np.sum(x['D_44'] > x['D_44'].mean())/x['D_44'].shape[0])
     d['D_44_avg_pct_change'] = np.where(x['D_44'].shape[0] == 1, 0, pd.Series(x['D_44'].to_list()).pct_change().mean())
     
     return pd.Series(d, index = ['D_44_mean', 'D_44_median', 'D_44_min', 'D_44_max', 'D_44_range', 'D_44_IQR', 'D_44_std', 'D_44_values_above_mean', 'D_44_avg_pct_change'])
