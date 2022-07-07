@@ -19,7 +19,7 @@ file_object_2 = bucket_object_2.get()
 file_content_stream_2 = file_object_2.get('Body')
 
 ## Creating data-type dictionary for reading the train data-frame
-dtype_dict = {'customer_ID': "object", 'S_2': "object", 'P_2': 'float16', 'D_39': 'float16', 'B_1': 'float16','B_2': 'float16',
+dtype_dict = {'customer_ID': "object", 'S_2': "object", 'P_2': 'float16', 'D_41': 'float16', 'B_1': 'float16','B_2': 'float16',
               'R_1': 'float16','S_3': 'float16','D_41': 'float16','B_3': 'float16','D_42': 'float16','D_43': 'float16','D_44': 'float16',
               'B_4': 'float16','D_45': 'float16','B_5': 'float16','R_2': 'float16','D_46': 'float16','D_47': 'float16','D_48': 'float16',
               'D_49': 'float16','B_6': 'float16','B_7': 'float16','B_8': 'float16','D_50': 'float16','D_51': 'float16','B_9': 'float16',
@@ -40,7 +40,7 @@ dtype_dict = {'customer_ID': "object", 'S_2': "object", 'P_2': 'float16', 'D_39'
               'D_93': 'float16','D_94': 'float16','R_24': 'float16','R_25': 'float16','D_96': 'float16','S_22': 'float16','S_23': 'float16',
               'S_24': 'float16','S_25': 'float16','S_26': 'float16','D_102': 'float16','D_103': 'float16','D_104': 'float16','D_105': 'float16',
               'D_106': 'float16','D_107': 'float16','B_36': 'float16','B_37': 'float16', 'R_26': 'float16','R_27': 'float16','B_38': 'float16',
-              'D_108': 'float16','D_109': 'float16','D_110': 'float16','D_111': 'float16','B_39': 'float16','D_112': 'float16','B_40': 'float16',
+              'D_108': 'float16','D_109': 'float16','D_110': 'float16','D_111': 'float16','B_41': 'float16','D_112': 'float16','B_40': 'float16',
               'S_27': 'float16','D_113': 'float16','D_114': 'float16','D_115': 'float16','D_116': 'float16','D_117': 'float16','D_118': 'float16',
               'D_119': 'float16','D_120': 'float16','D_121': 'float16','D_122': 'float16','D_123': 'float16','D_124': 'float16','D_125': 'float16',
               'D_126': 'float16','D_127': 'float16','D_128': 'float16','D_129': 'float16','B_41': 'float16','B_42': 'float16','D_130': 'float16',
@@ -52,7 +52,7 @@ dtype_dict = {'customer_ID': "object", 'S_2': "object", 'P_2': 'float16', 'D_39'
 train = pd.read_csv(file_content_stream_1, dtype = dtype_dict)
 target = pd.read_csv(file_content_stream_2)
 
-# delinquency_features = pd.read_csv('Delinquency_Features.csv')
+delinquency_features = pd.read_csv('Delinquency_Features.csv')
 
 ## Appending target variables
 train = pd.merge(train, target, on = 'customer_ID', how = 'left')
@@ -73,46 +73,46 @@ customer_target = train[['customer_ID', 'target']].drop_duplicates().reset_index
 def summary_stats(x):
     
     d = {}
-    d['D_39_mean'] = x['D_39'].mean()
-    d['D_39_median'] = x['D_39'].median()
-    d['D_39_min'] = x['D_39'].min()
-    d['D_39_max'] = x['D_39'].max()
-    d['D_39_range'] = np.where(x['D_39'].shape[0] == 1, 0, x['D_39'].max() - x['D_39'].min())
-    d['D_39_IQR'] = np.where(x['D_39'].shape[0] == 1, 0,np.percentile(x['D_39'], 75) - np.percentile(x['D_39'], 25))
-    d['D_39_std'] = np.where(x['D_39'].shape[0] == 1, 0, np.std(x['D_39'], ddof = 1))
-#     d['D_39_negative_count'] = np.sum(x['D_39'] < 0) 
-#     d['D_39_positive_count'] = np.sum(x['D_39'] > 0)
-    d['D_39_pct_values_above_mean'] = np.where(x['D_39'].shape[0] == 1, 0, np.sum(x['D_39'] > x['D_39'].mean())/x['D_39'].shape[0])
-    d['D_39_avg_pct_change'] = np.where(x['D_39'].shape[0] == 1, 0, pd.Series(x['D_39'].to_list()).pct_change().mean())
+    d['D_41_mean'] = x['D_41'].mean()
+    d['D_41_median'] = x['D_41'].median()
+    d['D_41_min'] = x['D_41'].min()
+    d['D_41_max'] = x['D_41'].max()
+    d['D_41_range'] = np.where(x['D_41'].shape[0] == 1, 0, x['D_41'].max() - x['D_41'].min())
+    d['D_41_IQR'] = np.where(x['D_41'].shape[0] == 1, 0,np.percentile(x['D_41'], 75) - np.percentile(x['D_41'], 25))
+    d['D_41_std'] = np.where(x['D_41'].shape[0] == 1, 0, np.std(x['D_41'], ddof = 1))
+#     d['D_41_negative_count'] = np.sum(x['D_41'] < 0) 
+#     d['D_41_positive_count'] = np.sum(x['D_41'] > 0)
+    d['D_41_pct_values_above_mean'] = np.where(x['D_41'].shape[0] == 1, 0, np.sum(x['D_41'] > x['D_41'].mean())/x['D_41'].shape[0])
+    d['D_41_avg_pct_change'] = np.where(x['D_41'].shape[0] == 1, 0, pd.Series(x['D_41'].to_list()).pct_change().mean())
     
-    return pd.Series(d, index = ['D_39_mean', 'D_39_median', 'D_39_min', 'D_39_max', 'D_39_range', 'D_39_IQR', 'D_39_std', 'D_39_pct_values_above_mean', 'D_39_avg_pct_change'])
+    return pd.Series(d, index = ['D_41_mean', 'D_41_median', 'D_41_min', 'D_41_max', 'D_41_range', 'D_41_IQR', 'D_41_std', 'D_41_pct_values_above_mean', 'D_41_avg_pct_change'])
 
 data_out = train_deli.groupby('customer_ID').apply(summary_stats)
 data_out['customer_ID'] = data_out.index
 data_out = data_out.reset_index(drop = True)
 
 # ## Computing average change at the customer level
-# data_change = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].apply(lambda x: pd.Series(x.to_list()).pct_change().mean()))
+# data_change = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_41'].apply(lambda x: pd.Series(x.to_list()).pct_change().mean()))
 # data_change['customer_ID'] = data_change.index
 # data_change = data_change.reset_index(drop = True)
-# data_change.columns = ['D_39_change', 'customer_ID']
+# data_change.columns = ['D_41_change', 'customer_ID']
 
 # ## Computing change from first to last month
-# data_change_first_last = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_39'].apply(lambda x: pd.Series(x.iloc[[0, -1]].to_list()).pct_change())).unstack()
-# data_change_first_last = data_change_first_last.drop(columns = ('D_39', 0), axis = 1)
+# data_change_first_last = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_41'].apply(lambda x: pd.Series(x.iloc[[0, -1]].to_list()).pct_change())).unstack()
+# data_change_first_last = data_change_first_last.drop(columns = ('D_41', 0), axis = 1)
 # data_change_first_last['customer_ID'] = data_change_first_last.index
 # data_change_first_last = data_change_first_last.reset_index(drop = True)
-# data_change_first_last.columns = ['D_39_change_first_last', 'customer_ID']
+# data_change_first_last.columns = ['D_41_change_first_last', 'customer_ID']
 
 ## Joining the to datasets
 data_out = pd.merge(customer_target, data_out, on = 'customer_ID', how = 'left')
-# data_out = data_out.drop(columns = ['target'], axis = 1)
+data_out = data_out.drop(columns = ['target'], axis = 1)
 
-# delinquency_features = pd.merge(delinquency_features, data_out, on = 'customer_ID', how = 'left')
+delinquency_features = pd.merge(delinquency_features, data_out, on = 'customer_ID', how = 'left')
 
 # data_out = pd.merge(data_avg, data_median, on = 'customer_ID', how = 'left')
 # data_out = pd.merge(data_out, data_change, on = 'customer_ID', how = 'left')
 # data_out = pd.merge(data_out, data_change_first_last, on = 'customer_ID', how = 'left')
 
-data_out.to_csv('Delinquency_Features.csv', index = False)
-# delinquency_features.to_csv('Delinquency_Features.csv', index = False)
+# data_out.to_csv('Delinquency_Features.csv', index = False)
+delinquency_features.to_csv('Delinquency_Features.csv', index = False)
