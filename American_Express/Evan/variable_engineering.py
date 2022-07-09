@@ -33,5 +33,5 @@ def create_var(data, variable, method, new_name):
         ## Cleaning the resulting data-frame
         temp.columns = ['customer_ID', new_name]
         
-        
+    ## Returning the temp data-frame
     return temp
