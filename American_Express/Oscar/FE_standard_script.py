@@ -74,36 +74,36 @@ customer_target = train[['customer_ID', 'target']].drop_duplicates().reset_index
 def summary_stats(x):
     
     d = {}
-    d['D_69_mean'] = x['D_69'].mean()
-    d['D_69_median'] = x['D_69'].median()
-    d['D_69_min'] = x['D_69'].min()
-    d['D_69_max'] = x['D_69'].max()
-    d['D_69_range'] = np.where(x['D_69'].shape[0] == 1, 0, x['D_69'].max() - x['D_69'].min())
-    d['D_69_IQR'] = np.where(x['D_69'].shape[0] == 1, 0,np.percentile(x['D_69'], 75) - np.percentile(x['D_69'], 25))
-    d['D_69_std'] = np.where(x['D_69'].shape[0] == 1, 0, np.std(x['D_69'], ddof = 1))
-#     d['D_69_negative_count'] = np.sum(x['D_69'] < 0) 
-#     d['D_69_positive_count'] = np.sum(x['D_69'] > 0)
-    d['D_69_pct_values_above_mean'] = np.where(x['D_69'].shape[0] == 1, 0, np.sum(x['D_69'] > x['D_69'].mean())/x['D_69'].shape[0])
-    d['D_69_avg_pct_change'] = np.where(x['D_69'].shape[0] == 1, 0, pd.Series(x['D_69'].to_list()).pct_change().mean())
+    d['D_70_mean'] = x['D_70'].mean()
+    d['D_70_median'] = x['D_70'].median()
+    d['D_70_min'] = x['D_70'].min()
+    d['D_70_max'] = x['D_70'].max()
+    d['D_70_range'] = np.where(x['D_70'].shape[0] == 1, 0, x['D_70'].max() - x['D_70'].min())
+    d['D_70_IQR'] = np.where(x['D_70'].shape[0] == 1, 0,np.percentile(x['D_70'], 75) - np.percentile(x['D_70'], 25))
+    d['D_70_std'] = np.where(x['D_70'].shape[0] == 1, 0, np.std(x['D_70'], ddof = 1))
+#     d['D_70_negative_count'] = np.sum(x['D_70'] < 0) 
+#     d['D_70_positive_count'] = np.sum(x['D_70'] > 0)
+    d['D_70_pct_values_above_mean'] = np.where(x['D_70'].shape[0] == 1, 0, np.sum(x['D_70'] > x['D_70'].mean())/x['D_70'].shape[0])
+    d['D_70_avg_pct_change'] = np.where(x['D_70'].shape[0] == 1, 0, pd.Series(x['D_70'].to_list()).pct_change().mean())
     
-    return pd.Series(d, index = ['D_69_mean', 'D_69_median', 'D_69_min', 'D_69_max', 'D_69_range', 'D_69_IQR', 'D_69_std', 'D_69_pct_values_above_mean', 'D_69_avg_pct_change'])
+    return pd.Series(d, index = ['D_70_mean', 'D_70_median', 'D_70_min', 'D_70_max', 'D_70_range', 'D_70_IQR', 'D_70_std', 'D_70_pct_values_above_mean', 'D_70_avg_pct_change'])
 
 data_out = train_deli.groupby('customer_ID').apply(summary_stats)
 data_out['customer_ID'] = data_out.index
 data_out = data_out.reset_index(drop = True)
 
 # ## Computing average change at the customer level
-# data_change = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_69'].apply(lambda x: pd.Series(x.to_list()).pct_change().mean()))
+# data_change = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_70'].apply(lambda x: pd.Series(x.to_list()).pct_change().mean()))
 # data_change['customer_ID'] = data_change.index
 # data_change = data_change.reset_index(drop = True)
-# data_change.columns = ['D_69_change', 'customer_ID']
+# data_change.columns = ['D_70_change', 'customer_ID']
 
 # ## Computing change from first to last month
-# data_change_first_last = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_69'].apply(lambda x: pd.Series(x.iloc[[0, -1]].to_list()).pct_change())).unstack()
-# data_change_first_last = data_change_first_last.drop(columns = ('D_69', 0), axis = 1)
+# data_change_first_last = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_70'].apply(lambda x: pd.Series(x.iloc[[0, -1]].to_list()).pct_change())).unstack()
+# data_change_first_last = data_change_first_last.drop(columns = ('D_70', 0), axis = 1)
 # data_change_first_last['customer_ID'] = data_change_first_last.index
 # data_change_first_last = data_change_first_last.reset_index(drop = True)
-# data_change_first_last.columns = ['D_69_change_first_last', 'customer_ID']
+# data_change_first_last.columns = ['D_70_change_first_last', 'customer_ID']
 
 ## Joining the to datasets
 data_out = pd.merge(customer_target, data_out, on = 'customer_ID', how = 'left')
