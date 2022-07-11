@@ -98,3 +98,6 @@ def iqr(x):
 
 def avg_pct_change(x):
     return pd.Series(x.to_list()).pct_change().mean()
+
+def correlation(x):
+    return pd.Series(x.values).corr(other = pd.Series(x.index), method = 'pearson')
