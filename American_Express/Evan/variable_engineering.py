@@ -57,7 +57,7 @@ def create_var(data, variable, method, new_name):
 
 
 
-## Defining the "create_var" function
+## Defining the "create" function
 def create(data, variable):
     
     ## Calculating the mean
@@ -80,15 +80,21 @@ def create(data, variable):
     max_temp = pd.DataFrame(data.groupby(['customer_ID'])[variable].max()).reset_index(drop = False)
     max_temp.columns = ['customer_ID', variable + '_max']
     
-    ## Calculating the average percent change
-    
-    
-    
-    ##d['D_65_avg_pct_change'] = np.where(x['D_65'].shape[0] == 1, 0, pd.Series(x['D_65'].to_list()).pct_change().mean())
-    
-    
     ## Concatenating all feature engineering data-frames into a single object
     new_vars = pd.concat([mean_temp, median_temp.iloc[:, 1], sum_temp.iloc[:, 1], min_temp.iloc[:, 1], max_temp.iloc[:, 1]], axis = 1)
     
     ## Return statement
     return new_vars
+
+## -------------------------------------------
+
+## Simplifying the aggregation functions
+
+def data_range(x):
+    return x.max() - x.min()
+
+def iqr(x):
+    return np.percentile(x, 75) - np.percentile(x, 25)
+
+def avg_pct_change(x):
+    return pd.Series(x.to_list()).pct_change().mean()
