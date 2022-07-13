@@ -48,6 +48,7 @@ dtype_dict = {'customer_ID': "object", 'S_2': "object", 'P_2': 'float16', 'D_39'
               'D_137': 'float16','D_138': 'float16','D_139': 'float16','D_140': 'float16','D_141': 'float16','D_142': 'float16','D_143': 'float16',
               'D_144': 'float16','D_145': 'float16'}
 
+
 ## Reading data-files
 train = pd.read_csv(file_content_stream_1, dtype = dtype_dict)
 target = pd.read_csv(file_content_stream_2)
@@ -73,36 +74,36 @@ customer_target = train[['customer_ID', 'target']].drop_duplicates().reset_index
 def summary_stats(x):
     
     d = {}
-    d['D_133_mean'] = x['D_133'].mean()
-    d['D_133_median'] = x['D_133'].median()
-    d['D_133_min'] = x['D_133'].min()
-    d['D_133_max'] = x['D_133'].max()
-    d['D_133_range'] = np.where(x['D_133'].shape[0] == 1, 0, x['D_133'].max() - x['D_133'].min())
-    d['D_133_IQR'] = np.where(x['D_133'].shape[0] == 1, 0,np.percentile(x['D_133'], 75) - np.percentile(x['D_133'], 25))
-    d['D_133_std'] = np.where(x['D_133'].shape[0] == 1, 0, np.std(x['D_133'], ddof = 1))
-#     d['D_133_negative_count'] = np.sum(x['D_133'] < 0) 
-#     d['D_133_positive_count'] = np.sum(x['D_133'] > 0)
-    d['D_133_pct_values_above_mean'] = np.where(x['D_133'].shape[0] == 1, 0, np.sum(x['D_133'] > x['D_133'].mean())/x['D_133'].shape[0])
-    d['D_133_avg_pct_change'] = np.where(x['D_133'].shape[0] == 1, 0, pd.Series(x['D_133'].to_list()).pct_change().mean())
+    d['D_139_mean'] = x['D_139'].mean()
+    d['D_139_median'] = x['D_139'].median()
+    d['D_139_min'] = x['D_139'].min()
+    d['D_139_max'] = x['D_139'].max()
+    d['D_139_range'] = np.where(x['D_139'].shape[0] == 1, 0, x['D_139'].max() - x['D_139'].min())
+    d['D_139_IQR'] = np.where(x['D_139'].shape[0] == 1, 0,np.percentile(x['D_139'], 75) - np.percentile(x['D_139'], 25))
+    d['D_139_std'] = np.where(x['D_139'].shape[0] == 1, 0, np.std(x['D_139'], ddof = 1))
+#     d['D_139_negative_count'] = np.sum(x['D_139'] < 0) 
+#     d['D_139_positive_count'] = np.sum(x['D_139'] > 0)
+    d['D_139_pct_values_above_mean'] = np.where(x['D_139'].shape[0] == 1, 0, np.sum(x['D_139'] > x['D_139'].mean())/x['D_139'].shape[0])
+    d['D_139_avg_pct_change'] = np.where(x['D_139'].shape[0] == 1, 0, pd.Series(x['D_139'].to_list()).pct_change().mean())
     
-    return pd.Series(d, index = ['D_133_mean', 'D_133_median', 'D_133_min', 'D_133_max', 'D_133_range', 'D_133_IQR', 'D_133_std', 'D_133_pct_values_above_mean', 'D_133_avg_pct_change'])
+    return pd.Series(d, index = ['D_139_mean', 'D_139_median', 'D_139_min', 'D_139_max', 'D_139_range', 'D_139_IQR', 'D_139_std', 'D_139_pct_values_above_mean', 'D_139_avg_pct_change'])
 
 data_out = train_deli.groupby('customer_ID').apply(summary_stats)
 data_out['customer_ID'] = data_out.index
 data_out = data_out.reset_index(drop = True)
 
 # ## Computing average change at the customer level
-# data_change = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_133'].apply(lambda x: pd.Series(x.to_list()).pct_change().mean()))
+# data_change = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_139'].apply(lambda x: pd.Series(x.to_list()).pct_change().mean()))
 # data_change['customer_ID'] = data_change.index
 # data_change = data_change.reset_index(drop = True)
-# data_change.columns = ['D_133_change', 'customer_ID']
+# data_change.columns = ['D_139_change', 'customer_ID']
 
 # ## Computing change from first to last month
-# data_change_first_last = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_133'].apply(lambda x: pd.Series(x.iloc[[0, -1]].to_list()).pct_change())).unstack()
-# data_change_first_last = data_change_first_last.drop(columns = ('D_133', 0), axis = 1)
+# data_change_first_last = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_139'].apply(lambda x: pd.Series(x.iloc[[0, -1]].to_list()).pct_change())).unstack()
+# data_change_first_last = data_change_first_last.drop(columns = ('D_139', 0), axis = 1)
 # data_change_first_last['customer_ID'] = data_change_first_last.index
 # data_change_first_last = data_change_first_last.reset_index(drop = True)
-# data_change_first_last.columns = ['D_133_change_first_last', 'customer_ID']
+# data_change_first_last.columns = ['D_139_change_first_last', 'customer_ID']
 
 ## Joining the to datasets
 data_out = pd.merge(customer_target, data_out, on = 'customer_ID', how = 'left')
