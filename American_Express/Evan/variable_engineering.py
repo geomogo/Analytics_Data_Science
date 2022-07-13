@@ -49,7 +49,6 @@ train = train[['customer_ID', 'P_2', 'P_3', 'P_4', 'S_3', 'S_5', 'S_6', 'S_7', '
 ## Sanity check
 print('-- Data Read -- \n')
 
-
 ## -------------------------------------------
 
 ## Creating a series of aggregation functions
@@ -81,7 +80,7 @@ training = payment_vars_train.merge(spend_vars_train, how = 'left', on = 'custom
 training = training.merge(labels, on = 'customer_ID', how = 'left')
 
 ## Exporting the resulting training data-frame to a csv file
-training.to_csv('amex_train_payment_spend.csv', ignore_index = True)
+training.to_csv('amex_train_payment_spend.csv', index = False)
 
 ## Sanity check
 print('-- Training data-frame complete -- \n')
@@ -98,7 +97,7 @@ print('-- Training data-frame complete -- \n')
 # testing = payment_vars_test.merge(spend_vars_test, how = 'left', on = 'customer_ID')
 
 # ## Exporting the resulting testing data-frames to a csv file
-# testing.to_csv('amex_test_payment_spend.csv', ignore_index = True)
+# testing.to_csv('amex_test_payment_spend.csv', index = False)
 
 ## Sanity check
 print('-- Testing data-frame complete -- \n')
