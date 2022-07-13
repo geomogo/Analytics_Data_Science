@@ -71,7 +71,7 @@ def correlation(x):
 
 payment_vars_train = train.groupby('customer_ID').agg({'P_2':['mean', 'median', 'sum', 'count', data_range, iqr, avg_pct_change, correlation], 'P_3':['mean', 'median', 'sum', 'count', data_range, iqr, avg_pct_change, correlation], 'P_4':['mean', 'median', 'sum', data_range, iqr, avg_pct_change, correlation]}).reset_index(drop = False)
 
-spend_vars_train = train.groupby('customer_ID').agg({'S_3':['median', 'sum', data_range, iqr, avg_pct_change, correlation], 'S_5':[data_range, iqr, avg_pct_change, correlation], 'S_6':['mean', 'median', 'sum', 'mad', data_range, iqr, avg_pct_change, correlation], 'S_8':['mean', 'median', 'sum', data_range, iqr, avg_pct_change, correlation], 'S_13':['mean', 'sum', 'std', 'mad', data_range, iqr, avg_pct_change, correlation], 'S_25':['mean', 'sum', 'std', 'mad', 'count', data_range, iqr, avg_pct_change, correlation], 'S_27':['count', data_range, iqr, avg_pct_change, correlation]}).reset_index(drop = False)
+spend_vars_train = train.groupby('customer_ID').agg({'S_3':['median', 'sum', data_range, iqr, avg_pct_change, correlation], 'S_5':[data_range, iqr, avg_pct_change, correlation], 'S_6':['mean', 'median', 'sum', 'mad', data_range, iqr, avg_pct_change, correlation], 'S_7': ['count'], 'S_8':['mean', 'median', 'sum', data_range, iqr, avg_pct_change, correlation], 'S_13':['mean', 'sum', 'std', 'mad', data_range, iqr, avg_pct_change, correlation], 'S_25':['mean', 'sum', 'std', 'mad', 'count', data_range, iqr, avg_pct_change, correlation], 'S_27':['count', data_range, iqr, avg_pct_change, correlation]}).reset_index(drop = False)
 
 ## Joining the Payment and Spend train data-frames
 training = payment_vars_train.merge(spend_vars_train, how = 'left', on = 'customer_ID')
@@ -91,7 +91,7 @@ print('-- Training data-frame complete -- \n')
 
 # payment_vars_test = test.groupby('customer_ID').agg({'P_2':['mean', 'median', 'sum', 'count', data_range, iqr, avg_pct_change, correlation], 'P_3':['mean', 'median', 'sum', 'count', data_range, iqr, avg_pct_change, correlation], 'P_4':['mean', 'median', 'sum', data_range, iqr, avg_pct_change, correlation]}).reset_index(drop = False)
 
-# spend_vars_test = test.groupby('customer_ID').agg({'S_3':['median', 'sum', data_range, iqr, avg_pct_change, correlation], 'S_5':[data_range, iqr, avg_pct_change, correlation], 'S_6':['mean', 'median', 'sum', 'mad', data_range, iqr, avg_pct_change, correlation], 'S_8':['mean', 'median', 'sum', data_range, iqr, avg_pct_change, correlation], 'S_13':['mean', 'sum', 'std', 'mad', data_range, iqr, avg_pct_change, correlation], 'S_25':['mean', 'sum', 'std', 'mad', 'count', data_range, iqr, avg_pct_change, correlation], 'S_27':['count', data_range, iqr, avg_pct_change, correlation]}).reset_index(drop = False)
+# spend_vars_test = test.groupby('customer_ID').agg({'S_3':['median', 'sum', data_range, iqr, avg_pct_change, correlation], 'S_5':[data_range, iqr, avg_pct_change, correlation], 'S_6':['mean', 'median', 'sum', 'mad', data_range, iqr, avg_pct_change, correlation], 'S_7': ['count'], 'S_8':['mean', 'median', 'sum', data_range, iqr, avg_pct_change, correlation], 'S_13':['mean', 'sum', 'std', 'mad', data_range, iqr, avg_pct_change, correlation], 'S_25':['mean', 'sum', 'std', 'mad', 'count', data_range, iqr, avg_pct_change, correlation], 'S_27':['count', data_range, iqr, avg_pct_change, correlation]}).reset_index(drop = False)
 
 # ## Joining the Payment and Spend test data-frames
 # testing = payment_vars_test.merge(spend_vars_test, how = 'left', on = 'customer_ID')
