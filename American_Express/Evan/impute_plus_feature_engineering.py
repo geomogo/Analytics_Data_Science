@@ -63,6 +63,8 @@ print('-- Training data-frame complete -- \n')
 
 ## -------------------------------------------
 
+## Delete variables where more than 10% of the values are missing
+
 ## Creating other aggregated features using the imputed train data-frame
 
 
