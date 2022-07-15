@@ -14,6 +14,8 @@ buckets = ['D_39', 'D_41', 'D_44', 'D_47', 'D_51', 'D_52', 'D_54', 'D_58', 'D_59
            'D_130', 'D_131', 'D_133', 'D_139', 'D_140', 'D_141', 'D_143', 'D_144', 'D_145']
 
 ## Removing features with inf
+to_remove = delinquency_data.columns.to_series()[np.isinf(delinquency_data).any()]
+delinquency_data = delinquency_data.drop(columns = [to_remove], axis = 1)
 
 
 ## Indentify variables with nan
