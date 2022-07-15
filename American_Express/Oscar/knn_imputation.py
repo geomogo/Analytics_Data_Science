@@ -15,7 +15,7 @@ buckets = ['D_39', 'D_41', 'D_44', 'D_47', 'D_51', 'D_52', 'D_54', 'D_58', 'D_59
 
 ## Removing features with inf
 to_remove = delinquency_data.columns.to_series()[np.isinf(delinquency_data).any()]
-delinquency_data = delinquency_data.drop(columns = [to_remove], axis = 1)
+delinquency_data = delinquency_data.drop(columns = [to_remove.index], axis = 1)
 
 ## Looping to identify features with nan and backfill them with KNNImputer
 for i in range(0, len(buckets)):
