@@ -13,7 +13,21 @@ buckets = ['D_39', 'D_41', 'D_44', 'D_47', 'D_51', 'D_52', 'D_54', 'D_58', 'D_59
            'D_119', 'D_121', 'D_122', 'D_123', 'D_124', 'D_125', 'D_127', 'D_128', 'D_129',
            'D_130', 'D_131', 'D_133', 'D_139', 'D_140', 'D_141', 'D_143', 'D_144', 'D_145']
 
-## Indentify variables with nan
+## Removing features with inf
+data = delinquency_data.drop(columns = ['customer_ID', 'target'], axis = 1)
+to_remove = data.columns.to_series()[np.isinf(data).any()]
+delinquency_data = delinquency_data.drop(columns = [to_remove.index], axis = 1)
 
+## Extracting features names
+features = list(delinquency_data.columns)
 
-## Running KNNImputer
+## Looping to identify features with nan and backfill them with KNNImputer
+for i in range(0, len(buckets)):
+    
+    ## Subsetting the bucket of features
+    to_select = [x for x in features if x.startswith(buckets[i])]
+
+    data_temp = delinquency_data[] # <--------- I'm here 07/15/22 2:29 pm
+    
+    
+    
