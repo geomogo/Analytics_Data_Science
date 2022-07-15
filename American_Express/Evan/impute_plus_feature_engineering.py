@@ -53,7 +53,7 @@ print(count_vars_train.head())
 
 
 ## Sanity check
-print('-- Training data-frame complete -- \n')
+print('-- Training counts data-frame complete -- \n')
 
 ## -------------------------------------------
 

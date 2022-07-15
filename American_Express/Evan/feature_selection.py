@@ -4,7 +4,7 @@
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
-from sklearn.feature_selection import RFE
+from sklearn.feature_selection import RFECV
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 
@@ -39,7 +39,7 @@ for i in tqdm(range(0, 5)):
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.8, stratify = Y)
     
     ## Runing RFE with Random Forest as a base algorithm (with n_features_to_select = 10)
-    rf_rfe = RFE(estimator = RandomForestClassifier(max_depth = 3, n_estimators = 100), n_features_to_select = 10).fit(X_train, Y_train)
+    rf_rfe = RFECV(estimator = RandomForestClassifier(max_depth = 3, n_estimators = 100), n_features_to_select = 10).fit(X_train, Y_train)
     
     ## Appending the features to be selected
     results.append(rf_rfe.support_)
