@@ -31,3 +31,11 @@ for i in range(0, len(buckets)):
     ## Checkinig for nan
     to_check = data_temp.isna().any().sum()
     
+    if (to_check > 0):
+        
+    else:
+        
+        continue 
+    
+    
+    
