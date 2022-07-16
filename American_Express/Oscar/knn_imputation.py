@@ -28,5 +28,6 @@ for i in range(0, len(buckets)):
     to_select = [x for x in features if x.startswith(buckets[i])]
     data_temp = delinquency_data[to_select] 
     
-    
+    ## Checkinig for nan
+    to_check = data_temp.isna().any().sum()
     
