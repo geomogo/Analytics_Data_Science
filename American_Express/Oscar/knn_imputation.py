@@ -26,8 +26,7 @@ for i in range(0, len(buckets)):
     
     ## Subsetting the bucket of features
     to_select = [x for x in features if x.startswith(buckets[i])]
-
-    data_temp = delinquency_data[] # <--------- I'm here 07/15/22 2:29 pm
+    data_temp = delinquency_data[to_select] 
     
     
     
