@@ -34,7 +34,10 @@ for i in range(0, len(buckets)):
     if (to_check > 0):
         
         imputed_data = KNNImputer(n_neighbors = 5).fit_transform(data_temp)
-        imputed_data = 
+        n = imputed_data.shape[1]
+        
+        for i in range(0, n): ## <------ I'm here 07/16/2022 10:20 am
+            
         
     else:
         
