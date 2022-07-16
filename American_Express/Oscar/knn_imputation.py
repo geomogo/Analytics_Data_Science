@@ -26,8 +26,22 @@ for i in range(0, len(buckets)):
     
     ## Subsetting the bucket of features
     to_select = [x for x in features if x.startswith(buckets[i])]
-
-    data_temp = delinquency_data[] # <--------- I'm here 07/15/22 2:29 pm
+    data_temp = delinquency_data[to_select] 
+    
+    ## Checkinig for nan
+    to_check = data_temp.isna().any().sum()
+    
+    if (to_check > 0):
+        
+        imputed_data = KNNImputer(n_neighbors = 5).fit_transform(data_temp)
+        n = imputed_data.shape[1]
+        
+        for i in range(0, n): ## <------ I'm here 07/16/2022 10:20 am
+            
+        
+    else:
+        
+        continue 
     
     
     
