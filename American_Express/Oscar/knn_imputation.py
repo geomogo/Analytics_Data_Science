@@ -45,7 +45,7 @@ for i in range(0, len(buckets)):
         continue 
         
 ## Storing results 
-
+delinquency_data.to_csv('Delinquency_Features_Imputed.csv', index = False)
     
     
     
