@@ -4,6 +4,7 @@ from sklearn.impute import KNNImputer
 
 ## Reading data-file
 delinquency_data = pd.read_csv('Delinquency_Features.csv')
+customer_ID_target = delinquency_data[['customer_ID', 'target']]
 
 ## Defining buckets of variables
 buckets = ['D_39', 'D_41', 'D_44', 'D_47', 'D_51', 'D_52', 'D_54', 'D_58', 'D_59', 'D_60',
@@ -36,12 +37,17 @@ for i in range(0, len(buckets)):
         imputed_data = KNNImputer(n_neighbors = 5).fit_transform(data_temp)
         n = imputed_data.shape[1]
         
-        for i in range(0, n): ## <------ I'm here 07/16/2022 10:20 am
+        for i in range(0, n): 
             
-        
+            delinquency_data.loc[:, to_select[i]] = imputed_data[:, i]
+                
     else:
         
         continue 
+        
+## Storing results 
+delinquency_data = pd.concat([customer_ID_target, delinquency_data], axis = 1)
+delinquency_data.to_csv('Delinquency_Features_Imputed.csv', index = False)
     
     
     
