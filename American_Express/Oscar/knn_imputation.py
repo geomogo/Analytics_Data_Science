@@ -4,6 +4,7 @@ from sklearn.impute import KNNImputer
 
 ## Reading data-file
 delinquency_data = pd.read_csv('Delinquency_Features.csv')
+customer_ID_target = delinquency_data[['customer_ID', 'target']]
 
 ## Defining buckets of variables
 buckets = ['D_39', 'D_41', 'D_44', 'D_47', 'D_51', 'D_52', 'D_54', 'D_58', 'D_59', 'D_60',
