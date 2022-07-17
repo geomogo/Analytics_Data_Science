@@ -94,7 +94,7 @@ def data_range(x):
 def iqr(x):
     return np.percentile(x, 75) - np.percentile(x, 25)
 def avg_pct_change(x):
-    return pd.Series(x.to_list()).pct_change().mean()
+    return pd.Series(x.to_list()).pct_change()[1:12].mean()
 def correlation(x):
     return pd.Series(x.values).corr(other = pd.Series(x.index), method = 'pearson')
 
