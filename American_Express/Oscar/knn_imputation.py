@@ -38,10 +38,14 @@ for i in range(0, len(buckets)):
         
         for i in range(0, n): 
             
-        
+            delinquency_data.loc[:, to_select[i]] = imputed_data[:, i]
+                
     else:
         
         continue 
+        
+## Storing results 
+
     
     
     
