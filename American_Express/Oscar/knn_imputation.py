@@ -20,6 +20,7 @@ delinquency_data = pd.read_csv(file_content_stream)
 customer_ID_target = delinquency_data[['customer_ID', 'target']]
 
 ## Defining buckets of variables
+buckets = ['D_39', 'D_41']
 buckets = ['D_39', 'D_41', 'D_44', 'D_47', 'D_51', 'D_52', 'D_54', 'D_58', 'D_59', 'D_60',
            'D_65', 'D_69', 'D_70', 'D_71', 'D_72', 'D_74', 'D_75', 'D_78', 'D_79', 'D_80',
            'D_81', 'D_83', 'D_84', 'D_86', 'D_89', 'D_91', 'D_92', 'D_93', 'D_94', 'D_96',
