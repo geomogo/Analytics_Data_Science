@@ -1,9 +1,27 @@
+import boto3
 import pandas as pd 
 import numpy as np
 from sklearn.impute import KNNImputer
 
+import os
+import sagemaker
+
+sess = sagemaker.Session()
+
+## Defining the bucket
+s3 = boto3.resource('s3')
+bucket_name = 'analytics-data-science-competitions'
+bucket = s3.Bucket(bucket_name)
+
+## Defining files names
+file_key = 'AmericanExpress/Delinquency_Features.csv'
+
+bucket_object = bucket.Object(file_key)
+file_object = bucket_object.get()
+file_content_stream = file_object.get('Body')
+
 ## Reading data-file
-delinquency_data = pd.read_csv('Delinquency_Features.csv')
+delinquency_data = pd.read_csv(file_content_stream)
 customer_ID_target = delinquency_data[['customer_ID', 'target']]
 
 ## Defining buckets of variables
@@ -17,7 +35,7 @@ buckets = ['D_39', 'D_41', 'D_44', 'D_47', 'D_51', 'D_52', 'D_54', 'D_58', 'D_59
 ## Removing features with inf
 data = delinquency_data.drop(columns = ['customer_ID', 'target'], axis = 1)
 to_remove = data.columns.to_series()[np.isinf(data).any()]
-delinquency_data = delinquency_data.drop(columns = to_remove.index, axis = 1)
+delinquency_data = data.drop(columns = to_remove.index, axis = 1)
 
 ## Extracting features names
 features = list(delinquency_data.columns)
@@ -45,9 +63,11 @@ for i in range(0, len(buckets)):
         
         continue 
         
-## Storing results 
+## Storing results in s3
 delinquency_data = pd.concat([customer_ID_target, delinquency_data], axis = 1)
 delinquency_data.to_csv('Delinquency_Features_Imputed.csv', index = False)
-    
-    
-    
+
+sess.upload_data(path = 'Delinquency_Features_Imputed.csv', 
+                 bucket = bucket_name,
+                 key_prefix = 'AmericanExpress')
+
