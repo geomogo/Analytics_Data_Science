@@ -72,7 +72,7 @@ test = pd.DataFrame({'x': [1, 2], 'y': [3, 4]})
 test.to_csv('mytest.csv')
 
 
-sess.upload_data(path = 'test.csv', 
+sess.upload_data(path = 'mytest.csv', 
                  bucket = bucket_name,
                  key_prefix = 'AmericanExpress')
 
