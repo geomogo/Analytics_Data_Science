@@ -1,6 +1,7 @@
 import boto3
 import pandas as pd 
 import numpy as np
+import os
 from sklearn.impute import KNNImputer
 
 ## Defining the bucket
@@ -64,5 +65,8 @@ bucket = s3.Bucket(bucket_name)
 # s3.meta.client.upload_file('Delinquency_Features_Imputed.csv', 'YOUR_S3_BUCKET_NAME', 'DESIRED_S3_OBJECT_NAME')    
 
 test = pd.DataFrame({'x': [1, 2], 'y': [3, 4]})
-test.to_csv('mytest.csv')
-s3.meta.client.upload_file('mytest.csv', 'analytics-data-science-competitions/AmericanExpress', 'mytest.csv')    
+# test.to_csv('mytest.csv')
+
+boto3.resource('s3').Bucket(bucket).Object(os.path.join(bucket_name, 'AmericanExpress', 'mytest.csv')).upload_fileobj(test)
+
+# s3.meta.client.upload_file('mytest.csv', 'analytics-data-science-competitions/AmericanExpress', 'mytest.csv')    
