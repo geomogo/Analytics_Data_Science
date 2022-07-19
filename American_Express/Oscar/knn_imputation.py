@@ -36,7 +36,7 @@ buckets = ['D_39', 'D_41']
 ## Removing features with inf
 data = delinquency_data.drop(columns = ['customer_ID', 'target'], axis = 1)
 to_remove = data.columns.to_series()[np.isinf(data).any()]
-delinquency_data = delinquency_data.drop(columns = to_remove.index, axis = 1)
+delinquency_data = data.drop(columns = to_remove.index, axis = 1)
 
 ## Extracting features names
 features = list(delinquency_data.columns)
