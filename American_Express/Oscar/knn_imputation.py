@@ -64,3 +64,5 @@ bucket = s3.Bucket(bucket_name)
 # s3.meta.client.upload_file('Delinquency_Features_Imputed.csv', 'YOUR_S3_BUCKET_NAME', 'DESIRED_S3_OBJECT_NAME')    
 
 test = pd.DataFrame({'x': [1, 2], 'y': [3, 4]})
+test.to_csv('mytest.csv')
+s3.meta.client.upload_file('mytest.csv', 'analytics-data-science-competitions/AmericanExpress', 'mytest.csv')    
