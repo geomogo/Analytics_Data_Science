@@ -16,7 +16,7 @@ bucket = s3.Bucket(bucket_name)
 ## Defining files names
 file_key = 'AmericanExpress/Delinquency_Features.csv'
 
-# bucket_object = bucket.Object(file_key)
+bucket_object = bucket.Object(file_key)
 file_object = bucket_object.get()
 file_content_stream = file_object.get('Body')
 
