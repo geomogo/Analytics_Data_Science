@@ -56,5 +56,24 @@ target = pd.read_csv(file_content_stream_2)
 train = pd.merge(train, target, on = 'customer_ID', how = 'left')
 
 ## Selecting Deliquency categorical variables
-train_deli_cat = train[['customer_ID', 'D_63', 'D_64', 'D_66', 'D_68', 'D_114', 'D_116', 'D_117', 'D_120', 'D_126']]
+train_deli_cat = train[['customer_ID', 'D_63', 'D_64', 'D_66', 'D_68', 'D_114', 'D_116', 'D_117', 'D_120', 'D_126']].astype(str)
+
+def f_cat(x):
+    
+    d = {}
+    d['D_63_last'] = x['D_63'].iloc[-1]
+    d['D_64_last'] = x['D_64'].iloc[-1]
+    d['D_66_last'] = x['D_66'].iloc[-1]
+    d['D_68_last'] = x['D_68'].iloc[-1]
+    d['D_114_last'] = x['D_114'].iloc[-1]
+    d['D_116_last'] = x['D_116'].iloc[-1]
+    d['D_117_last'] = x['D_117'].iloc[-1]
+    d['D_120_last'] = x['D_120'].iloc[-1]
+    d['D_126_last'] = x['D_126'].iloc[-1]
+    
+    return pd.Series(d, index = ['D_63_last', 'D_64_last', 'D_66_last', 'D_68_last', 'D_114_last', 'D_116_last', 'D_117_last', 'D_120_last', 'D_126_last'])
+
+
+train_deli_cat_last = train_deli_cat.groupby('customer_ID').apply(f_cat)
+
 
