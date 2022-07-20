@@ -27,6 +27,9 @@ file_content_stream_2 = file_object_2.get('Body')
 
 ## Reading data-files
 data_left = pd.read_csv(file_content_stream_1)
+to_remove = data_left.drop(columns = ['customer_ID', 'target'], axis = 1).columns.to_series()[np.isnan(data_left.drop(columns = ['customer_ID', 'target'], axis = 1)).any()]
+data_left = data_left.drop(columns = to_remove.index, axis = 1)
+
 data_right = pd.read_csv(file_content_stream_2)
 
 ## Merging datasets
@@ -56,3 +59,10 @@ for i in range(0, len(target)):
     
     ## Predicting 
     data[np.isnan(Y)][target[i]] = knn_md.predict(X_to_be_filled)
+    
+## Storing results in s3
+train_deli_cat_last.to_csv('Delinquency_Features_Filled.csv', index = False)
+
+sess.upload_data(path = 'Delinquency_Features_Filled.csv', 
+                 bucket = bucket_name,
+                 key_prefix = 'AmericanExpress')
