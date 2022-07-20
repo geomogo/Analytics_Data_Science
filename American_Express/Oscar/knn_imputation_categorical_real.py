@@ -35,16 +35,24 @@ data = pd.merge(data_left, data_right, on = 'customer_ID', how = 'left')
 ## Defining target features
 target = ['D_66_last', 'D_68_last', 'D_114_last', 'D_116_last', 'D_117_last', 'D_120_last']
 
-## Defining input variables and standardization
+## Defining input variables 
 X = data.drop(columns = ['customer_ID', 'target', 'D_63_last', 'D_64_last', 'D_66_last', 'D_68_last', 'D_114_last', 'D_116_last', 'D_117_last', 'D_120_last', 'D_120_last'], axis = 1)
 
-
+scaler = MinMaxScaler()
+X = pd.DataFrame(scaler.fit_transform(X))
 
 ## Looping to backfill missing values
 for i in range(0, len(target)):
     
     ## Defining the target variable
     Y = data[target[i]]
+    Y_full = Y[~np.isnan(Y)]
+    X_full = X[~np.isnan(Y)]
+    
+    X_to_be_filled = X[np.isnan(Y)]
     
     ## Defining the model
-    knn_md = KNeighborsClassifier(n_neighbors = 3).fit(X, Y)
+    knn_md = KNeighborsClassifier(n_neighbors = 3).fit(X_full, Y_full)
+    
+    ## Predicting 
+    data[np.isnan(Y)][target[i]] = knn_md.predict(X_to_be_filled)
