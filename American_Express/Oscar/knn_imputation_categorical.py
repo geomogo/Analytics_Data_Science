@@ -54,3 +54,6 @@ target = pd.read_csv(file_content_stream_2)
 
 ## Appending target variables
 train = pd.merge(train, target, on = 'customer_ID', how = 'left')
+
+## Selecting Deliquency categorical variables
+train_deli = train[['customer_ID', 'D_63', 'D_64', 'D_66', 'D_68', 'D_114', 'D_116', 'D_117', 'D_120', 'D_126']]
