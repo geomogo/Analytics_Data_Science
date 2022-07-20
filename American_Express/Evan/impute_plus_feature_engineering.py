@@ -93,21 +93,19 @@ def data_range(x):
     return x.max() - x.min()
 def iqr(x):
     return np.percentile(x, 75) - np.percentile(x, 25)
-def avg_pct_change(x):
-    return pd.Series(x.to_list()).pct_change()[1:12].mean()
 def correlation(x):
     return pd.Series(x.values).corr(other = pd.Series(x.index), method = 'pearson')
 
 ## Creating new Payment features with the cleaned train data-frame
-payment_vars_train = train_impute.groupby('customer_ID').agg({'P_2':['mean', 'median', 'sum', data_range, iqr, avg_pct_change, correlation], 'P_3':['mean', 'median', 'sum', data_range, iqr, avg_pct_change, correlation], 'P_4':['mean', 'median', 'sum', data_range, iqr, avg_pct_change, correlation]}).reset_index(drop = False)
+payment_vars_train = train_impute.groupby('customer_ID').agg({'P_2':['mean', 'median', 'sum', data_range, iqr, correlation], 'P_3':['mean', 'median', 'sum', data_range, iqr, correlation], 'P_4':['mean', 'median', 'sum', data_range, iqr, correlation]}).reset_index(drop = False)
 
 ## Renaming variable names
-payment_vars_train.columns = ['customer_ID', 'P_2_mean', 'P_2_median', 'P_2_sum', 'P_2_data_range', 'P_2_iqr', 'P_2_avg_pct_change', 'P_2_correlation', 'P_3_mean', 'P_3_median', 'P_3_sum', 'P_3_data_range', 'P_3_iqr', 'P_3_avg_pct_change', 'P_3_correlation', 'P_4_mean', 'P_4_median', 'P_4_sum', 'P_4_data_range', 'P_4_iqr', 'P_4_avg_pct_change', 'P_4_correlation']
+payment_vars_train.columns = ['customer_ID', 'P_2_mean', 'P_2_median', 'P_2_sum', 'P_2_data_range', 'P_2_iqr', 'P_2_correlation', 'P_3_mean', 'P_3_median', 'P_3_sum', 'P_3_data_range', 'P_3_iqr', 'P_3_correlation', 'P_4_mean', 'P_4_median', 'P_4_sum', 'P_4_data_range', 'P_4_iqr', 'P_4_correlation']
 
 ## Creating new Spend features with the cleaned train data-frame
-spend_vars_train = train_impute.groupby('customer_ID').agg({'S_3':['median', 'sum', data_range, iqr, avg_pct_change, correlation], 'S_5':[data_range, iqr, avg_pct_change, correlation], 'S_6':['mean', 'median', 'sum', 'mad', data_range, iqr, avg_pct_change, correlation], 'S_8':['mean', 'median', 'sum', data_range, iqr, avg_pct_change, correlation], 'S_13':['mean', 'sum', 'std', 'mad', data_range, iqr, avg_pct_change, correlation], 'S_25':['mean', 'sum', 'std', 'mad', data_range, iqr, avg_pct_change, correlation], 'S_27':[data_range, iqr, avg_pct_change, correlation]}).reset_index(drop = False)
+spend_vars_train = train_impute.groupby('customer_ID').agg({'S_3':['median', 'sum', data_range, iqr, correlation], 'S_5':[data_range, iqr, correlation], 'S_6':['mean', 'median', 'sum', 'mad', data_range, iqr, correlation], 'S_8':['mean', 'median', 'sum', data_range, iqr, correlation], 'S_13':['mean', 'sum', 'std', 'mad', data_range, iqr, correlation], 'S_25':['mean', 'sum', 'std', 'mad', data_range, iqr, correlation], 'S_27':[data_range, iqr, correlation]}).reset_index(drop = False)
 
-spend_vars_train.columns = ['customer_ID', 'S_3_median', 'S_3_sum', 'S_3_data_range', 'S_3_iqr', 'S_3_avg_pct_change', 'S_3_correlation', 'S_5_data_range', 'S_5_iqr', 'S_5_avg_pct_change', 'S_5_correlation', 'S_6_mean', 'S_6_median', 'S_6_sum', 'S_6_mad', 'S_6_data_range', 'S_6_iqr', 'S_6_avg_pct_change', 'S_6_correlation', 'S_8_mean', 'S_8_median', 'S_8_sum', 'S_8_data_range', 'S_8_iqr', 'S_8_avg_pct_change', 'S_8_correlation', 'S_13_mean', 'S_13_sum', 'S_13_std', 'S_13_mad', 'S_13_data_range', 'S_13_iqr', 'S_13_avg_pct_change', 'S_13_correlation', 'S_25_mean', 'S_25_sum', 'S_25_std', 'S_25_mad', 'S_25_data_range', 'S_25_iqr', 'S_25_avg_pct_change', 'S_25_correlation', 'S_27_data_range', 'S_27_iqr', 'S_27_avg_pct_change', 'S_27_correlation']
+spend_vars_train.columns = ['customer_ID', 'S_3_median', 'S_3_sum', 'S_3_data_range', 'S_3_iqr', 'S_3_correlation', 'S_5_data_range', 'S_5_iqr', 'S_5_correlation', 'S_6_mean', 'S_6_median', 'S_6_sum', 'S_6_mad', 'S_6_data_range', 'S_6_iqr', 'S_6_correlation', 'S_8_mean', 'S_8_median', 'S_8_sum', 'S_8_data_range', 'S_8_iqr', 'S_8_correlation', 'S_13_mean', 'S_13_sum', 'S_13_std', 'S_13_mad', 'S_13_data_range', 'S_13_iqr', 'S_13_correlation', 'S_25_mean', 'S_25_sum', 'S_25_std', 'S_25_mad', 'S_25_data_range', 'S_25_iqr', 'S_25_correlation', 'S_27_data_range', 'S_27_iqr', 'S_27_correlation']
 
 ## Sanity check
 print('-- Training aggregations data-frame complete -- \n')
