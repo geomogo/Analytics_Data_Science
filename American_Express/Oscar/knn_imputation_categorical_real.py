@@ -1,6 +1,8 @@
 import boto3
 import pandas as pd 
 import numpy as np
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import MinMaxScaler
 
 import os
 import sagemaker
@@ -33,10 +35,16 @@ data = pd.merge(data_left, data_right, on = 'customer_ID', how = 'left')
 ## Defining target features
 target = ['D_66_last', 'D_68_last', 'D_114_last', 'D_116_last', 'D_117_last', 'D_120_last']
 
-## Defining input variables 
+## Defining input variables and standardization
 X = data.drop(columns = ['customer_ID', 'target', 'D_63_last', 'D_64_last', 'D_66_last', 'D_68_last', 'D_114_last', 'D_116_last', 'D_117_last', 'D_120_last', 'D_120_last'], axis = 1)
+
+
 
 ## Looping to backfill missing values
 for i in range(0, len(target)):
     
+    ## Defining the target variable
+    Y = data[target[i]]
     
+    ## Defining the model
+    knn_md = KNeighborsClassifier(n_neighbors = 3).fit(X, Y)
