@@ -36,3 +36,7 @@ target = ['D_66_last', 'D_68_last', 'D_114_last', 'D_116_last', 'D_117_last', 'D
 ## Defining input variables 
 X = data.drop(columns = ['customer_ID', 'target', 'D_63_last', 'D_64_last', 'D_66_last', 'D_68_last', 'D_114_last', 'D_116_last', 'D_117_last', 'D_120_last', 'D_120_last'], axis = 1)
 
+## Looping to backfill missing values
+for i in range(0, len(target)):
+    
+    
