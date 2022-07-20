@@ -1,8 +1,8 @@
 import boto3
 import pandas as pd; pd.set_option('display.max_columns', 200)
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
+#import matplotlib.pyplot as plt
+#import seaborn as sns
 
 
 # Reading previous balance features
@@ -43,3 +43,5 @@ balance_features = pd.merge(balance_features, data_out, on = 'customer_ID', how 
 
 # Exporting as csv
 balance_features.to_csv('Balance_Features.csv', index = False)
+
+print("finished")
