@@ -75,5 +75,12 @@ def f_cat(x):
 
 
 train_deli_cat_last = train_deli_cat.groupby('customer_ID').apply(f_cat)
+train_deli_cat_last['customer_ID'] = train_deli_cat_last.index
+train_deli_cat_last = train_deli_cat_last.reset_index(drop = True)
 
+## Storing results in s3
+train_deli_cat_last.to_csv('Delinquency_Features_Categorical_Last.csv', index = False)
 
+sess.upload_data(path = 'Delinquency_Features_Categorical_Last.csv', 
+                 bucket = bucket_name,
+                 key_prefix = 'AmericanExpress')
