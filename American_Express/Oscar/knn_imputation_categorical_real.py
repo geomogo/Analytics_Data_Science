@@ -23,4 +23,10 @@ bucket_object_2 = bucket.Object(file_key_2)
 file_object_2 = bucket_object_2.get()
 file_content_stream_2 = file_object_2.get('Body')
 
+## Reading data-files
+data_left = pd.read_csv(file_content_stream_1)
+data_right= pd.read_csv(file_content_stream_2)
+
+## Merging datasets
+data = pd.merge(data_left, data_right, on = 'customer_ID', how = 'left')
 
