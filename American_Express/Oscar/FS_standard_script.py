@@ -1,6 +1,7 @@
 import boto3
 import pandas as pd
 import numpy as np
+from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 from sklearn.feature_selection import RFECV
 from sklearn.metrics import make_scorer
@@ -50,7 +51,7 @@ amex_function = make_scorer(amex_metric, greater_is_better = True, needs_proba =
 ## Defining list to store results
 features_to_select = list()
 
-for i in range(0, 10):
+for i in tqdm(range(0, 10)):
     
     ## Running RFE with Random forest
     RF_auto_feature = RFECV(estimator = RandomForestClassifier(n_estimators = 300, max_depth = 3), step = 1, scoring = amex_function, min_features_to_select = 10, cv = 3, n_jobs = -1).fit(X_train, Y_train)
