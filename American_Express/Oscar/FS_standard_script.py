@@ -37,8 +37,6 @@ dummies = pd.get_dummies(data[['D_63_last', 'D_68_last', 'D_114_last', 'D_116_la
 data = data.drop(columns = ['D_63_last', 'D_68_last', 'D_114_last', 'D_116_last', 'D_117_last', 'D_120_last', 'D_126_last'], axis = 1)
 data = pd.concat([data, dummies], axis = 1)
 
-
-
 ## Defining input and target variables
 X = data.drop(columns = ['customer_ID', 'target'], axis = 1)
 Y = data['target']
@@ -62,3 +60,4 @@ for i in range(0, 10):
     
 ## Putting results as data-frame
 features_to_select = pd.DataFrame(features_to_select)
+features_to_select.to_csv('Delinquency_Features_to_select.csv', index = False)
