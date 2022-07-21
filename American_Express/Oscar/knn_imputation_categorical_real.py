@@ -58,7 +58,7 @@ for i in range(0, len(target)):
     knn_md = KNeighborsClassifier(n_neighbors = 3).fit(X_full, Y_full)
     
     ## Predicting 
-    data[np.isnan(Y)][target[i]] = knn_md.predict(X_to_be_filled)
+    data.loc[np.isnan(Y), target[i]] = knn_md.predict(X_to_be_filled)
     
 ## Storing results in s3
 train_deli_cat_last.to_csv('Delinquency_Features_Filled.csv', index = False)
