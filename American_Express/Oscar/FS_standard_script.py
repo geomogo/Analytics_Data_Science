@@ -43,7 +43,7 @@ X = data.drop(columns = ['customer_ID', 'target'], axis = 1)
 Y = data['target']
 
 ## Spliting the data into train, validation, and test
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.2, stratify = Y)
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.8, stratify = Y)
 
 ## Defining the customized scoring function 
 amex_function = make_scorer(amex_metric, greater_is_better = True, needs_proba = True)
