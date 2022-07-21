@@ -36,10 +36,10 @@ data_right = pd.read_csv(file_content_stream_2)
 data = pd.merge(data_left, data_right, on = 'customer_ID', how = 'left')
 
 ## Defining target features
-target = ['D_66_last', 'D_68_last', 'D_114_last', 'D_116_last', 'D_117_last', 'D_120_last']
+target = ['D_68_last', 'D_114_last', 'D_116_last', 'D_117_last', 'D_120_last']
 
 ## Defining input variables 
-X = data.drop(columns = ['customer_ID', 'target', 'D_63_last', 'D_64_last', 'D_66_last', 'D_68_last', 'D_114_last', 'D_116_last', 'D_117_last', 'D_120_last', 'D_120_last'], axis = 1)
+X = data.drop(columns = ['customer_ID', 'target', 'D_63_last', 'D_64_last', 'D_66_last', 'D_68_last', 'D_114_last', 'D_116_last', 'D_117_last', 'D_120_last', 'D_126_last'], axis = 1)
 
 scaler = MinMaxScaler()
 X = pd.DataFrame(scaler.fit_transform(X))
