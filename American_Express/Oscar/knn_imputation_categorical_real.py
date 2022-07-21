@@ -55,7 +55,7 @@ for i in range(0, len(target)):
     X_to_be_filled = X[np.isnan(Y)]
     
     ## Defining the model
-    knn_md = KNeighborsClassifier(n_neighbors = 3).fit(X_full, Y_full)
+    knn_md = KNeighborsClassifier(n_neighbors = 5).fit(X_full, Y_full)
     
     ## Predicting 
     data.loc[np.isnan(Y), target[i]] = knn_md.predict(X_to_be_filled)
