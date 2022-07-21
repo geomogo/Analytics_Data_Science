@@ -34,6 +34,7 @@ data_right = pd.read_csv(file_content_stream_2)
 
 ## Merging datasets
 data = pd.merge(data_left, data_right, on = 'customer_ID', how = 'left')
+data = data.drop(columns = ['D_66_last'], axis = 1)
 
 ## Defining target features
 target = ['D_68_last', 'D_114_last', 'D_116_last', 'D_117_last', 'D_120_last']
