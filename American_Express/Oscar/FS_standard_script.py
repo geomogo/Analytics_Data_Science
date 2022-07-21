@@ -43,7 +43,7 @@ X = data.drop(columns = ['customer_ID', 'target'], axis = 1)
 Y = data['target']
 
 ## Spliting the data into train, validation, and test
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.95, stratify = Y)
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.97, stratify = Y)
 
 ## Defining the customized scoring function 
 amex_function = make_scorer(amex_metric, greater_is_better = True, needs_proba = True)
@@ -54,7 +54,7 @@ features_to_select = list()
 for i in tqdm(range(0, 10)):
     
     ## Running RFE with Random forest
-    RF_auto_feature = RFECV(estimator = RandomForestClassifier(n_estimators = 100, max_depth = 3), step = 1, scoring = amex_function, min_features_to_select = 10, cv = 3, n_jobs = -1).fit(X_train, Y_train)
+    RF_auto_feature = RFECV(estimator = RandomForestClassifier(n_estimators = 50, max_depth = 3), step = 1, scoring = amex_function, min_features_to_select = 10, cv = 3, n_jobs = -1).fit(X_train, Y_train)
 
     ## Appending results 
     features_to_select.append(X_train.columns[RF_auto_feature.support_])
