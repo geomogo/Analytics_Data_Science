@@ -40,14 +40,14 @@ data = data.drop(columns = ['D_66_last'], axis = 1)
 target = ['D_68_last', 'D_114_last', 'D_116_last', 'D_117_last', 'D_120_last']
 
 ## Defining input variables 
-X = data.drop(columns = ['customer_ID', 'target', 'D_63_last', 'D_64_last', 'D_66_last', 'D_68_last', 'D_114_last', 'D_116_last', 'D_117_last', 'D_120_last', 'D_126_last'], axis = 1)
+X = data.drop(columns = ['customer_ID', 'target', 'D_63_last', 'D_64_last', 'D_68_last', 'D_114_last', 'D_116_last', 'D_117_last', 'D_120_last', 'D_126_last'], axis = 1)
 
 scaler = MinMaxScaler()
 X = pd.DataFrame(scaler.fit_transform(X))
 
 ## Looping to backfill missing values
 for i in range(0, len(target)):
-    
+    print(target[i])
     ## Defining the target variable
     Y = data[target[i]]
     Y_full = Y[~np.isnan(Y)]
