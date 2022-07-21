@@ -61,8 +61,8 @@ for i in range(0, len(target)):
     ## Predicting 
     data.loc[np.isnan(Y), target[i]] = knn_md.predict(X_to_be_filled)
     
-## Storing results in s3
-train_deli_cat_last.to_csv('Delinquency_Features_Filled.csv', index = False)
+## Uploading results in s3
+data.to_csv('Delinquency_Features_Filled.csv', index = False)
 
 sess.upload_data(path = 'Delinquency_Features_Filled.csv', 
                  bucket = bucket_name,
