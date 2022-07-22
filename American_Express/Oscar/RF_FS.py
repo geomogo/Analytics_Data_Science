@@ -86,5 +86,13 @@ data = pd.concat([data, dummies], axis = 1)
 X = data[features_rank['feature'].tolist()]
 Y = data['target']
 
-## Spliting the data into train, validation, and test
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.20, stratify = Y)
+
+for i in range(0, 1):
+    
+    ## Spliting the data into train, validation, and test
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.20, stratify = Y)
+    
+    ## Building the model
+    RF_md = RandomForestClassifier(n_estimators = 100, max_depth = 3).fit(X_train, Y_train)
+    
+    print(RF_md.feature_importances_)
