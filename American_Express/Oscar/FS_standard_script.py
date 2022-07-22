@@ -43,7 +43,7 @@ X = data.drop(columns = ['customer_ID', 'target'], axis = 1)
 Y = data['target']
 
 ## Spliting the data into train, validation, and test
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.50, stratify = Y)
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.40, stratify = Y)
 
 ## Defining the customized scoring function 
 amex_function = make_scorer(amex_metric, greater_is_better = True, needs_proba = True)
@@ -61,4 +61,4 @@ for i in tqdm(range(0, 10)):
     
 ## Putting results as data-frame
 features_to_select = pd.DataFrame(features_to_select)
-features_to_select.to_csv('Delinquency_Features_to_select_6.csv', index = False)
+features_to_select.to_csv('Delinquency_Features_to_select_7.csv', index = False)
