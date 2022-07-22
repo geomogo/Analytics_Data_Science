@@ -1,6 +1,7 @@
 import boto3
 import pandas as pd; pd.set_option('display.max_columns', 500)
 import numpy as np
+from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 
@@ -86,8 +87,10 @@ data = pd.concat([data, dummies], axis = 1)
 X = data[features_rank['feature'].tolist()]
 Y = data['target']
 
+## Defining list to store results
+results = []
 
-for i in range(0, 1):
+for i in tqdm(range(0, 2)):
     
     ## Spliting the data into train, validation, and test
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.20, stratify = Y)
@@ -95,4 +98,10 @@ for i in range(0, 1):
     ## Building the model
     RF_md = RandomForestClassifier(n_estimators = 100, max_depth = 3).fit(X_train, Y_train)
     
-    print(RF_md.feature_importances_)
+    results.append(RF_md.feature_importances_)
+    
+## Defining data-frame to be stored
+results = pd.DataFrame(results)
+results = results.apply(np.mean, axis = 0)
+feature_imp = pd.DataFrame({'feature': features_rank['feature'].tolist(), 'imp': results})
+feature_imp.to_csv('RF_Importance.csv', index = False)
