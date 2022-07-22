@@ -90,7 +90,7 @@ Y = data['target']
 ## Defining list to store results
 results = []
 
-for i in tqdm(range(0, 2)):
+for i in tqdm(range(0, 10)):
     
     ## Spliting the data into train, validation, and test
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.20, stratify = Y)
