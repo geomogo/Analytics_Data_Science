@@ -54,7 +54,7 @@ features_to_select = list()
 for i in tqdm(range(0, 10)):
     
     ## Running RFE with Random forest
-    RF_auto_feature = RFECV(estimator = RandomForestClassifier(n_estimators = 50, max_depth = 3), step = 20, scoring = amex_function, min_features_to_select = 10, cv = 3, n_jobs = -1).fit(X_train, Y_train)
+    RF_auto_feature = RFECV(estimator = RandomForestClassifier(n_estimators = 50, max_depth = 3), step = 30, scoring = amex_function, min_features_to_select = 10, cv = 3, n_jobs = -1).fit(X_train, Y_train)
 
     ## Appending results 
     features_to_select.append(X_train.columns[RF_auto_feature.support_])
