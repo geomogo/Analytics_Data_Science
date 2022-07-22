@@ -104,4 +104,5 @@ for i in tqdm(range(0, 10)):
 results = pd.DataFrame(results)
 results = results.apply(np.mean, axis = 0)
 feature_imp = pd.DataFrame({'feature': features_rank['feature'].tolist(), 'imp': results})
+feature_imp = feature_imp.sort_values(by = 'imp', ascending = False)
 feature_imp.to_csv('RF_Importance.csv', index = False)
