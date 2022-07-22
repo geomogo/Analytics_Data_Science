@@ -6,7 +6,7 @@ import numpy as np
 from tqdm import tqdm
 import miceforest as mf
 from sklearn.feature_selection import RFECV
-from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import make_scorer
 from Amex_Metric import amex_metric
@@ -44,6 +44,12 @@ print('-- Training data-frame imputation complete -- \n')
 
 ## -------------------------------------------
 
+## Subsetting the data for the 24 most important variables
+train_impute = train_impute[['customer_ID', 'P_2_mean', 'S_3_median', 'S_25_iqr', 'S_25_data_range', 'S_25_mad', 'S_25_std', 'S_25_sum', 'S_25_mean', 'S_13_sum', 'S_13_mean', 'S_8_sum', 'P_2_median', 'S_8_mean', 'S_5_correlation', 'S_3_sum', 'S_8_median', 'P_2_sum', 'P_2_data_range', 'P_3_mean', 'P_3_sum', 'P_2_correlation', 'P_4_mean', 'P_3_median', 'P_4_sum', 'target']]
+
+## Sanity check
+print('-- Data subsetting complete -- \n')
+
 ## Defining the input and target variables
 X = train_impute.drop(columns = ['customer_ID', 'target'])
 Y = train_impute['target']
@@ -61,7 +67,7 @@ features_to_select = list()
 for i in tqdm(range(0, 10)):
     
     ## Runing RFECV with Random Forest as a base algorithm
-    rf_rfecv = RFECV(estimator = RandomForestClassifier(n_estimators = 100, max_depth = 3), step = 1, scoring = amex_function, min_features_to_select = 3, cv = 3).fit(X_train, Y_train)
+    rf_rfecv = RFECV(estimator = RandomForestClassifier(n_estimators = 100, max_depth = 3), step = 2, scoring = amex_function, min_features_to_select = 2, cv = 3).fit(X_train, Y_train)
     
     ## Appending results 
     features_to_select.append(rf_rfecv.support_)
@@ -74,7 +80,7 @@ features_to_select = 100 * features_to_select.apply(np.sum, axis = 0) / features
 output = pd.DataFrame(features_to_select).reset_index(drop = False)
 output.columns = ['Variable', 'Selected']
 output = output.sort_values(by = 'Selected', ascending = False).reset_index(drop = True)
-output.to_csv('feature_selection_results.csv', index = False)
+output.to_csv('feature_selection_results_pt2.csv', index = False)
 
 ## Sanity check
 print('-- Completed --')
