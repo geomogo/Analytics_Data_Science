@@ -1,0 +1,50 @@
+import pandas as pd; pd.set_option('display.max_columns', 500)
+import numpy as np
+
+def pandas_to_list(data):
+    
+    results = []
+    n = data.shape[0]
+    
+    for i in range(0, n):
+        
+        a = data.loc[0].values.tolist()
+        a = [x for x in a if str(x) != 'nan']
+        results.append(a)
+    
+    results = [i for ii in results for i in ii]
+    return results
+
+## Reading data-files
+data = pd.read_csv('Delinquency_Features_to_select.csv')
+data1 = pd.read_csv('Delinquency_Features_to_select_1.csv')
+data2 = pd.read_csv('Delinquency_Features_to_select_2.csv')
+data3 = pd.read_csv('Delinquency_Features_to_select_3.csv')
+data4 = pd.read_csv('Delinquency_Features_to_select_4.csv')
+data5 = pd.read_csv('Delinquency_Features_to_select_5.csv')
+data6 = pd.read_csv('Delinquency_Features_to_select_6.csv')
+data7 = pd.read_csv('Delinquency_Features_to_select_7.csv')
+data8 = pd.read_csv('Delinquency_Features_to_select_8.csv')
+data9 = pd.read_csv('Delinquency_Features_to_select_9.csv')
+
+x = pandas_to_list(data)
+x1 = pandas_to_list(data1)
+x2 = pandas_to_list(data2)
+x3 = pandas_to_list(data3)
+x4 = pandas_to_list(data4)
+x5 = pandas_to_list(data5)
+x6 = pandas_to_list(data6)
+x7 = pandas_to_list(data7)
+x8 = pandas_to_list(data8)
+x9 = pandas_to_list(data9)
+
+## Combining all list
+a = x + x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+
+## Converting to data-frame
+features_rank = pd.DataFrame(a)
+feature_freq = 100*features_rank[0].value_counts().sort_values(ascending = False) / features_rank.shape[0]
+feature_names = features_rank[0].value_counts().sort_values(ascending = False).index.tolist()
+features_rank = pd.DataFrame({'feature': feature_names, 'freq': feature_freq}).reset_index(drop = True)
+features_rank = features_rank[features_rank['freq'] > 0.22]
+
