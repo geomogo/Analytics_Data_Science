@@ -24,7 +24,7 @@ dtype_dict = {'customer_ID': 'object', 'D_39': 'float16', 'D_41': 'float16',
               'D_78': 'float16', 'D_84': 'float16'}
 
 ## Reading data-files
-test = pd.read_csv(file_content_stream, use_cols = ['customer_ID', 'D_39', 'D_41', 'D_44', 'D_52', 'D_58', 'D_65', 'D_74','D_75', 'D_78', 'D_84'], dtype = dtype_dict)
+test = pd.read_csv(file_content_stream, usecols = ['customer_ID', 'D_39', 'D_41', 'D_44', 'D_52', 'D_58', 'D_65', 'D_74','D_75', 'D_78', 'D_84'], dtype = dtype_dict)
 
 ## Computing basic summary-stats features
 def summary_stats(x):
