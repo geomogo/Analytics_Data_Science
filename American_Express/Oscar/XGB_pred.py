@@ -84,6 +84,11 @@ X_test_real = test.drop(columns = ['customer_ID'], axis = 1)
 X_test_real_pred = XGB_md.predict_proba(X_test_real)[:, 1]
 
 data_out = pd.DataFrame({'customer_ID': test['custorm_ID'], 'prediction': X_test_real_pred})
+
+## Uploading results in s3
 data_out.to_csv('submission.csv', index = False)
 
+sess.upload_data(path = 'submission.csv', 
+                 bucket = bucket_name,
+                 key_prefix = 'AmericanExpress')
 
