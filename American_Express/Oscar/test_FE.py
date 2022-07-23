@@ -14,4 +14,5 @@ file_object = bucket_object.get()
 file_content_stream = file_object.get('Body')
 
 ## Reading data-files
-data = pd.read_csv(file_content_stream)
+data = pd.read_csv(file_content_stream, use_cols = ['D_39', 'D_41', 'D_44', 'D_52', 'D_58', 'D_65', 'D_74','D_75', 'D_78', 'D_84'])
+
