@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 import optuna
-from xgboost import XGBRegressor
+from xgboost import XGBClassifier
 from Amex_Metric import amex_metric
 
 import os
@@ -16,20 +16,26 @@ bucket_name = 'analytics-data-science-competitions'
 bucket = s3.Bucket(bucket_name)
 
 ## Defining files names
-file_key = 'AmericanExpress/Delinquency_Features_Filled.csv'
+file_key_1 = 'AmericanExpress/Delinquency_Features_Filled.csv'
+file_key_2 = 'AmericanExpress/test_delinquency_features.csv'
 
-bucket_object = bucket.Object(file_key)
-file_object = bucket_object.get()
-file_content_stream = file_object.get('Body')
+bucket_object_1 = bucket_1.Object(file_key_1)
+file_object_1 = bucket_object_1.get()
+file_content_stream_1 = file_object_1.get('Body')
+
+bucket_object_2 = bucket_2.Object(file_key_2)
+file_object_2 = bucket_object_2.get()
+file_content_stream_2 = file_object_2.get('Body')
 
 ## Reading data-files
-data = pd.read_csv(file_content_stream, usecols = ['D_44_median', 'D_44_mean', 'D_44_max', 
-                                                   'D_75_max', 'D_75_mean', 'D_78_max', 
-                                                   'D_78_mean', 'D_78_range', 'D_44_std', 
-                                                   'D_75_median', 'D_78_std', 'D_74_mean',
-                                                   'D_44_range', 'D_44_min', 'D_84_mean', 
-                                                   'D_74_max', 'D_41_range', 'D_75_min', 
-                                                   'D_44_IQR', 'D_84_range', 'target'])
+data = pd.read_csv(file_content_stream_1, usecols = ['D_44_median', 'D_44_mean', 'D_44_max', 
+                                                     'D_75_max', 'D_75_mean', 'D_78_max', 
+                                                     'D_78_mean', 'D_78_range', 'D_44_std', 
+                                                     'D_75_median', 'D_78_std', 'D_74_mean',
+                                                     'D_44_range', 'D_44_min', 'D_84_mean', 
+                                                     'D_74_max', 'D_41_range', 'D_75_min', 
+                                                     'D_44_IQR', 'D_84_range', 'target'])
+test = pd.read_csv(file_content_stream_1)
 
 ## Defining input and target 
 X = data.drop(columns = 'target', axis = 1)
@@ -46,7 +52,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.20, stra
 def objective_amex(trial):
     
     ## Defining the XGB hyper-parameter grid
-    XGB_param_grid = {'n_estimators': trial.suggest_int('n_estimators', 100, 700, 100),
+    XGB_param_grid = {'n_estimators': trial.suggest_int('n_estimators', 100, 500, 100),
                      'learning_rate': trial.suggest_float('learning_rate', 0.001, 0.951, step = 0.05),
                      'min_split_loss': trial.suggest_int('min_split_loss', 0, 5, 1),
                      'max_depth' : trial.suggest_int('max_depth', 3, 7, 1),
@@ -55,17 +61,23 @@ def objective_amex(trial):
                      'colsample_bytree' : trial.suggest_float('colsample_bytree', 0.6, 1, step = 0.1)}
     
     ## Building the XGBRegressor model
-    model = XGBRegressor(**XGB_param_grid, n_jobs = -1).fit(X_train, Y_train)
+    model = XGBClassifier(**XGB_param_grid, n_jobs = -1).fit(X_train, Y_train)
         
     ## Predicting on the test data-frame
-    XGB_pred_test = model.predict(X_test)
+    XGB_pred_test = model.predict_proba(X_test)[:, 1]
     
     ## Evaluating model performance on the test set
-    abs_diff = -np.mean(abs(XGB_pred_test - Y_test))
+    amex_score = amex_metric(Y_test, XGB_pred_test)
     
     ## Returning absolute difference of model test predictions
-    return abs_diff
+    return amex_score
 
 ## Calling Optuna objective function
 study = optuna.create_study(direction = 'maximize')
 study.optimize(objective_amex, n_trials = 100)
+
+## Extracting best model 
+best_params = study.best_trial.params
+XGB_md = XGBClassifier(**best_params, n_jobs = -1).fit(X_train, Y_train)
+
+
