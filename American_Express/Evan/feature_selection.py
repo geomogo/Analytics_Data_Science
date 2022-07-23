@@ -45,10 +45,10 @@ print('-- Training data-frame imputation complete -- \n')
 ## -------------------------------------------
 
 ## Subsetting the data for the 24 most important variables
-train_impute = train_impute[['customer_ID', 'P_2_mean', 'S_3_median', 'S_25_iqr', 'S_25_data_range', 'S_25_mad', 'S_25_std', 'S_25_sum', 'S_25_mean', 'S_13_sum', 'S_13_mean', 'S_8_sum', 'P_2_median', 'S_8_mean', 'S_5_correlation', 'S_3_sum', 'S_8_median', 'P_2_sum', 'P_2_data_range', 'P_3_mean', 'P_3_sum', 'P_2_correlation', 'P_4_mean', 'P_3_median', 'P_4_sum', 'target']]
+train_impute = train_impute[['customer_ID', 'P_2_mean', 'P_2_median', 'P_3_median', 'P_2_correlation', 'P_3_sum', 'P_3_mean', 'P_2_sum', 'S_3_median', 'S_8_mean', 'S_25_mean', 'S_25_sum', 'S_25_std', 'S_25_mad', 'S_25_data_range', 'S_25_iqr', 'target']]
 
 ## Sanity check
-print('-- Data subsetting complete -- \n')
+print('-- Data subsetting (Pt. 2) complete -- \n')
 
 ## Defining the input and target variables
 X = train_impute.drop(columns = ['customer_ID', 'target'])
@@ -63,11 +63,11 @@ amex_function = make_scorer(amex_metric, greater_is_better = True, needs_proba =
 ## Defining empty list to store results
 features_to_select = list()
 
-## Repeating RFECV steps 10 times:
-for i in tqdm(range(0, 10)):
+## Repeating RFECV steps 25 times:
+for i in tqdm(range(0, 25)):
     
     ## Runing RFECV with Random Forest as a base algorithm
-    rf_rfecv = RFECV(estimator = RandomForestClassifier(n_estimators = 100, max_depth = 3), step = 2, scoring = amex_function, min_features_to_select = 2, cv = 3).fit(X_train, Y_train)
+    rf_rfecv = RFECV(estimator = RandomForestClassifier(n_estimators = 300, max_depth = 3), step = 3, scoring = amex_function, min_features_to_select = 3, cv = 3).fit(X_train, Y_train)
     
     ## Appending results 
     features_to_select.append(rf_rfecv.support_)
