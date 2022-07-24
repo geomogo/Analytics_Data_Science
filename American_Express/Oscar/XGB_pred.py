@@ -2,6 +2,7 @@ import boto3
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 import optuna
 from xgboost import XGBClassifier
 from Amex_Metric import amex_metric
@@ -63,10 +64,12 @@ def objective_amex(trial):
     model = XGBClassifier(**XGB_param_grid, n_jobs = -1).fit(X_train, Y_train)
         
     ## Predicting on the test data-frame
-    XGB_pred_test = model.predict_proba(X_test)[:, 1]
+#     XGB_pred_test = model.predict_proba(X_test)[:, 1]
+    XGB_pred_test = model.predict(X_test)
     
     ## Evaluating model performance on the test set
-    amex_score = amex_metric(Y_test, XGB_pred_test)
+#     amex_score = amex_metric(Y_test, XGB_pred_test)
+    amex_score = accuracy_score(Y_test, XGB_pred_test)
     
     ## Returning absolute difference of model test predictions
     return amex_score
