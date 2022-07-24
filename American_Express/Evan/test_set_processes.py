@@ -25,25 +25,14 @@ dtype_dict = {'customer_ID': "object", 'S_2': "object", 'P_2': 'float16', 'D_39'
 ## Reading the data
 test = pd.read_csv(file_content_stream, dtype = dtype_dict)
 
+## Sanity check
+print('-- Data Read --')
+
 ## Subsetting the data for Payment and Spend variables
 test = test[['customer_ID', 'P_2', 'P_3', 'P_4', 'S_3', 'S_5', 'S_6', 'S_7', 'S_8', 'S_9', 'S_11', 'S_12', 'S_13', 'S_15', 'S_16', 'S_17', 
                'S_18', 'S_19', 'S_20', 'S_22', 'S_23', 'S_24', 'S_25', 'S_26', 'S_27']]
 
 print(test.columns)
-
-## -------------------------------------------
-
-## Computing "count" variables of interest
-count_vars_test = train.groupby('customer_ID').agg({'P_3':['count'], 'S_7':['count'], 'S_22': ['count']}).reset_index(drop = False)
-
-## Editing the variable names in the data-frame
-count_vars_train.columns = ['customer_ID', 'P_3_count', 'S_7_count', 'S_22_count']
-
-# Creating "binary count" variables of interest
-count_vars_train['P_3_count_binary'] = np.where(count_vars_train["P_3_count"] > 0, 1, 0)
-
-## Sanity check
-print('-- Testing counts data-frame complete -- \n')
 
 ## -------------------------------------------
 
@@ -68,29 +57,30 @@ print('-- Testing data-frame imputation complete -- \n')
 
 ## Creating other aggregated features of interest
 
+## Sanity check
+print('-- Testing data-frame aggregations starting -- \n')
+
 ## Creating a series of aggregation functions
 def data_range(x):
     return x.max() - x.min()
 def iqr(x):
     return np.percentile(x, 75) - np.percentile(x, 25)
-def avg_pct_change(x):
-    return pd.Series(x.to_list()).pct_change()[1:12].mean()
 def correlation(x):
     return pd.Series(x.values).corr(other = pd.Series(x.index), method = 'pearson')
 
 ## Creating new Payment features with the cleaned test data-frame
-payment_vars_test = test_impute.groupby('customer_ID').agg({'P_2':['mean', correlation], 'P_4':['median']}).reset_index(drop = False)
+payment_vars_test = test_impute.groupby('customer_ID').agg({'P_2':['mean', 'median', 'sum', correlation], 'P_3':['mean']}).reset_index(drop = False)
 
 ## Renaming variable names
-payment_vars_test.columns = ['customer_ID', 'P_2_mean', 'P_4_median']
+payment_vars_test.columns = ['customer_ID', 'P_2_mean', 'P_2_median', 'P_2_sum', 'P_2_correlation', 'P_3_mean']
 
 ## Creating new Spend features with the cleaned test data-frame
-spend_vars_test = test_impute.groupby('customer_ID').agg({'S_3':['median', 'sum'], 'S_25':['mean', correlation]}).reset_index(drop = False)
+spend_vars_test = test_impute.groupby('customer_ID').agg({'S_25':['mean', 'sum', 'std', 'mad', data_range, iqr]}).reset_index(drop = False)
 
-spend_vars_test.columns = ['customer_ID', 'S_3_median', 'S_3_sum', 'S_25_mean', 'S_25_correlation']
+spend_vars_test.columns = ['customer_ID', 'S_25_mean', 'S_25_sum', 'S_25_std', 'S_25_mad', 'S_25_data_range', 'S_25_iqr']
 
 ## Sanity check
-print('-- Testing aggregations data-frame complete -- \n')
+print('-- Testing aggregations complete -- \n')
 
 ## -------------------------------------------
 
@@ -99,13 +89,10 @@ print('-- Testing aggregations data-frame complete -- \n')
 ## Joining the Payment and Spend train data-frames
 testing = payment_vars_test.merge(spend_vars_test, how = 'left', on = 'customer_ID')
 
-## Joining the Training and Count data-frames
-testing = testing.merge(count_vars_test, how = 'left', on = 'customer_ID')
-
 ## -------------------------------------------
 
 ## Exporting the resulting training data-frame to a csv file
-training.to_csv('payment_spend_test_final.csv', index = False)
+testing.to_csv('amex_test_payment_spend_final.csv', index = False)
 
 ## Sanity check
 print('-- Testing data-frame complete -- \n')
