@@ -35,7 +35,7 @@ data = pd.read_csv(file_content_stream_1, usecols = ['D_44_median', 'D_44_mean',
                                                      'D_44_range', 'D_44_min', 'D_84_mean', 
                                                      'D_74_max', 'D_41_range', 'D_75_min', 
                                                      'D_44_IQR', 'D_84_range', 'target'])
-test = pd.read_csv(file_content_stream_1)
+test = pd.read_csv(file_content_stream_2)
 
 ## Defining input and target 
 X = data.drop(columns = 'target', axis = 1)
