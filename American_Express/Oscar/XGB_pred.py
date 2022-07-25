@@ -29,14 +29,17 @@ file_object_2 = bucket_object_2.get()
 file_content_stream_2 = file_object_2.get('Body')
 
 ## Reading data-files
-data = pd.read_csv(file_content_stream_1, usecols = ['D_44_median', 'D_44_mean', 'D_44_max', 
-                                                     'D_75_max', 'D_75_mean', 'D_78_max', 
-                                                     'D_78_mean', 'D_78_range', 'D_44_std', 
-                                                     'D_75_median', 'D_78_std', 'D_74_mean',
-                                                     'D_44_range', 'D_44_min', 'D_84_mean', 
-                                                     'D_74_max', 'D_41_range', 'D_75_min', 
-                                                     'D_44_IQR', 'D_84_range', 'target'])
-test = pd.read_csv(file_content_stream_2)
+oscar_data_train = pd.read_csv(file_content_stream_1, 
+                               usecols = ['D_44_median', 'D_44_mean', 'D_44_max', 
+                                          'D_75_max', 'D_75_mean', 'D_78_max', 
+                                          'D_78_mean', 'D_78_range', 'D_44_std', 
+                                          'D_75_median', 'D_78_std', 'D_74_mean',
+                                          'D_44_range', 'D_44_min', 'D_84_mean', 
+                                          'D_74_max', 'D_41_range', 'D_75_min', 
+                                          'D_44_IQR', 'D_84_range', 'target',
+                                          'customer_ID'])
+
+oscar_data_test = pd.read_csv(file_content_stream_2)
 
 ## Defining input and target 
 X = data.drop(columns = 'target', axis = 1)
