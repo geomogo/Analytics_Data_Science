@@ -2,7 +2,7 @@ import boto3
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
-import lightgbm as lgb
+from lightgbm import LGBMClassifier
 import optuna
 from Amex_Metric import amex_metric
 
@@ -76,7 +76,6 @@ Y = oscar_data_train['target']
 
 ## Spliting the data into train, validation, and test
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.20, stratify = Y)
-dtrain = lgb.Dataset(X_train, label = Y_train)
 
 ############
 ## Optuna ##
@@ -86,21 +85,27 @@ def objective_amex(trial):
     
     ## Defining the XGB hyper-parameter grid
     LGB_param_grid = {'objective': 'binary',
-                      'metric': 'binary_logloss',
-                      'lambda_l1': trial.suggest_loguniform('lambda_l1', 1e-8, 10.0),
-                      'lambda_l2': trial.suggest_loguniform('lambda_l2', 1e-8, 10.0),
-                      'num_leaves': trial.suggest_int('num_leaves', 2, 256),
-                      'feature_fraction': trial.suggest_uniform('feature_fraction', 0.4, 1.0),
-                      'bagging_fraction': trial.suggest_uniform('bagging_fraction', 0.4, 1.0),
-                      'bagging_freq': trial.suggest_int('bagging_freq', 1, 7),
-                      'min_child_samples': trial.suggest_int('min_child_samples', 5, 100)
+                      'n_estimators': trial.suggest_int('n_estimators', 100, 500, 100),
+                      'learning_rate': trial.suggest_float('learning_rate', 0.01, 0.3),
+                      'num_leaves': trial.suggest_int('num_leaves', 20, 30, step = 1),
+                      'max_depth': trial.suggest_int('max_depth', 3, 12),
+                      'min_data_in_leaf': trial.suggest_int('min_data_in_leaf', 10, 20, step = 1),
+                      'lambda_l1': trial.suggest_int('lambda_l1', 0, 100, step = 5),
+                      'lambda_l2': trial.suggest_int('lambda_l2', 0, 100, step = 5),
+                      'min_gain_to_split': trial.suggest_float('min_gain_to_split', 0, 15),
+                      'bagging_fraction': trial.suggest_float(
+                      'bagging_fraction', 0.2, 0.95, step = 0.1),
+                      'bagging_freq': trial.suggest_categorical('bagging_freq', [1]),
+                      'feature_fraction': trial.suggest_float(
+                      'feature_fraction', 0.2, 0.95, step = 0.1)
                      }
+                     
     
     ## Building the LightGBM model
-    model = lgb.train(LGB_param_grid, dtrain)
+    model = LGBMClassifier(**LGB_param_grid, n_jobs = -1).fit(X_train, Y_train)
         
     ## Predicting on the test data-frame
-    LGB_pred_test = model.predict(X_test)[:, 1]
+    LGB_pred_test = model.predict_proba(X_test)[:, 1]
     
     ## Evaluating model performance on the test set
     amex_score = amex_metric(Y_test, LGB_pred_test)
@@ -114,7 +119,7 @@ study.optimize(objective_amex, n_trials = 10)
 
 ## Extracting best model 
 best_params = study.best_trial.params
-LGB_md = lgb(best_params, dtrain)
+LGB_md = LGBMClassifier(**best_params, n_jobs = -1).fit(X_train, Y_train)
 
 ## Predicting on test 
 # X_test_real = data_test.drop(columns = ['customer_ID'], axis = 1)
