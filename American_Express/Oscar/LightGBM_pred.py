@@ -4,7 +4,6 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import lightgbm as lgb
 import optuna
-# from xgboost import XGBClassifier
 from Amex_Metric import amex_metric
 
 import os
@@ -98,7 +97,7 @@ def objective_amex(trial):
                      }
     
     ## Building the LightGBM model
-    model = lgb.train(param, dtrain)
+    model = lgb.train(LGB_param_grid, dtrain)
         
     ## Predicting on the test data-frame
     LGB_pred_test = model.predict_proba(X_test)[:, 1]
