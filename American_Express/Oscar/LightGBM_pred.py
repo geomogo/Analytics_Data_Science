@@ -100,7 +100,7 @@ def objective_amex(trial):
     model = lgb.train(LGB_param_grid, dtrain)
         
     ## Predicting on the test data-frame
-    LGB_pred_test = model.predict_proba(X_test)[:, 1]
+    LGB_pred_test = model.predict(X_test)[:, 1]
     
     ## Evaluating model performance on the test set
     amex_score = amex_metric(Y_test, LGB_pred_test)
