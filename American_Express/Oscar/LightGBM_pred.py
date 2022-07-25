@@ -114,7 +114,7 @@ study.optimize(objective_amex, n_trials = 100)
 
 ## Extracting best model 
 best_params = study.best_trial.params
-LGB_md = lgb(best_param, dtrain)
+LGB_md = lgb(best_params, dtrain)
 
 ## Predicting on test 
 # X_test_real = data_test.drop(columns = ['customer_ID'], axis = 1)
