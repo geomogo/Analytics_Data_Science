@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import lightgbm as lgb
 import optuna
-from xgboost import XGBClassifier
+# from xgboost import XGBClassifier
 from Amex_Metric import amex_metric
 
 import os
