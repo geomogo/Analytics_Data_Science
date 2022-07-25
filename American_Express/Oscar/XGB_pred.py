@@ -51,13 +51,18 @@ oscar_data_train = pd.read_csv(file_content_stream_1,
 
 oscar_data_test = pd.read_csv(file_content_stream_2)
 
-evan_data_train = 
+evan_data_train = pd.read_csv(file_content_stream_3)
+evan_data_train = evan_data_train.drop(columns = ['target'], axis = 1)
 
-evan_data_test = 
+evan_data_test = pd.read_csv(file_content_stream_4)
+
+## Joining datasets
+data_train = pd.merge(oscar_data_train, evan_data_train, on = 'customer_ID', how = 'left')
+data_test = pd.merge(oscar_data_test, evan_data_test, on = 'customer_ID', how = 'left')
 
 ## Defining input and target 
-X = data.drop(columns = 'target', axis = 1)
-Y = data['target']
+X = data_train.drop(columns = 'target', axis = 1)
+Y = data_train['target']
 
 ## Spliting the data into train, validation, and test
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.20, stratify = Y)
@@ -81,12 +86,12 @@ def objective_amex(trial):
     model = XGBClassifier(**XGB_param_grid, n_jobs = -1).fit(X_train, Y_train)
         
     ## Predicting on the test data-frame
-#     XGB_pred_test = model.predict_proba(X_test)[:, 1]
-    XGB_pred_test = model.predict(X_test)
+    XGB_pred_test = model.predict_proba(X_test)[:, 1]
+#     XGB_pred_test = model.predict(X_test)
     
     ## Evaluating model performance on the test set
-#     amex_score = amex_metric(Y_test, XGB_pred_test)
-    amex_score = accuracy_score(Y_test, XGB_pred_test)
+    amex_score = amex_metric(Y_test, XGB_pred_test)
+#     amex_score = accuracy_score(Y_test, XGB_pred_test)
     
     ## Returning absolute difference of model test predictions
     return amex_score
@@ -100,10 +105,10 @@ best_params = study.best_trial.params
 XGB_md = XGBClassifier(**best_params, n_jobs = -1).fit(X_train, Y_train)
 
 ## Predicting on test 
-X_test_real = test.drop(columns = ['customer_ID'], axis = 1)
+X_test_real = data_test.drop(columns = ['customer_ID'], axis = 1)
 X_test_real_pred = XGB_md.predict_proba(X_test_real)[:, 1]
 
-data_out = pd.DataFrame({'customer_ID': test['customer_ID'], 'prediction': X_test_real_pred})
+data_out = pd.DataFrame({'customer_ID': data_test['customer_ID'], 'prediction': X_test_real_pred})
 
 ## Uploading results in s3
 data_out.to_csv('submission.csv', index = False)
