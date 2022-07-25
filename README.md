@@ -15,3 +15,6 @@ Ask a home buyer to describe their dream house, and they probably won't begin wi
 Whether out at a restaurant or buying tickets to a concert, modern life counts on the convenience of a credit card to make daily purchases. It saves us from carrying large amounts of cash and also can advance a full purchase that can be paid over time. How do card issuers know we’ll pay back what we charge? That’s a complex problem with many existing solutions—and even more potential improvements, to be explored in this competition.
 
 Credit default prediction is central to managing risk in a consumer lending business. Credit default prediction allows lenders to optimize lending decisions, which leads to a better customer experience and sound business economics. Current models exist to help manage risk. But it's possible to create better models that can outperform those currently in use. For more info see [here](https://www.kaggle.com/competitions/amex-default-prediction).
+
+## Predict Future Sales
+
