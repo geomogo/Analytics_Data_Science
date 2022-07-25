@@ -74,13 +74,16 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.20, stra
 def objective_amex(trial):
     
     ## Defining the XGB hyper-parameter grid
-    XGB_param_grid = {'n_estimators': trial.suggest_int('n_estimators', 100, 500, 100),
-                     'learning_rate': trial.suggest_float('learning_rate', 0.001, 0.951, step = 0.05),
-                     'min_split_loss': trial.suggest_int('min_split_loss', 0, 5, 1),
-                     'max_depth' : trial.suggest_int('max_depth', 3, 7, 1),
-                     'min_child_weight' : trial.suggest_int('min_child_weight', 5, 9, 1),
-                     'subsample' : trial.suggest_float('subsample', 0.6, 1, step = 0.1),
-                     'colsample_bytree' : trial.suggest_float('colsample_bytree', 0.6, 1, step = 0.1)}
+    LGB_param_grid = {'objective': 'binary',
+                      'metric': 'binary_logloss',
+                      'lambda_l1': trial.suggest_loguniform('lambda_l1', 1e-8, 10.0),
+                      'lambda_l2': trial.suggest_loguniform('lambda_l2', 1e-8, 10.0),
+                      'num_leaves': trial.suggest_int('num_leaves', 2, 256),
+                      'feature_fraction': trial.suggest_uniform('feature_fraction', 0.4, 1.0),
+                      'bagging_fraction': trial.suggest_uniform('bagging_fraction', 0.4, 1.0),
+                      'bagging_freq': trial.suggest_int('bagging_freq', 1, 7),
+                      'min_child_samples': trial.suggest_int('min_child_samples', 5, 100)
+                     }
     
     ## Building the XGBRegressor model
     model = XGBClassifier(**XGB_param_grid, n_jobs = -1).fit(X_train, Y_train)
