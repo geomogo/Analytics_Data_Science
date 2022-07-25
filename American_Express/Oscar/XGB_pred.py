@@ -19,6 +19,8 @@ bucket = s3.Bucket(bucket_name)
 ## Defining files names
 file_key_1 = 'AmericanExpress/Delinquency_Features_Filled.csv'
 file_key_2 = 'AmericanExpress/test_delinquency_features.csv'
+file_key_3 = 'AmericanExpress/amex_train_payment_spend_final.csv'
+file_key_4 = 'AmericanExpress/amex_test_payment_spend_final.csv'
 
 bucket_object_1 = bucket.Object(file_key_1)
 file_object_1 = bucket_object_1.get()
@@ -27,6 +29,14 @@ file_content_stream_1 = file_object_1.get('Body')
 bucket_object_2 = bucket.Object(file_key_2)
 file_object_2 = bucket_object_2.get()
 file_content_stream_2 = file_object_2.get('Body')
+
+bucket_object_3 = bucket.Object(file_key_3)
+file_object_3 = bucket_object_3.get()
+file_content_stream_3 = file_object_3.get('Body')
+
+bucket_object_4 = bucket.Object(file_key_4)
+file_object_4 = bucket_object_4.get()
+file_content_stream_4 = file_object_4.get('Body')
 
 ## Reading data-files
 oscar_data_train = pd.read_csv(file_content_stream_1, 
@@ -40,6 +50,10 @@ oscar_data_train = pd.read_csv(file_content_stream_1,
                                           'customer_ID'])
 
 oscar_data_test = pd.read_csv(file_content_stream_2)
+
+evan_data_train = 
+
+evan_data_test = 
 
 ## Defining input and target 
 X = data.drop(columns = 'target', axis = 1)
