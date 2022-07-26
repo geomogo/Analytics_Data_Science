@@ -115,6 +115,6 @@ data_out = data_out.reset_index(drop = True)
 # data_out = pd.merge(data_out, data_change, on = 'customer_ID', how = 'left')
 # data_out = pd.merge(data_out, data_change_first_last, on = 'customer_ID', how = 'left')
 
-# data_out.to_csv('Delinquency_Features.csv', index = False)
+data_out.to_csv('Risk_Features.csv', index = False)
 # delinquency_features.to_csv('Delinquency_Features.csv', index = False)
-risk_features.to_csv('Delinquency_Features.csv', index = False)
+# risk_features.to_csv('Delinquency_Features.csv', index = False)
