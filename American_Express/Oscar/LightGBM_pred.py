@@ -66,6 +66,8 @@ evan_data_test = pd.read_csv(file_content_stream_4)
 
 ## Joining datasets
 data_train = pd.merge(oscar_data_train, evan_data_train, on = 'customer_ID', how = 'left')
+data_train = data_train.drop(columns = ['customer_ID'], axis = 1)
+
 data_test = pd.merge(oscar_data_test, evan_data_test, on = 'customer_ID', how = 'left')
 
 ## Defining input and target 
