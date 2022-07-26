@@ -59,7 +59,7 @@ train = pd.merge(train, target, on = 'customer_ID', how = 'left')
 
 ## Selecting Deliquency variables
 my_variables = train.columns
-D_variables = [x for x in my_variables if x.startswith('D_')]
+D_variables = [x for x in my_variables if x.startswith('R_')]
 to_select = ['customer_ID', 'target']
 for i in range(2, (len(D_variables) + 2)):
     to_select.append(D_variables[i-2])
