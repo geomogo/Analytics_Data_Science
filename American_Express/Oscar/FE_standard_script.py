@@ -88,7 +88,7 @@ def summary_stats(x):
 #     d['R_1_avg_pct_change'] = np.where(x['R_1'].shape[0] == 1, 0, pd.Series(x['R_1'].to_list()).pct_change().mean())
     d['R_1_last_value'] = x['R_1'].iloc[-1]
     
-    return pd.Series(d, index = ['R_1_mean', 'R_1_median', 'R_1_min', 'R_1_max', 'R_1_range', 'R_1_IQR', 'R_1_std', 'R_1_pct_values_above_mean', 'R_1_avg_pct_change', 'R_1_last_value'])
+    return pd.Series(d, index = ['R_1_mean', 'R_1_median', 'R_1_min', 'R_1_max', 'R_1_range', 'R_1_IQR', 'R_1_std', 'R_1_pct_values_above_mean', 'R_1_last_value'])
 
 data_out = train.groupby('customer_ID').apply(summary_stats)
 data_out['customer_ID'] = data_out.index
