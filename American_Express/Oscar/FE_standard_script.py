@@ -49,70 +49,72 @@ dtype_dict = {'customer_ID': "object", 'S_2': "object", 'P_2': 'float16', 'D_39'
               'D_144': 'float16','D_145': 'float16'}
 
 ## Reading data-files
-train = pd.read_csv(file_content_stream_1, dtype = dtype_dict)
+train = pd.read_csv(file_content_stream_1, dtype = dtype_dict, usecols = ['customer_ID', 'R_1'])
 target = pd.read_csv(file_content_stream_2)
 
-delinquency_features = pd.read_csv('Delinquency_Features.csv')
+# delinquency_features = pd.read_csv('Delinquency_Features.csv')
 
 ## Appending target variables
 train = pd.merge(train, target, on = 'customer_ID', how = 'left')
 
-## Selecting Deliquency variables
-my_variables = train.columns
-D_variables = [x for x in my_variables if x.startswith('R_')]
-to_select = ['customer_ID', 'target']
-for i in range(2, (len(D_variables) + 2)):
-    to_select.append(D_variables[i-2])
+## Selecting Deliquency variables (and risk variables)
+# my_variables = train.columns
+# D_variables = [x for x in my_variables if x.startswith('R_')]
+# to_select = ['customer_ID', 'target']
+# for i in range(2, (len(D_variables) + 2)):
+#     to_select.append(D_variables[i-2])
 
-train_deli = train[to_select]
+# train_deli = train[to_select]
 
 ## Selecting unique customer_ID and target
-customer_target = train[['customer_ID', 'target']].drop_duplicates().reset_index(drop = True)
+# customer_target = train[['customer_ID', 'target']].drop_duplicates().reset_index(drop = True)
 
 ## Computing basic summary-stats features
 def summary_stats(x):
     
     d = {}
-    d['D_145_mean'] = x['D_145'].mean()
-    d['D_145_median'] = x['D_145'].median()
-    d['D_145_min'] = x['D_145'].min()
-    d['D_145_max'] = x['D_145'].max()
-    d['D_145_range'] = np.where(x['D_145'].shape[0] == 1, 0, x['D_145'].max() - x['D_145'].min())
-    d['D_145_IQR'] = np.where(x['D_145'].shape[0] == 1, 0,np.percentile(x['D_145'], 75) - np.percentile(x['D_145'], 25))
-    d['D_145_std'] = np.where(x['D_145'].shape[0] == 1, 0, np.std(x['D_145'], ddof = 1))
-#     d['D_145_negative_count'] = np.sum(x['D_145'] < 0) 
-#     d['D_145_positive_count'] = np.sum(x['D_145'] > 0)
-    d['D_145_pct_values_above_mean'] = np.where(x['D_145'].shape[0] == 1, 0, np.sum(x['D_145'] > x['D_145'].mean())/x['D_145'].shape[0])
-    d['D_145_avg_pct_change'] = np.where(x['D_145'].shape[0] == 1, 0, pd.Series(x['D_145'].to_list()).pct_change().mean())
+    d['R_1_mean'] = x['R_1'].mean()
+    d['R_1_median'] = x['R_1'].median()
+    d['R_1_min'] = x['R_1'].min()
+    d['R_1_max'] = x['R_1'].max()
+    d['R_1_range'] = np.where(x['R_1'].shape[0] == 1, 0, x['R_1'].max() - x['R_1'].min())
+    d['R_1_IQR'] = np.where(x['R_1'].shape[0] == 1, 0,np.percentile(x['R_1'], 75) - np.percentile(x['R_1'], 25))
+    d['R_1_std'] = np.where(x['R_1'].shape[0] == 1, 0, np.std(x['R_1'], ddof = 1))
+#     d['R_1_negative_count'] = np.sum(x['R_1'] < 0) 
+#     d['R_1_positive_count'] = np.sum(x['R_1'] > 0)
+    d['R_1_pct_values_above_mean'] = np.where(x['R_1'].shape[0] == 1, 0, np.sum(x['R_1'] > x['R_1'].mean())/x['R_1'].shape[0])
+#     d['R_1_avg_pct_change'] = np.where(x['R_1'].shape[0] == 1, 0, pd.Series(x['R_1'].to_list()).pct_change().mean())
+    d['R_1_last_value'] = x['R_1'].iloc[-1]
     
-    return pd.Series(d, index = ['D_145_mean', 'D_145_median', 'D_145_min', 'D_145_max', 'D_145_range', 'D_145_IQR', 'D_145_std', 'D_145_pct_values_above_mean', 'D_145_avg_pct_change'])
+    return pd.Series(d, index = ['R_1_mean', 'R_1_median', 'R_1_min', 'R_1_max', 'R_1_range', 'R_1_IQR', 'R_1_std', 'R_1_pct_values_above_mean', 'R_1_avg_pct_change', 'R_1_last_value'])
 
 data_out = train_deli.groupby('customer_ID').apply(summary_stats)
 data_out['customer_ID'] = data_out.index
 data_out = data_out.reset_index(drop = True)
 
 # ## Computing average change at the customer level
-# data_change = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_145'].apply(lambda x: pd.Series(x.to_list()).pct_change().mean()))
+# data_change = pd.DataFrame(train_deli.groupby(['customer_ID'])['R_1'].apply(lambda x: pd.Series(x.to_list()).pct_change().mean()))
 # data_change['customer_ID'] = data_change.index
 # data_change = data_change.reset_index(drop = True)
-# data_change.columns = ['D_145_change', 'customer_ID']
+# data_change.columns = ['R_1_change', 'customer_ID']
 
 # ## Computing change from first to last month
-# data_change_first_last = pd.DataFrame(train_deli.groupby(['customer_ID'])['D_145'].apply(lambda x: pd.Series(x.iloc[[0, -1]].to_list()).pct_change())).unstack()
-# data_change_first_last = data_change_first_last.drop(columns = ('D_145', 0), axis = 1)
+# data_change_first_last = pd.DataFrame(train_deli.groupby(['customer_ID'])['R_1'].apply(lambda x: pd.Series(x.iloc[[0, -1]].to_list()).pct_change())).unstack()
+# data_change_first_last = data_change_first_last.drop(columns = ('R_1', 0), axis = 1)
 # data_change_first_last['customer_ID'] = data_change_first_last.index
 # data_change_first_last = data_change_first_last.reset_index(drop = True)
-# data_change_first_last.columns = ['D_145_change_first_last', 'customer_ID']
+# data_change_first_last.columns = ['R_1_change_first_last', 'customer_ID']
 
 ## Joining the to datasets
-data_out = pd.merge(customer_target, data_out, on = 'customer_ID', how = 'left')
-data_out = data_out.drop(columns = ['target'], axis = 1)
+# data_out = pd.merge(customer_target, data_out, on = 'customer_ID', how = 'left')
+# data_out = data_out.drop(columns = ['target'], axis = 1)
 
-delinquency_features = pd.merge(delinquency_features, data_out, on = 'customer_ID', how = 'left')
+# delinquency_features = pd.merge(delinquency_features, data_out, on = 'customer_ID', how = 'left')
 
 # data_out = pd.merge(data_avg, data_median, on = 'customer_ID', how = 'left')
 # data_out = pd.merge(data_out, data_change, on = 'customer_ID', how = 'left')
 # data_out = pd.merge(data_out, data_change_first_last, on = 'customer_ID', how = 'left')
 
 # data_out.to_csv('Delinquency_Features.csv', index = False)
-delinquency_features.to_csv('Delinquency_Features.csv', index = False)
+# delinquency_features.to_csv('Delinquency_Features.csv', index = False)
+risk_features.to_csv('Delinquency_Features.csv', index = False)
