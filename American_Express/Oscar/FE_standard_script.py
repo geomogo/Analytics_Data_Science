@@ -8,15 +8,15 @@ bucket = s3.Bucket(bucket_name)
 
 ## Defining files names
 file_key_1 = 'AmericanExpress/train_data.csv'
-file_key_2 = 'AmericanExpress/train_labels.csv'
+# file_key_2 = 'AmericanExpress/train_labels.csv'
 
 bucket_object_1 = bucket.Object(file_key_1)
 file_object_1 = bucket_object_1.get()
 file_content_stream_1 = file_object_1.get('Body')
 
-bucket_object_2 = bucket.Object(file_key_2)
-file_object_2 = bucket_object_2.get()
-file_content_stream_2 = file_object_2.get('Body')
+# bucket_object_2 = bucket.Object(file_key_2)
+# file_object_2 = bucket_object_2.get()
+# file_content_stream_2 = file_object_2.get('Body')
 
 ## Creating data-type dictionary for reading the train data-frame
 dtype_dict = {'customer_ID': "object", 'S_2': "object", 'P_2': 'float16', 'D_39': 'float16', 'B_1': 'float16','B_2': 'float16',
@@ -50,12 +50,12 @@ dtype_dict = {'customer_ID': "object", 'S_2': "object", 'P_2': 'float16', 'D_39'
 
 ## Reading data-files
 train = pd.read_csv(file_content_stream_1, dtype = dtype_dict, usecols = ['customer_ID', 'R_1'])
-target = pd.read_csv(file_content_stream_2)
+# target = pd.read_csv(file_content_stream_2)
 
 # delinquency_features = pd.read_csv('Delinquency_Features.csv')
 
 ## Appending target variables
-train = pd.merge(train, target, on = 'customer_ID', how = 'left')
+# train = pd.merge(train, target, on = 'customer_ID', how = 'left')
 
 ## Selecting Deliquency variables (and risk variables)
 # my_variables = train.columns
