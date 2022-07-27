@@ -33,10 +33,6 @@ dtype_dict = {'customer_ID': "object", 'S_2': "object", 'P_2': 'float16', 'D_39'
 train = pd.read_csv(file_content_stream, dtype = dtype_dict)
 train_labels = pd.read_csv(file_content_stream2)
 
-## Subsetting the data for Payment and Spend variables
-train = train[['customer_ID', 'P_2', 'P_3', 'P_4', 'S_3', 'S_5', 'S_6', 'S_7', 'S_8', 'S_9', 'S_11', 'S_12', 'S_13', 'S_15', 'S_16', 'S_17', 
-               'S_18', 'S_19', 'S_20', 'S_22', 'S_23', 'S_24', 'S_25', 'S_26', 'S_27']]
-
 ## Appending target labels with train data-frame
 train = train.merge(train_labels, on = 'customer_ID', how = 'left')
 
@@ -47,6 +43,10 @@ print('-- Data Read -- \n')
 
 ## -------------------------------------------
 
+############################################
+## Payment and Spend variable engineering ##
+############################################
+
 ## Computing new Payment and Spend count features with the train data-frame
 count_vars_train = train.groupby('customer_ID').agg({'P_3':['count'], 'S_3':['count'], 'S_7':['count'], 
                                                      'S_22': ['count'], 'S_23': ['count'], 'S_25': ['count']}).reset_index(drop = False)
@@ -54,13 +54,15 @@ count_vars_train = train.groupby('customer_ID').agg({'P_3':['count'], 'S_3':['co
 ## Editing the variable names in the data-frame
 count_vars_train.columns = ['customer_ID', 'P_3_count', 'S_3_count', 'S_7_count', 'S_22_count', 'S_23_count', 'S_25_count']
 
-# Creating binary count variables
-count_vars_train['P_3_count_binary'] = np.where(count_vars_train["P_3_count"] > 0, 1, 0)
-count_vars_train['S_3_count_binary'] = np.where(count_vars_train["S_3_count"] > 0, 1, 0)
-count_vars_train['S_7_count_binary'] = np.where(count_vars_train["S_7_count"] > 0, 1, 0)
-count_vars_train['S_22_count_binary'] = np.where(count_vars_train["S_22_count"] > 0, 1, 0)
-count_vars_train['S_23_count_binary'] = np.where(count_vars_train["S_23_count"] > 0, 1, 0)
-count_vars_train['S_25_count_binary'] = np.where(count_vars_train["S_25_count"] > 0, 1, 0)
+##################################
+## Balance variable engineering ##
+##################################
+
+## Computing new Balance count features with the train data-frame
+count_vars_train = train.groupby('customer_ID').agg({'B_2':['count'], 'B_3':['count'], 'B_6':['count'], 'B_8': ['count'], 'B_13': ['count'], 'B_15': ['count'], 'B_16': ['count'], 'B_17': ['count'], 'B_19': ['count'], 'B_20': ['count'], 'B_22': ['count'], 'B_25': ['count'], 'B_26': ['count'], 'B_27': ['count'], 'B_29': ['count'], 'B_30': ['count'], 'B_33': ['count'], 'B_37': ['count'], 'B_38': ['count'], 'B_39': ['count'], 'B_40': ['count'], 'B_41': ['count'], 'B_42': ['count']}).reset_index(drop = False)
+
+## Editing the variable names in the data-frame
+count_vars_train.columns = ['customer_ID', 'B_2_count', 'B_3_count', 'B_6_count', 'B_8_count', 'B_13_count', 'B_15_count', 'B_16_count', 'B_17_count', 'B_19_count', 'B_20_count', 'B_22_count', 'B_25_count', 'B_26_count', 'B_27_count', 'B_29_count', 'B_30_count', 'B_33_count', 'B_37_count','B_38_count', 'B_39_count', 'B_40_count', 'B_41_count', 'B_42_count']
 
 ## Sanity check
 print('-- Training counts data-frame complete -- \n')
@@ -96,6 +98,10 @@ def iqr(x):
 def correlation(x):
     return pd.Series(x.values).corr(other = pd.Series(x.index), method = 'pearson')
 
+############################################
+## Payment and Spend variable engineering ##
+############################################
+
 ## Creating new Payment features with the cleaned train data-frame
 payment_vars_train = train_impute.groupby('customer_ID').agg({'P_2':['mean', 'median', 'sum', data_range, iqr, correlation], 'P_3':['mean', 'median', 'sum', data_range, iqr, correlation], 'P_4':['mean', 'median', 'sum', data_range, iqr, correlation]}).reset_index(drop = False)
 
@@ -106,6 +112,17 @@ payment_vars_train.columns = ['customer_ID', 'P_2_mean', 'P_2_median', 'P_2_sum'
 spend_vars_train = train_impute.groupby('customer_ID').agg({'S_3':['median', 'sum', data_range, iqr, correlation], 'S_5':[data_range, iqr, correlation], 'S_6':['mean', 'median', 'sum', 'mad', data_range, iqr, correlation], 'S_8':['mean', 'median', 'sum', data_range, iqr, correlation], 'S_13':['mean', 'sum', 'std', 'mad', data_range, iqr, correlation], 'S_25':['mean', 'sum', 'std', 'mad', data_range, iqr, correlation], 'S_27':[data_range, iqr, correlation]}).reset_index(drop = False)
 
 spend_vars_train.columns = ['customer_ID', 'S_3_median', 'S_3_sum', 'S_3_data_range', 'S_3_iqr', 'S_3_correlation', 'S_5_data_range', 'S_5_iqr', 'S_5_correlation', 'S_6_mean', 'S_6_median', 'S_6_sum', 'S_6_mad', 'S_6_data_range', 'S_6_iqr', 'S_6_correlation', 'S_8_mean', 'S_8_median', 'S_8_sum', 'S_8_data_range', 'S_8_iqr', 'S_8_correlation', 'S_13_mean', 'S_13_sum', 'S_13_std', 'S_13_mad', 'S_13_data_range', 'S_13_iqr', 'S_13_correlation', 'S_25_mean', 'S_25_sum', 'S_25_std', 'S_25_mad', 'S_25_data_range', 'S_25_iqr', 'S_25_correlation', 'S_27_data_range', 'S_27_iqr', 'S_27_correlation']
+
+##################################
+## Balance variable engineering ##
+##################################
+
+
+
+
+
+
+
 
 ## Sanity check
 print('-- Training aggregations data-frame complete -- \n')
