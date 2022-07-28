@@ -22,7 +22,7 @@ file_object_2 = bucket_object_2.get()
 file_content_stream_2 = file_object_2.get('Body')
 
 ## Reading data-files
-data = pd.read_csv(file_content_stream)
+data = pd.read_csv(file_content_stream_1)
 labels = pd.read_csv(file_content_stream_2)
 data = pd.merge(data, labels, on = 'customer_ID', how = 'left')
 
