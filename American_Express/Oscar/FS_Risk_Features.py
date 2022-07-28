@@ -13,7 +13,7 @@ bucket_name = 'analytics-data-science-competitions'
 bucket = s3.Bucket(bucket_name)
 
 ## Defining files names
-file_key_1 = 'AmericanExpress/Risk_Features.csv'
+file_key_1 = 'AmericanExpress/Risk_Features_Imputed.csv'
 file_key_2 = 'AmericanExpress/train_labels.csv'
 
 bucket_object_1 = bucket.Object(file_key_1)
