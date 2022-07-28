@@ -47,12 +47,12 @@ print('-- Data Read -- \n')
 ## Payment and Spend variable engineering ##
 ############################################
 
-## Computing new Payment and Spend count features with the train data-frame
-count_vars_train = train.groupby('customer_ID').agg({'P_3':['count'], 'S_3':['count'], 'S_7':['count'], 
-                                                     'S_22': ['count'], 'S_23': ['count'], 'S_25': ['count']}).reset_index(drop = False)
+# ## Computing new Payment and Spend count features with the train data-frame
+# count_vars_train = train.groupby('customer_ID').agg({'P_3':['count'], 'S_3':['count'], 'S_7':['count'], 
+#                                                      'S_22': ['count'], 'S_23': ['count'], 'S_25': ['count']}).reset_index(drop = False)
 
-## Editing the variable names in the data-frame
-count_vars_train.columns = ['customer_ID', 'P_3_count', 'S_3_count', 'S_7_count', 'S_22_count', 'S_23_count', 'S_25_count']
+# ## Editing the variable names in the data-frame
+# count_vars_train.columns = ['customer_ID', 'P_3_count', 'S_3_count', 'S_7_count', 'S_22_count', 'S_23_count', 'S_25_count']
 
 ##################################
 ## Balance variable engineering ##
@@ -102,27 +102,24 @@ def correlation(x):
 ## Payment and Spend variable engineering ##
 ############################################
 
-## Creating new Payment features with the cleaned train data-frame
-payment_vars_train = train_impute.groupby('customer_ID').agg({'P_2':['mean', 'median', 'sum', data_range, iqr, correlation], 'P_3':['mean', 'median', 'sum', data_range, iqr, correlation], 'P_4':['mean', 'median', 'sum', data_range, iqr, correlation]}).reset_index(drop = False)
+# ## Creating new Payment features with the cleaned train data-frame
+# payment_vars_train = train_impute.groupby('customer_ID').agg({'P_2':['mean', 'median', 'sum', data_range, iqr, correlation], 'P_3':['mean', 'median', 'sum', data_range, iqr, correlation], 'P_4':['mean', 'median', 'sum', data_range, iqr, correlation]}).reset_index(drop = False)
 
-## Renaming variable names
-payment_vars_train.columns = ['customer_ID', 'P_2_mean', 'P_2_median', 'P_2_sum', 'P_2_data_range', 'P_2_iqr', 'P_2_correlation', 'P_3_mean', 'P_3_median', 'P_3_sum', 'P_3_data_range', 'P_3_iqr', 'P_3_correlation', 'P_4_mean', 'P_4_median', 'P_4_sum', 'P_4_data_range', 'P_4_iqr', 'P_4_correlation']
+# ## Renaming variable names
+# payment_vars_train.columns = ['customer_ID', 'P_2_mean', 'P_2_median', 'P_2_sum', 'P_2_data_range', 'P_2_iqr', 'P_2_correlation', 'P_3_mean', 'P_3_median', 'P_3_sum', 'P_3_data_range', 'P_3_iqr', 'P_3_correlation', 'P_4_mean', 'P_4_median', 'P_4_sum', 'P_4_data_range', 'P_4_iqr', 'P_4_correlation']
 
-## Creating new Spend features with the cleaned train data-frame
-spend_vars_train = train_impute.groupby('customer_ID').agg({'S_3':['median', 'sum', data_range, iqr, correlation], 'S_5':[data_range, iqr, correlation], 'S_6':['mean', 'median', 'sum', 'mad', data_range, iqr, correlation], 'S_8':['mean', 'median', 'sum', data_range, iqr, correlation], 'S_13':['mean', 'sum', 'std', 'mad', data_range, iqr, correlation], 'S_25':['mean', 'sum', 'std', 'mad', data_range, iqr, correlation], 'S_27':[data_range, iqr, correlation]}).reset_index(drop = False)
+# ## Creating new Spend features with the cleaned train data-frame
+# spend_vars_train = train_impute.groupby('customer_ID').agg({'S_3':['median', 'sum', data_range, iqr, correlation], 'S_5':[data_range, iqr, correlation], 'S_6':['mean', 'median', 'sum', 'mad', data_range, iqr, correlation], 'S_8':['mean', 'median', 'sum', data_range, iqr, correlation], 'S_13':['mean', 'sum', 'std', 'mad', data_range, iqr, correlation], 'S_25':['mean', 'sum', 'std', 'mad', data_range, iqr, correlation], 'S_27':[data_range, iqr, correlation]}).reset_index(drop = False)
 
-spend_vars_train.columns = ['customer_ID', 'S_3_median', 'S_3_sum', 'S_3_data_range', 'S_3_iqr', 'S_3_correlation', 'S_5_data_range', 'S_5_iqr', 'S_5_correlation', 'S_6_mean', 'S_6_median', 'S_6_sum', 'S_6_mad', 'S_6_data_range', 'S_6_iqr', 'S_6_correlation', 'S_8_mean', 'S_8_median', 'S_8_sum', 'S_8_data_range', 'S_8_iqr', 'S_8_correlation', 'S_13_mean', 'S_13_sum', 'S_13_std', 'S_13_mad', 'S_13_data_range', 'S_13_iqr', 'S_13_correlation', 'S_25_mean', 'S_25_sum', 'S_25_std', 'S_25_mad', 'S_25_data_range', 'S_25_iqr', 'S_25_correlation', 'S_27_data_range', 'S_27_iqr', 'S_27_correlation']
+# spend_vars_train.columns = ['customer_ID', 'S_3_median', 'S_3_sum', 'S_3_data_range', 'S_3_iqr', 'S_3_correlation', 'S_5_data_range', 'S_5_iqr', 'S_5_correlation', 'S_6_mean', 'S_6_median', 'S_6_sum', 'S_6_mad', 'S_6_data_range', 'S_6_iqr', 'S_6_correlation', 'S_8_mean', 'S_8_median', 'S_8_sum', 'S_8_data_range', 'S_8_iqr', 'S_8_correlation', 'S_13_mean', 'S_13_sum', 'S_13_std', 'S_13_mad', 'S_13_data_range', 'S_13_iqr', 'S_13_correlation', 'S_25_mean', 'S_25_sum', 'S_25_std', 'S_25_mad', 'S_25_data_range', 'S_25_iqr', 'S_25_correlation', 'S_27_data_range', 'S_27_iqr', 'S_27_correlation']
 
 ##################################
 ## Balance variable engineering ##
 ##################################
 
+balance_vars_train = train_impute.groupby('customer_ID').agg({'B_2':['count'], 'B_3':['count'], 'B_6':['count'], 'B_8': ['count'], 'B_13': ['count'], 'B_15': ['count'], 'B_16': ['count'], 'B_17': ['count'], 'B_19': ['count'], 'B_20': ['count'], 'B_22': ['count'], 'B_25': ['count'], 'B_26': ['count'], 'B_27': ['count'], 'B_29': ['count'], 'B_30': ['count'], 'B_33': ['count'], 'B_37': ['count'], 'B_38': ['count'], 'B_39': ['count'], 'B_40': ['count'], 'B_41': ['count'], 'B_42': ['count']}).reset_index(drop = False)
 
-
-
-
-
-
+balance_vars_train.columns = ['customer_ID', ....... 'S_3_median', 'S_3_sum', 'S_3_data_range', 'S_3_iqr', 'S_3_correlation', 'S_5_data_range', 'S_5_iqr', 'S_5_correlation', 'S_6_mean', 'S_6_median', 'S_6_sum', 'S_6_mad', 'S_6_data_range', 'S_6_iqr', 'S_6_correlation', 'S_8_mean', 'S_8_median', 'S_8_sum', 'S_8_data_range', 'S_8_iqr', 'S_8_correlation', 'S_13_mean', 'S_13_sum', 'S_13_std', 'S_13_mad', 'S_13_data_range', 'S_13_iqr', 'S_13_correlation', 'S_25_mean', 'S_25_sum', 'S_25_std', 'S_25_mad', 'S_25_data_range', 'S_25_iqr', 'S_25_correlation', 'S_27_data_range', 'S_27_iqr', 'S_27_correlation']
 
 ## Sanity check
 print('-- Training aggregations data-frame complete -- \n')
@@ -131,19 +128,28 @@ print('-- Training aggregations data-frame complete -- \n')
 
 ## Combining desired count features with other aggregated features to create final data-frame
 
-## Joining the Payment and Spend train data-frames
-training = payment_vars_train.merge(spend_vars_train, how = 'left', on = 'customer_ID')
+# ## Joining the Payment and Spend train data-frames
+# training = payment_vars_train.merge(spend_vars_train, how = 'left', on = 'customer_ID')
+
+# ## Joining the Training and Count data-frames
+# training = training.merge(count_vars_train, how = 'left', on = 'customer_ID')
+
+# ## Appending target labels to training data-frame
+# training = training.merge(train_labels, on = 'customer_ID', how = 'left')
 
 ## Joining the Training and Count data-frames
-training = training.merge(count_vars_train, how = 'left', on = 'customer_ID')
+training = balance_vars_train.merge(count_vars_train, how = 'left', on = 'customer_ID')
 
 ## Appending target labels to training data-frame
 training = training.merge(train_labels, on = 'customer_ID', how = 'left')
 
 ## -------------------------------------------
 
+# ## Exporting the resulting training data-frame to a csv file
+# training.to_csv('amex_train_payment_spend.csv', index = False)
+
 ## Exporting the resulting training data-frame to a csv file
-training.to_csv('amex_train_payment_spend.csv', index = False)
+training.to_csv('amex_train_balance.csv', index = False)
 
 ## Sanity check
 print('-- Training data-frame complete -- \n')
