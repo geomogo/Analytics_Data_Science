@@ -74,11 +74,21 @@ evan_data_train = evan_data_train.drop(columns = ['target'], axis = 1)
 
 evan_data_test = pd.read_csv(file_content_stream_4)
 
+risk_data_train = pd.read_csv(file_content_stream_5, 
+                              usecols = ['R_1_mean', 'R_1_std', 'R_1_max', 'R_1_range', 
+                                        'R_1_last_value', 'R_1_IQR', 'R_10_mean', 'R_10_max',
+                                        'R_10_std', 'R_10_range', 
+                                        'customer_ID'])
+
+risk_data_test = pd.read_csv(file_content_stream_6)
+
 ## Joining datasets
 data_train = pd.merge(oscar_data_train, evan_data_train, on = 'customer_ID', how = 'left')
+data_train = pd.merge(data_train, risk_data_train, on = 'customer_ID', how = 'left')
 data_train = data_train.drop(columns = ['customer_ID'], axis = 1)
 
 data_test = pd.merge(oscar_data_test, evan_data_test, on = 'customer_ID', how = 'left')
+data_test = pd.merge(data_test, risk_data_test, on = 'customer_ID', how = 'left')
 
 ## Defining input and target 
 X = data_train.drop(columns = 'target', axis = 1)
