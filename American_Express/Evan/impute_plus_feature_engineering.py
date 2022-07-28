@@ -58,6 +58,9 @@ print('-- Data Read -- \n')
 ## Balance variable engineering ##
 ##################################
 
+## Sanity check
+print('-- Balance variable engineering -- \n')
+
 ## Computing new Balance count features with the train data-frame
 count_vars_train = train.groupby('customer_ID').agg({'B_2':['count'], 'B_3':['count'], 'B_6':['count'], 'B_8': ['count'], 'B_13': ['count'], 'B_15': ['count'], 'B_16': ['count'], 'B_17': ['count'], 'B_19': ['count'], 'B_20': ['count'], 'B_22': ['count'], 'B_25': ['count'], 'B_26': ['count'], 'B_27': ['count'], 'B_29': ['count'], 'B_30': ['count'], 'B_33': ['count'], 'B_37': ['count'], 'B_38': ['count'], 'B_39': ['count'], 'B_40': ['count'], 'B_41': ['count'], 'B_42': ['count']}).reset_index(drop = False)
 
