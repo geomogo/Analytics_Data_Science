@@ -20,6 +20,8 @@ file_key_1 = 'AmericanExpress/Delinquency_Features_Filled.csv'
 file_key_2 = 'AmericanExpress/test_delinquency_features.csv'
 file_key_3 = 'AmericanExpress/amex_train_payment_spend_final.csv'
 file_key_4 = 'AmericanExpress/amex_test_payment_spend_final.csv'
+file_key_5 = 'AmericanExpress/Risk_Features_Imputed.csv'
+file_key_6 = 'AmericanExpress/test_risk_features.csv'
 
 bucket_object_1 = bucket.Object(file_key_1)
 file_object_1 = bucket_object_1.get()
@@ -36,6 +38,14 @@ file_content_stream_3 = file_object_3.get('Body')
 bucket_object_4 = bucket.Object(file_key_4)
 file_object_4 = bucket_object_4.get()
 file_content_stream_4 = file_object_4.get('Body')
+
+bucket_object_5 = bucket.Object(file_key_5)
+file_object_5 = bucket_object_5.get()
+file_content_stream_5 = file_object_5.get('Body')
+
+bucket_object_6 = bucket.Object(file_key_6)
+file_object_6 = bucket_object_6.get()
+file_content_stream_6 = file_object_6.get('Body')
 
 ## Reading data-files
 # oscar_data_train = pd.read_csv(file_content_stream_1, 
