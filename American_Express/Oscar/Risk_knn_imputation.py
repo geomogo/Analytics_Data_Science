@@ -39,7 +39,7 @@ buckets = ['R_1', 'R_2', 'R_3', 'R_4', 'R_5', 'R_6', 'R_7', 'R_8', 'R_10', 'R_11
            'R_23', 'R_24', 'R_25', 'R_28']
 
 ## Extracting features names
-features = list(delinquency_data.columns)
+features = list(risk_data.columns)
 
 ## Looping to identify features with nan and backfill them with KNNImputer
 for i in range(0, len(buckets)):
