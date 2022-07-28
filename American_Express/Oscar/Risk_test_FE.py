@@ -69,7 +69,7 @@ test_features = test_features.reset_index(drop = True)
 ## Uploading results in s3
 test_features.to_csv('test_risk_features.csv', index = False)
 
-sess.uploaR_data(path = 'test_risk_features.csv', 
+sess.upload_data(path = 'test_risk_features.csv', 
                  bucket = bucket_name,
                  key_prefix = 'AmericanExpress')
 
