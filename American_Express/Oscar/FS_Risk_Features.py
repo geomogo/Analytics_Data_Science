@@ -64,4 +64,4 @@ for i in tqdm(range(0, 10)):
     
 ## Putting results as data-frame
 features_to_select = pd.DataFrame(features_to_select)
-features_to_select.to_csv('Risk_Features_to_select_1.csv', index = False)
+features_to_select.to_csv('Risk_Features_to_select_2.csv', index = False)
