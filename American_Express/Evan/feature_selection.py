@@ -3,9 +3,10 @@
 ## Importing libraries
 import pandas as pd
 import numpy as np
+from tqdm import tqdm
 import miceforest as mf
 from sklearn.feature_selection import RFECV
-from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import make_scorer
 from Amex_Metric import amex_metric
@@ -13,11 +14,14 @@ from Amex_Metric import amex_metric
 ## -------------------------------------------
 
 ## Sanity check
-print('-- Process Started --')
+print('-- Feature Selection Process Started --')
 
 ## Reading customer-level data with engineered Payment and Spend features
 train = pd.read_csv('/home/ec2-user/SageMaker/Analytics_Data_Science/American_Express/Evan/amex_train_payment_spend.csv')
 #test = pd.read_csv('/home/ec2-user/SageMaker/Analytics_Data_Science/American_Express/Evan/amex_test_payment_spend.csv')
+
+## Sanity check
+print('-- Data Read --')
 
 ## -------------------------------------------
 
@@ -40,12 +44,18 @@ print('-- Training data-frame imputation complete -- \n')
 
 ## -------------------------------------------
 
+## Subsetting the data for the 24 most important variables
+train_impute = train_impute[['customer_ID', 'P_2_mean', 'P_2_median', 'P_3_median', 'P_2_correlation', 'P_3_sum', 'P_3_mean', 'P_2_sum', 'S_3_median', 'S_8_mean', 'S_25_mean', 'S_25_sum', 'S_25_std', 'S_25_mad', 'S_25_data_range', 'S_25_iqr', 'target']]
+
+## Sanity check
+print('-- Data subsetting (Pt. 2) complete -- \n')
+
 ## Defining the input and target variables
 X = train_impute.drop(columns = ['customer_ID', 'target'])
 Y = train_impute['target']
 
 ## Splitting the data
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.2, stratify = Y)
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.3, stratify = Y)
 
 ## Defining the customized scoring function 
 amex_function = make_scorer(amex_metric, greater_is_better = True, needs_proba = True)
@@ -53,61 +63,26 @@ amex_function = make_scorer(amex_metric, greater_is_better = True, needs_proba =
 ## Defining empty list to store results
 features_to_select = list()
 
-## Repeating steps 100 times:
-for i in range(0, 5):
+## Repeating RFECV steps 25 times:
+for i in tqdm(range(0, 25)):
     
     ## Runing RFECV with Random Forest as a base algorithm
-    rf_rfecv = RFECV(estimator = RandomForestClassifier(n_estimators = 300, max_depth = 3), step = 1, scoring = amex_function, min_features_to_select = 5, cv = 3).fit(X_train, Y_train)
+    rf_rfecv = RFECV(estimator = RandomForestClassifier(n_estimators = 300, max_depth = 3), step = 3, scoring = amex_function, min_features_to_select = 3, cv = 3).fit(X_train, Y_train)
     
     ## Appending results 
-    features_to_select.append(X_train.columns[rf_rfecv.support_])
+    features_to_select.append(rf_rfecv.support_)
     
-## Putting results as data-frame
-features_to_select = pd.DataFrame(features_to_select)
+## Creating a data-frame to stre results
+features_to_select = pd.DataFrame(features_to_select, columns = X.columns)
+features_to_select = 100 * features_to_select.apply(np.sum, axis = 0) / features_to_select.shape[0]
 
-features_to_select.to_csv('feature_selection_results.csv', index = False)
+## Producing the final output data-frame
+output = pd.DataFrame(features_to_select).reset_index(drop = False)
+output.columns = ['Variable', 'Selected']
+output = output.sort_values(by = 'Selected', ascending = False).reset_index(drop = True)
+output.to_csv('feature_selection_results_pt2.csv', index = False)
 
 ## Sanity check
 print('-- Completed --')
     
 ## -------------------------------------------
-
-# ## Changing result lists to data-frames
-# results = pd.DataFrame(results, columns = X.columns)
-# results_df = 100 * results.apply(np.sum, axis = 0) / results.shape[0]
-
-# ## Producing the final output data-frame
-# output = pd.DataFrame(results_df).reset_index(drop = False)
-# output.columns = ['Variable', 'Selected']
-# output = output.sort_values(by = 'Selected', ascending = False).reset_index(drop = True)
-# output.to_csv('feature_selection_results.csv', index = False)
-
-# ## Producing the 10 feature to select
-# to_select = output.iloc[0:10, 0]
-# to_select.to_csv('feature_selection_results_top_10.csv', index = False)
-
-
-
-# ## Defining input and target variables
-# X = data.drop(columns = ['customer_ID', 'target'], axis = 1)
-# Y = data['target']
-
-# ## Spliting the data into train, validation, and test
-# X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.2, stratify = Y)
-
-# ## Defining the customized scoring function 
-# amex_function = make_scorer(amex_metric, greater_is_better = True, needs_proba = True)
-
-# ## Defining list to store results
-# features_to_select = list()
-
-# for i in range(0, 10):
-    
-#     ## Running RFE with Random forest
-#     RF_auto_feature = RFECV(estimator = RandomForestClassifier(n_estimators = 300, max_depth = 3), step = 1, scoring = amex_function, min_features_to_select = 10, cv = 3).fit(X_train, Y_train)
-
-#     ## Appending results 
-#     features_to_select.append(X_train.columns[RF_auto_feature.support_])
-    
-# ## Putting results as data-frame
-# features_to_select = pd.DataFrame(features_to_select)
