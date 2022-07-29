@@ -75,13 +75,13 @@ evan_data_train = evan_data_train.drop(columns = ['target'], axis = 1)
 evan_data_test = pd.read_csv(file_content_stream_4)
 
 risk_data_train = pd.read_csv(file_content_stream_5, 
-                              usecols = [['R_1_mean', 'R_1_std', 'R_1_max', 'R_1_range', 
-                                          'R_1_last_value', 'R_1_IQR', 'R_10_mean', 
-                                          'R_10_max', 'R_10_std', 'R_10_range', 'R_2_mean', 
-                                          'R_1_median', 'R_2_last_value', 'R_3_mean', 
-                                          'R_2_max', 'R_2_std', 'R_2_range', 
-                                          'R_1_pct_values_above_mean', 'R_3_median', 
-                                          'R_6_mean', 'customer_ID'])
+                              usecols = ['R_1_mean', 'R_1_std', 'R_1_max', 'R_1_range', 
+                                         'R_1_last_value', 'R_1_IQR', 'R_10_mean', 
+                                         'R_10_max', 'R_10_std', 'R_10_range', 'R_2_mean', 
+                                         'R_1_median', 'R_2_last_value', 'R_3_mean', 
+                                         'R_2_max', 'R_2_std', 'R_2_range', 
+                                         'R_1_pct_values_above_mean', 'R_3_median', 
+                                         'R_6_mean', 'customer_ID'])
 
 risk_data_test = pd.read_csv(file_content_stream_6)
 
