@@ -11,9 +11,6 @@ s3 = boto3.resource('s3')
 bucket_name = 'analytics-data-science-competitions'
 bucket = s3.Bucket(bucket_name)
 
-## Reading data-file
-# risk_features = pd.read_csv('Risk_Features.csv')
-
 ## Uploading results in s3
 sess.upload_data(path = 'Risk_Features.csv', 
                  bucket = bucket_name,
