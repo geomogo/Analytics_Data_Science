@@ -81,7 +81,10 @@ risk_data_train = pd.read_csv(file_content_stream_5,
                                          'R_1_median', 'R_2_last_value', 'R_3_mean', 
                                          'R_2_max', 'R_2_std', 'R_2_range', 
                                          'R_1_pct_values_above_mean', 'R_3_median', 
-                                         'R_6_mean', 'customer_ID'])
+                                         'R_6_mean', 'R_3_max', 'R_6_max', 
+                                         'R_6_last_value', 'R_6_std', 'R_4_mean', 'R_6_range', 
+                                         'R_5_last_value', 'R_16_mean', 'R_3_last_value', 
+                                         'R_3_min', 'customer_ID'])
 
 risk_data_test = pd.read_csv(file_content_stream_6)
 
