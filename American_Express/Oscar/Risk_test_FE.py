@@ -19,12 +19,13 @@ file_object = bucket_object.get()
 file_content_stream = file_object.get('Body')
 
 dtype_dict = {'customer_ID': 'object', 'R_1': 'float16', 'R_2': 'float16',
-              'R_3': 'float16', 'R_6': 'float16', 'R_10': 'float16'}
+              'R_3': 'float16', 'R_4': 'float16', 'R_5': 'float16', 
+              'R_6': 'float16', 'R_10': 'float16', 'R_16': 'float16'}
 
 ## Reading data-files
 test = pd.read_csv(file_content_stream, 
                    usecols = ['customer_ID', 'R_1', 'R_2', 'R_3',
-                              'R_6', 'R_10',], dtype = dtype_dict)
+                              'R_4', 'R_5', 'R_6', 'R_10', 'R_16'], dtype = dtype_dict)
 
 ## Computing basic summary-stats features
 def summary_stats(x):
@@ -52,6 +53,17 @@ def summary_stats(x):
     d['R_3_median'] = x['R_3'].median()
     d['R_6_mean'] = x['R_6'].mean()
     
+    d['R_3_max'] = x['R_3'].max()
+    d['R_6_max'] = x['R_6'].max()
+    d['R_6_last_value'] = x['R_6'].iloc[-1]
+    d['R_6_std'] = np.where(x['R_6'].shape[0] == 1, 0, np.std(x['R_6'], ddof = 1))
+    d['R_4_mean'] = x['R_4'].mean()
+    d['R_6_range'] = np.where(x['R_6'].shape[0] == 1, 0, x['R_6'].max() - x['R_6'].min())
+    d['R_5_last_value'] = x['R_5'].iloc[-1]
+    d['R_16_mean'] = x['R_16'].mean()
+    d['R_3_last_value'] = x['R_3'].iloc[-1]
+    d['R_3_min'] = x['R_3'].min()
+    
     
 #     d['R_44_mean'] = x['R_44'].mean()
 #     d['R_44_max'] = x['R_44'].max()
@@ -78,7 +90,10 @@ def summary_stats(x):
                                  'R_10_std', 'R_10_range', 'R_2_mean', 'R_1_median', 
                                  'R_2_last_value', 'R_3_mean', 'R_2_max', 'R_2_std',
                                  'R_2_range', 'R_1_pct_values_above_mean', 
-                                 'R_3_median', 'R_6_mean'])
+                                 'R_3_median', 'R_6_mean', 'R_3_max', 'R_6_max', 
+                                 'R_6_last_value', 'R_6_std', 'R_4_mean', 'R_6_range', 
+                                 'R_5_last_value', 'R_16_mean', 'R_3_last_value', 
+                                 'R_3_min'])
 
 test_features = test.groupby('customer_ID').apply(summary_stats)
 test_features['customer_ID'] = test_features.index
