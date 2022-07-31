@@ -58,13 +58,14 @@ file_content_stream_6 = file_object_6.get('Body')
 #                                           'D_44_IQR', 'D_84_range', 'target'])
 
 oscar_data_train = pd.read_csv(file_content_stream_1, 
-                               usecols = ['D_44_median', 'D_44_mean', 'D_44_max', 
-                                          'D_75_max', 'D_75_mean', 'D_78_max', 
-                                          'D_78_mean', 'D_78_range', 'D_44_std', 
-                                          'D_75_median', 'D_78_std', 'D_74_mean',
-                                          'D_44_range', 'D_44_min', 'D_84_mean', 
-                                          'D_74_max', 'D_41_range', 'D_75_min', 
-                                          'D_44_IQR', 'D_84_range', 'target',
+                               usecols = ['D_44_median', 'D_44_mean', 'D_44_max', 'D_75_max', 
+                                          'D_75_mean', 'D_78_max', 'D_78_mean', 'D_78_range',
+                                          'D_44_std', 'D_75_median', 'D_78_std', 'D_74_mean',
+                                          'D_44_range', 'D_44_min', 'D_84_mean', 'D_74_max',
+                                          'D_41_range', 'D_75_min', 'D_44_IQR', 'D_84_range',
+                                          'D_41_std', 'D_39_max', 'D_84_max', 'D_84_std', 
+                                          'D_74_median', 'D_52_median', 'D_58_median',
+                                          'D_65_max', 'D_58_max', 'D_59_mean' 'target',
                                           'customer_ID'])
 
 oscar_data_test = pd.read_csv(file_content_stream_2)
