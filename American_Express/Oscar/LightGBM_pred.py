@@ -160,7 +160,7 @@ def objective_amex(trial):
 
 ## Calling Optuna objective function
 study = optuna.create_study(direction = 'maximize')
-study.optimize(objective_amex, n_trials = 100)
+study.optimize(objective_amex, n_trials = 200)
 
 ## Extracting best model 
 best_params = study.best_trial.params
