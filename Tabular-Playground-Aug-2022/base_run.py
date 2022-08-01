@@ -56,7 +56,7 @@ XGBoost_param_grid = {'n_estimators': [300],
                       'colsample_bytree': [1]}
 
 ## Performing grid search with 5 folds
-XGBoost_grid_search = GridSearchCV(XGBRegressor(), XGBoost_param_grid, cv = 3, scoring = 'roc_auc').fit(X_train, Y_train)
+XGBoost_grid_search = GridSearchCV(XGBClassifier(), XGBoost_param_grid, cv = 3, scoring = 'roc_auc').fit(X_train, Y_train)
 
 ## Extracting the best model
 XGBoost_md = XGBoost_grid_search.best_estimator_
