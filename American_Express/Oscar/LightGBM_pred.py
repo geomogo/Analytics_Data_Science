@@ -22,6 +22,8 @@ file_key_3 = 'AmericanExpress/amex_train_payment_spend_final.csv'
 file_key_4 = 'AmericanExpress/amex_test_payment_spend_final.csv'
 file_key_5 = 'AmericanExpress/Risk_Features_Imputed.csv'
 file_key_6 = 'AmericanExpress/test_risk_features.csv'
+file_key_7 = 'AmericanExpress/amex_train_data_balance_final.csv'
+file_key_8 = 'AmericanExpress/amex_test_data_balance_final.csv'
 
 bucket_object_1 = bucket.Object(file_key_1)
 file_object_1 = bucket_object_1.get()
@@ -46,6 +48,14 @@ file_content_stream_5 = file_object_5.get('Body')
 bucket_object_6 = bucket.Object(file_key_6)
 file_object_6 = bucket_object_6.get()
 file_content_stream_6 = file_object_6.get('Body')
+
+bucket_object_7 = bucket.Object(file_key_7)
+file_object_7 = bucket_object_7.get()
+file_content_stream_7 = file_object_7.get('Body')
+
+bucket_object_8 = bucket.Object(file_key_8)
+file_object_8 = bucket_object_8.get()
+file_content_stream_8 = file_object_8.get('Body')
 
 ## Reading data-files
 # oscar_data_train = pd.read_csv(file_content_stream_1, 
@@ -89,13 +99,19 @@ risk_data_train = pd.read_csv(file_content_stream_5,
 
 risk_data_test = pd.read_csv(file_content_stream_6)
 
+balance_data_train = pd.read_csv(file_content_stream_7)
+
+balance_data_test = pd.read_csv(file_content_stream_8)
+
 ## Joining datasets
 data_train = pd.merge(oscar_data_train, evan_data_train, on = 'customer_ID', how = 'left')
 data_train = pd.merge(data_train, risk_data_train, on = 'customer_ID', how = 'left')
+data_train = pd.merge(data_train, balance_data_train, on = 'customer_ID', how = 'left')
 data_train = data_train.drop(columns = ['customer_ID'], axis = 1)
 
 data_test = pd.merge(oscar_data_test, evan_data_test, on = 'customer_ID', how = 'left')
 data_test = pd.merge(data_test, risk_data_test, on = 'customer_ID', how = 'left')
+data_test = pd.merge(data_test, balance_data_test, on = 'customer_ID', how = 'left')
 
 ## Defining input and target 
 X = data_train.drop(columns = 'target', axis = 1)
@@ -144,7 +160,7 @@ def objective_amex(trial):
 
 ## Calling Optuna objective function
 study = optuna.create_study(direction = 'maximize')
-study.optimize(objective_amex, n_trials = 200)
+study.optimize(objective_amex, n_trials = 100)
 
 ## Extracting best model 
 best_params = study.best_trial.params
