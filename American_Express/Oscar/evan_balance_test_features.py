@@ -8,10 +8,26 @@ import miceforest as mf
 import os
 import sagemaker
 
+s3 = boto3.resource('s3')
+bucket_name = 'analytics-data-science-competitions'
+bucket = s3.Bucket(bucket_name)
+
+file_key_1 = 'AmericanExpress/test_data.csv'
+
+bucket_object_1 = bucket.Object(file_key_1)
+file_object_1 = bucket_object_1.get()
+file_content_stream_1 = file_object_1.get('Body')
+
 ## -------------------------------------------
 
 ## Read test data-frame
-test = ...
+dtype_dict = {'customer_ID': 'object', 'B_1': 'float16', 'B_2': 'float16',
+              'B_3': 'float16', 'B_4': 'float16', 'B_9': 'float16', 
+              'B_18': 'float16', 'B_26': 'float16'}
+
+test = pd.read_csv(file_content_stream_1, 
+                   usecols = ['customer_ID', 'B_1', 'B_2', 'B_3', 'B_4', 
+                              'B_9', 'B_18', 'B_26'], dtype = dtype_dict)
 
 ## -------------------------------------------
 
