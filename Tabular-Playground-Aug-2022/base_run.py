@@ -66,7 +66,7 @@ xgb_pred = XGBoost_md.predict_proba(test)[:, 1]
 
 ## Defining data-frame to be exported
 data_out = pd.DataFrame({'id': test_id, 'failure': xgb_pred})
-data_out.to_csv('submission.csv')
+data_out.to_csv('submission.csv', index = False)
 
 sess.upload_data(path = 'submission.csv', 
                  bucket = bucket_name,
