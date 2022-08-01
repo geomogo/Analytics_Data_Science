@@ -21,3 +21,9 @@ Credit default prediction is central to managing risk in a consumer lending busi
 This challenge serves as final project for the "How to win a data science competition" Coursera course. In this competition you will work with a challenging time-series dataset consisting of daily sales data, kindly provided by one of the largest Russian software firms - 1C Company. 
 
 We are asking you to predict total sales for every product and store in the next month. By solving this competition you will be able to apply and enhance your data science skills. For more info see [here](https://www.kaggle.com/competitions/competitive-data-science-predict-future-sales/overview).
+
+## Tabular Playground Aug-2022
+
+The August 2022 edition of the Tabular Playground Series in an opportunity to help the fictional company Keep It Dry improve its main product Super Soaker. The product is used in factories to absorb spills and leaks.
+
+The company has just completed a large testing study for different product prototypes. Can you use this data to build a model that predicts product failures? For more info see [here](https://www.kaggle.com/competitions/tabular-playground-series-aug-2022/overview/description)
