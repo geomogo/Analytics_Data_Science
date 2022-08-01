@@ -1,7 +1,13 @@
 import boto3
 import pandas as pd; pd.set_option('display.max_columns', 100)
 import numpy as np
+from sklearn.metrics import roc_auc_score
 from xgboost import XGBClassifier
+
+import os
+import sagemaker
+
+sess = sagemaker.Session()
 
 s3 = boto3.resource('s3')
 bucket_name = 'analytics-data-science-competitions'
@@ -23,6 +29,7 @@ train = pd.read_csv(file_content_stream_1)
 train = train.drop(columns = ['id'], axis = 1)
 
 test = pd.read_csv(file_content_stream_2)
+test_id = test['id']
 test = test.drop(columns = ['id'], axis = 1)
 
 ## Changing labels to dummies
@@ -48,10 +55,18 @@ XGBoost_param_grid = {'n_estimators': [300],
                       'colsample_bytree': [1]}
 
 ## Performing grid search with 5 folds
-XGBoost_grid_search = GridSearchCV(XGBRegressor(), XGBoost_param_grid, cv = 5, scoring = 'neg_mean_absolute_error').fit(X_train, Y_train)
+XGBoost_grid_search = GridSearchCV(XGBRegressor(), XGBoost_param_grid, cv = 3, scoring = 'roc_auc').fit(X_train, Y_train)
 
 ## Extracting the best model
 XGBoost_md = XGBoost_grid_search.best_estimator_
 
+## Predicting on test with best xgboost model 
+xgb_pred = XGBoost_md.predict_proba(test)[:, 1] 
 
+## Defining data-frame to be exported
+data_out = pd.DataFrame({'id': test_id, 'failure': xgb_pred})
+data_out.to_csv('submission.csv')
 
+sess.upload_data(path = 'submission.csv', 
+                 bucket = bucket_name,
+                 key_prefix = 'Tabular-Playground-Aug-2022')
