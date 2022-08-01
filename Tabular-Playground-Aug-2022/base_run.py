@@ -34,11 +34,11 @@ test_id = test['id']
 test = test.drop(columns = ['id'], axis = 1)
 
 ## Changing labels to dummies
-train_dummies = pd.get_dummies(train[['product_code', 'attribute_0', 'attribute_1']])
+train_dummies = pd.get_dummies(train[['attribute_0']])
 train = train.drop(columns = ['product_code', 'attribute_0', 'attribute_1'], axis = 1)
 train = pd.concat([train, train_dummies], axis = 1)
 
-test_dummies = pd.get_dummies(test[['product_code', 'attribute_0', 'attribute_1']])
+test_dummies = pd.get_dummies(test[['attribute_0']])
 test = test.drop(columns = ['product_code', 'attribute_0', 'attribute_1'], axis = 1)
 test = pd.concat([test, test_dummies], axis = 1)
 
@@ -47,13 +47,13 @@ X = train.drop(columns = ['failure'], axis = 1)
 Y = train['failure']
 
 ## Defining the hyper-parameter grid
-XGBoost_param_grid = {'n_estimators': [300],
+XGBoost_param_grid = {'n_estimators': [100, 300, 500],
                       'max_depth': [3, 5, 7],
                       'min_child_weight': [5, 7, 10],
-                      'learning_rate': [0.01],
+                      'learning_rate': [0.01, 0.001],
                       'gamma': [0.3, 0.1],
                       'subsample': [0.8, 1],
-                      'colsample_bytree': [1]}
+                      'colsample_bytree': [0.8, 1]}
 
 ## Performing grid search with 5 folds
 XGBoost_grid_search = GridSearchCV(XGBClassifier(), XGBoost_param_grid, cv = 3, scoring = 'roc_auc').fit(X, Y)
@@ -66,7 +66,7 @@ xgb_pred = XGBoost_md.predict_proba(test)[:, 1]
 
 ## Defining data-frame to be exported
 data_out = pd.DataFrame({'id': test_id, 'failure': xgb_pred})
-data_out.to_csv('submission.csv')
+data_out.to_csv('submission.csv', index = False)
 
 sess.upload_data(path = 'submission.csv', 
                  bucket = bucket_name,
