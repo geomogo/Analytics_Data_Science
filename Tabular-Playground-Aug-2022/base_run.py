@@ -34,11 +34,11 @@ test_id = test['id']
 test = test.drop(columns = ['id'], axis = 1)
 
 ## Changing labels to dummies
-train_dummies = pd.get_dummies(train[['product_code', 'attribute_0', 'attribute_1']])
+train_dummies = pd.get_dummies(train[['attribute_0']])
 train = train.drop(columns = ['product_code', 'attribute_0', 'attribute_1'], axis = 1)
 train = pd.concat([train, train_dummies], axis = 1)
 
-test_dummies = pd.get_dummies(test[['product_code', 'attribute_0', 'attribute_1']])
+test_dummies = pd.get_dummies(test[['attribute_0']])
 test = test.drop(columns = ['product_code', 'attribute_0', 'attribute_1'], axis = 1)
 test = pd.concat([test, test_dummies], axis = 1)
 
