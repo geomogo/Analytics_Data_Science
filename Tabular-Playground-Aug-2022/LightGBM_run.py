@@ -47,7 +47,7 @@ X = train.drop(columns = ['failure'], axis = 1)
 Y = train['failure']
 
 ## Defining the hyper-parameter grid
-lightGBM_param_grid = {'n_estimators': [100, 300, 500],
+LightGBM_param_grid = {'n_estimators': [100, 300, 500],
                        'max_depth': [3, 5, 7],
                        'num_leaves': [20, 25, 30],
                        'min_data_in_leaf': [10, 15, 20],
@@ -58,7 +58,7 @@ lightGBM_param_grid = {'n_estimators': [100, 300, 500],
                       }
 
 ## Performing grid search with 5 folds
-LightGBM_grid_search = GridSearchCV(XGBClassifier(), LightGBM_param_grid, cv = 3, scoring = 'roc_auc').fit(X, Y)
+LightGBM_grid_search = GridSearchCV(LGBMClassifier(), LightGBM_param_grid, cv = 3, scoring = 'roc_auc').fit(X, Y)
 
 ## Extracting the best model
 LightGBM_md = LightGBM_grid_search.best_estimator_
