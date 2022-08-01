@@ -1,6 +1,7 @@
 import boto3
 import pandas as pd; pd.set_option('display.max_columns', 100)
 import numpy as np
+from xgboost import XGBClassifier
 
 s3 = boto3.resource('s3')
 bucket_name = 'analytics-data-science-competitions'
@@ -16,4 +17,41 @@ file_content_stream_1 = file_object_1.get('Body')
 bucket_object_2 = bucket.Object(file_key_2)
 file_object_2 = bucket_object_2.get()
 file_content_stream_2 = file_object_2.get('Body')
+
+## Reading data-files
+train = pd.read_csv(file_content_stream_1)
+train = train.drop(columns = ['id'], axis = 1)
+
+test = pd.read_csv(file_content_stream_2)
+test = test.drop(columns = ['id'], axis = 1)
+
+## Changing labels to dummies
+train_dummies = pd.get_dummies(train[['product_code', 'attribute_0', 'attribute_1']])
+train = train.drop(columns = ['product_code', 'attribute_0', 'attribute_1'], axis = 1)
+train = pd.concat([train, train_dummies], axis = 1)
+
+test_dummies = pd.get_dummies(test[['product_code', 'attribute_0', 'attribute_1']])
+test = test.drop(columns = ['product_code', 'attribute_0', 'attribute_1'], axis = 1)
+test = pd.concat([test, test_dummies], axis = 1)
+
+## Defining input and target variables
+X = train.drop(columns = ['failure'], axis = 1)
+Y = train['failure']
+
+## Defining the hyper-parameter grid
+XGBoost_param_grid = {'n_estimators': [300],
+                      'max_depth': [3, 5, 7],
+                      'min_child_weight': [5, 7, 10],
+                      'learning_rate': [0.01],
+                      'gamma': [0.3, 0.1],
+                      'subsample': [0.8, 1],
+                      'colsample_bytree': [1]}
+
+## Performing grid search with 5 folds
+XGBoost_grid_search = GridSearchCV(XGBRegressor(), XGBoost_param_grid, cv = 5, scoring = 'neg_mean_absolute_error').fit(X_train, Y_train)
+
+## Extracting the best model
+XGBoost_md = XGBoost_grid_search.best_estimator_
+
+
 
