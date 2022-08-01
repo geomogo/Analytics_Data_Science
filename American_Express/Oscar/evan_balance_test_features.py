@@ -94,3 +94,7 @@ print('-- Final test data-frame imputation complete -- \n')
 
 ## Exporting the resulting training data-frame as a csv file
 data_impute.to_csv('amex_test_data_balance_final.csv', index = False)
+
+sess.upload_data(path = 'amex_test_data_balance_final.csv', 
+                 bucket = bucket_name,
+                 key_prefix = 'AmericanExpress')
