@@ -164,7 +164,7 @@ study.optimize(objective_amex, n_trials = 200)
 
 ## Extracting best model 
 best_params = study.best_trial.params
-LGB_md = LGBMClassifier(**best_params, n_jobs = -1).fit(X_train, Y_train)
+LGB_md = LGBMClassifier(**best_params, n_jobs = -1).fit(X, Y)
 
 ## Predicting on test 
 X_test_real = data_test.drop(columns = ['customer_ID'], axis = 1)
