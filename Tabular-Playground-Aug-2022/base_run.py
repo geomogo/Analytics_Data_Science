@@ -47,13 +47,13 @@ X = train.drop(columns = ['failure'], axis = 1)
 Y = train['failure']
 
 ## Defining the hyper-parameter grid
-XGBoost_param_grid = {'n_estimators': [300],
+XGBoost_param_grid = {'n_estimators': [100, 300, 500],
                       'max_depth': [3, 5, 7],
                       'min_child_weight': [5, 7, 10],
-                      'learning_rate': [0.01],
+                      'learning_rate': [0.01, 0.001],
                       'gamma': [0.3, 0.1],
                       'subsample': [0.8, 1],
-                      'colsample_bytree': [1]}
+                      'colsample_bytree': [0.8, 1]}
 
 ## Performing grid search with 5 folds
 XGBoost_grid_search = GridSearchCV(XGBClassifier(), XGBoost_param_grid, cv = 3, scoring = 'roc_auc').fit(X, Y)
