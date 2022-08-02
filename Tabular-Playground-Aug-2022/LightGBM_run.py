@@ -67,7 +67,7 @@ LightGBM_md = LightGBM_grid_search.best_estimator_
 lightGBM_pred = LightGBM_md.predict_proba(test)[:, 1] 
 
 ## Defining data-frame to be exported
-data_out = pd.DataFrame({'id': test_id, 'failure': lightGBM})
+data_out = pd.DataFrame({'id': test_id, 'failure': lightGBM_pred})
 data_out.to_csv('submission.csv', index = False)
 
 sess.upload_data(path = 'submission.csv', 
