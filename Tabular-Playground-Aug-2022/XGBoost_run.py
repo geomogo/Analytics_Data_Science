@@ -53,7 +53,7 @@ test = pd.DataFrame(knn_imputer.fit_transform(test), columns = test.columns)
 
 ## Defining the hyper-parameter grid
 XGBoost_param_grid = {'n_estimators': [300],
-                      'max_depth': [3, 5, 7],
+                      'max_depth': [5, 7],
                       'min_child_weight': [5, 7, 10],
                       'learning_rate': [0.01, 0.001],
                       'gamma': [0.3, 0.1],
