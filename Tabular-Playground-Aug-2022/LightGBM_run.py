@@ -58,7 +58,7 @@ LightGBM_param_grid = {'n_estimators': [100, 300],
                       }
 
 ## Performing grid search with 5 folds
-LightGBM_grid_search = GridSearchCV(LGBMClassifier(), LightGBM_param_grid, cv = 3, scoring = 'roc_auc').fit(X, Y)
+LightGBM_grid_search = GridSearchCV(LGBMClassifier(), LightGBM_param_grid, cv = 3, scoring = 'roc_auc', n_jobs = -1).fit(X, Y)
 
 ## Extracting the best model
 LightGBM_md = LightGBM_grid_search.best_estimator_
