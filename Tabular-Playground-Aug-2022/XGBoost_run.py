@@ -48,7 +48,7 @@ X = train.drop(columns = ['failure'], axis = 1)
 Y = train['failure']
 
 ## Filling missing values with kNN
-knn_imputer = KNNImputer(n_neighbors = 5, weights = 'uniform')
+knn_imputer = KNNImputer(n_neighbors = 5, weights = 'distance')
 X = pd.DataFrame(knn_imputer.fit_transform(X), columns = X.columns)
 test = pd.DataFrame(knn_imputer.fit_transform(test), columns = test.columns)
 
