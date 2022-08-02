@@ -63,7 +63,7 @@ RF_param_grid = {'n_estimators': [100, 300, 500],
 RF_grid_search = GridSearchCV(RandomForestClassifier(), RF_param_grid, cv = 3, scoring = 'roc_auc', n_jobs = -1).fit(X, Y)
 
 ## Extracting the best score
-best_score = XGBoost_grid_search.best_score_
+best_score = RF_grid_search.best_score_
 print('The best area under the ROC cure is:', best_score)
 
 ## Extracting the best model
