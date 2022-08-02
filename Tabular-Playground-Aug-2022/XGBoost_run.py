@@ -46,8 +46,13 @@ test = pd.concat([test, test_dummies], axis = 1)
 X = train.drop(columns = ['failure'], axis = 1)
 Y = train['failure']
 
+## Filling missing values with kNN
+knn_imputer = KNNImputer(n_neighbors = 5, weights = 'uniform')
+X = pd.DataFrame(knn_imputer.fit_transform(X), columns = X.columns)
+test = pd.DataFrame(knn_imputer.fit_transform(test), columns = test.columns)
+
 ## Defining the hyper-parameter grid
-XGBoost_param_grid = {'n_estimators': [100, 300, 500],
+XGBoost_param_grid = {'n_estimators': [500],
                       'max_depth': [3, 5, 7],
                       'min_child_weight': [5, 7, 10],
                       'learning_rate': [0.01, 0.001],
