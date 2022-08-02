@@ -49,8 +49,8 @@ train = pd.DataFrame(knn_imputer.fit_transform(train), columns = train.columns)
 test = pd.DataFrame(knn_imputer.fit_transform(test), columns = test.columns)
 
 ## Engineering features
-train['feature_1'] = pd.where(train['loading'] < 150, 0, 1)
-test['feature_1'] = pd.where(test['loading'] < 150, 0, 1)
+train['feature_1'] = np.where(train['loading'] < 150, 0, 1)
+test['feature_1'] = np.where(test['loading'] < 150, 0, 1)
 
 ## Defining input and target variables
 X = train.drop(columns = ['failure'], axis = 1)
