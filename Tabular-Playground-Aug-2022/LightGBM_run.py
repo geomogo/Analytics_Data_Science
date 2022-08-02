@@ -47,11 +47,11 @@ X = train.drop(columns = ['failure'], axis = 1)
 Y = train['failure']
 
 ## Defining the hyper-parameter grid
-LightGBM_param_grid = {'n_estimators': [100, 300, 500],
+LightGBM_param_grid = {'n_estimators': [100, 300],
                        'max_depth': [3, 5, 7],
                        'num_leaves': [20, 25, 30],
                        'min_data_in_leaf': [10, 15, 20],
-                       'learning_rate': [0.1, 0.01, 0.001],
+                       'learning_rate': [0.01, 0.001],
                        'feature_fraction': [0.8, 0.9, 1],
                        'lambda_l1': [0, 10, 100],
                        'lambda_l2': [0, 10, 100]
