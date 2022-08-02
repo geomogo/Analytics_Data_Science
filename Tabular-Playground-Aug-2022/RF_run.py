@@ -57,7 +57,8 @@ RF_param_grid = {'n_estimators': [300, 500],
                  'max_features': [3, 5, 7],
                  'max_depth': [3, 5, 7],
                  'min_samples_split': [5, 7, 10],
-                 'min_samples_leaf': [3, 5, 7]}
+                 'min_samples_leaf': [3, 5, 7],
+                 'class_weight': 'balanced'}
 
 ## Performing grid search with 5 folds
 RF_grid_search = GridSearchCV(RandomForestClassifier(), RF_param_grid, cv = 3, scoring = 'roc_auc', n_jobs = -1).fit(X, Y)
