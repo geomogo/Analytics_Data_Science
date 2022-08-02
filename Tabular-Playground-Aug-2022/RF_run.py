@@ -45,3 +45,32 @@ test = pd.concat([test, test_dummies], axis = 1)
 ## Defining input and target variables
 X = train.drop(columns = ['failure'], axis = 1)
 Y = train['failure']
+
+## Filling missing values with kNN
+knn_imputer = KNNImputer(n_neighbors = 5, weights = 'uniform')
+X = pd.DataFrame(knn_imputer.fit_transform(X), columns = X.columns)
+test = pd.DataFrame(knn_imputer.fit_transform(test), columns = test.columns)
+
+## Defining the hyper-parameter grid
+RF_param_grid = {'n_estimators': [100, 300, 500],
+                 'max_features': [3, 5, 7],
+                 'max_depth': [3, 5, 7],
+                 'min_samples_split': [5, 7, 10],
+                 'min_samples_leaf': [3, 5, 7]}
+
+## Performing grid search with 5 folds
+RF_grid_search = GridSearchCV(RandomForestClassifier(), RF_param_grid, cv = 3, scoring = 'roc_auc').fit(X, Y)
+
+## Extracting the best model
+RF_md = RF_grid_search.best_estimator_
+
+## Predicting on test with best RF model 
+RF_pred = RF_md.predict_proba(test)[:, 1] 
+
+## Defining data-frame to be exported
+data_out = pd.DataFrame({'id': test_id, 'failure': RF_pred})
+data_out.to_csv('submission.csv', index = False)
+
+sess.upload_data(path = 'submission.csv', 
+                 bucket = bucket_name,
+                 key_prefix = 'Tabular-Playground-Aug-2022')
