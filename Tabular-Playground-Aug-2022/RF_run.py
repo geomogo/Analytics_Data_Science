@@ -43,24 +43,29 @@ test_dummies = pd.get_dummies(test[['attribute_0']])
 test = test.drop(columns = ['product_code', 'attribute_0', 'attribute_1'], axis = 1)
 test = pd.concat([test, test_dummies], axis = 1)
 
+## Filling missing values with kNN
+knn_imputer = KNNImputer(n_neighbors = 5, weights = 'distance')
+train = pd.DataFrame(knn_imputer.fit_transform(train), columns = train.columns)
+test = pd.DataFrame(knn_imputer.fit_transform(test), columns = test.columns)
+
 ## Defining input and target variables
 X = train.drop(columns = ['failure'], axis = 1)
 Y = train['failure']
 
-## Filling missing values with kNN
-knn_imputer = KNNImputer(n_neighbors = 5, weights = 'uniform')
-X = pd.DataFrame(knn_imputer.fit_transform(X), columns = X.columns)
-test = pd.DataFrame(knn_imputer.fit_transform(test), columns = test.columns)
-
 ## Defining the hyper-parameter grid
-RF_param_grid = {'n_estimators': [100, 300, 500],
+RF_param_grid = {'n_estimators': [300, 500],
                  'max_features': [3, 5, 7],
                  'max_depth': [3, 5, 7],
                  'min_samples_split': [5, 7, 10],
-                 'min_samples_leaf': [3, 5, 7]}
+                 'min_samples_leaf': [3, 5, 7],
+                 'class_weight': ['balanced']}
 
 ## Performing grid search with 5 folds
-RF_grid_search = GridSearchCV(RandomForestClassifier(), RF_param_grid, cv = 3, scoring = 'roc_auc').fit(X, Y)
+RF_grid_search = GridSearchCV(RandomForestClassifier(), RF_param_grid, cv = 3, scoring = 'roc_auc', n_jobs = -1).fit(X, Y)
+
+## Extracting the best score
+best_score = RF_grid_search.best_score_
+print('The best area under the ROC cure is:', best_score)
 
 ## Extracting the best model
 RF_md = RF_grid_search.best_estimator_
@@ -70,8 +75,8 @@ RF_pred = RF_md.predict_proba(test)[:, 1]
 
 ## Defining data-frame to be exported
 data_out = pd.DataFrame({'id': test_id, 'failure': RF_pred})
-data_out.to_csv('submission.csv', index = False)
+data_out.to_csv('RF_submission_1.csv', index = False)
 
-sess.upload_data(path = 'submission.csv', 
+sess.upload_data(path = 'RF_submission_1.csv', 
                  bucket = bucket_name,
                  key_prefix = 'Tabular-Playground-Aug-2022')
