@@ -48,9 +48,19 @@ knn_imputer = KNNImputer(n_neighbors = 5, weights = 'distance')
 train = pd.DataFrame(knn_imputer.fit_transform(train), columns = train.columns)
 test = pd.DataFrame(knn_imputer.fit_transform(test), columns = test.columns)
 
+## Engineering features
+train['feature_1'] = np.where(train['loading'] < 150, 0, 1)
+test['feature_1'] = np.where(test['loading'] < 150, 0, 1)
+
 ## Defining input and target variables
-X = train.drop(columns = ['failure'], axis = 1)
+X = train[['loading', 'measurement_2', 'measurement_4', 'measurement_5',
+           'measurement_6', 'measurement_7', 'measurement_8', 'measurement_15',
+           'measurement_17', 'feature_1']]
 Y = train['failure']
+
+test = test[['loading', 'measurement_2', 'measurement_4', 'measurement_5',
+             'measurement_6', 'measurement_7', 'measurement_8', 'measurement_15',
+             'measurement_17', 'feature_1']]
 
 ## Defining the hyper-parameter grid
 RF_param_grid = {'n_estimators': [300, 500],
@@ -61,7 +71,7 @@ RF_param_grid = {'n_estimators': [300, 500],
                  'class_weight': ['balanced']}
 
 ## Performing grid search with 5 folds
-RF_grid_search = GridSearchCV(RandomForestClassifier(), RF_param_grid, cv = 3, scoring = 'roc_auc', n_jobs = -1).fit(X, Y)
+RF_grid_search = GridSearchCV(RandomForestClassifier(), RF_param_grid, cv = 5, scoring = 'roc_auc', n_jobs = -1).fit(X, Y)
 
 ## Extracting the best score
 best_score = RF_grid_search.best_score_
@@ -75,7 +85,7 @@ RF_pred = RF_md.predict_proba(test)[:, 1]
 
 ## Defining data-frame to be exported
 data_out = pd.DataFrame({'id': test_id, 'failure': RF_pred})
-data_out.to_csv('RF_submission_1.csv', index = False)
+data_out.to_csv('RF_submission_2.csv', index = False)
 
 sess.upload_data(path = 'RF_submission_1.csv', 
                  bucket = bucket_name,
