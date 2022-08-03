@@ -72,7 +72,7 @@ svm_param_grid = {'C' : [0.001, 0.01, 0.1, 1, 10, 100],
                   'kernel': ['linear', 'rbf', 'sigmoid']}
 
 ## Performing grid search with 5 folds
-SVM_grid_search = GridSearchCV(SVC(), svm_param_grid, cv = 5, scoring = 'roc_auc', n_jobs = -1).fit(X, Y)
+SVM_grid_search = GridSearchCV(SVC(), svm_param_grid, cv = 5, scoring = 'roc_auc', n_jobs = -1, verbose = 1).fit(X, Y)
 
 ## Extracting the best parameters
 best_params = SVM_grid_search.best_params_
