@@ -87,6 +87,6 @@ RF_pred = RF_md.predict_proba(test)[:, 1]
 data_out = pd.DataFrame({'id': test_id, 'failure': RF_pred})
 data_out.to_csv('RF_submission_2.csv', index = False)
 
-sess.upload_data(path = 'RF_submission_1.csv', 
+sess.upload_data(path = 'RF_submission_2.csv', 
                  bucket = bucket_name,
                  key_prefix = 'Tabular-Playground-Aug-2022')
