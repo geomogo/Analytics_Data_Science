@@ -80,7 +80,7 @@ logistic_md = logistic_grid_search.best_estimator_
 logistic_pred = logistic_md.predict_proba(test)[:, 1] 
 
 ## Defining data-frame to be exported
-data_out = pd.DataFrame({'id': test_id, 'failure': RF_pred})
+data_out = pd.DataFrame({'id': test_id, 'failure': logistic_pred})
 data_out.to_csv('RF_submission_4.csv', index = False)
 
 sess.upload_data(path = 'Logistic_submission.csv', 
