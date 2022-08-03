@@ -71,6 +71,10 @@ RF_param_grid = {'n_estimators': [300],
 ## Performing grid search with 5 folds
 RF_grid_search = GridSearchCV(RandomForestClassifier(), RF_param_grid, cv = 5, scoring = 'roc_auc', n_jobs = -1).fit(X, Y)
 
+## Extracting the best parameters
+best_params = RF_grid_search.best_params_
+print('The optimal hyper-parameters are:', best_params)
+
 ## Extracting the best score
 best_score = RF_grid_search.best_score_
 print('The best area under the ROC cure is:', best_score)
