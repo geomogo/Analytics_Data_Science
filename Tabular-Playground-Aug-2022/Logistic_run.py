@@ -63,7 +63,7 @@ logistic_param_grid = {'penalty': ['l1', 'l2', 'elasticnet'],
 #                        'class_weight': ['balanced']}
 
 ## Performing grid search with 5 folds
-logistic_grid_search = GridSearchCV(LogisticRegression(), logistic_param_grid, cv = 5, scoring = 'roc_auc', n_jobs = -1).fit(X, Y)
+logistic_grid_search = GridSearchCV(LogisticRegression(), logistic_param_grid, cv = 5, scoring = 'roc_auc', n_jobs = -1, verbose = 1).fit(X, Y)
 
 ## Extracting the best parameters
 best_params = logistic_grid_search.best_params_
