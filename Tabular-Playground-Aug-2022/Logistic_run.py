@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import roc_auc_score
 from sklearn.impute import KNNImputer
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 
 import os
 import sagemaker
@@ -49,46 +49,40 @@ train = pd.DataFrame(knn_imputer.fit_transform(train), columns = train.columns)
 test = pd.DataFrame(knn_imputer.fit_transform(test), columns = test.columns)
 
 ## Engineering features
-train['feature_1'] = np.where(train['loading'] < 150, 0, 1)
-test['feature_1'] = np.where(test['loading'] < 150, 0, 1)
+# train['feature_1'] = np.where(train['loading'] < 150, 0, 1)
+# test['feature_1'] = np.where(test['loading'] < 150, 0, 1)
 
 ## Defining input and target variables
-X = train[['loading', 'measurement_5', 'measurement_6', 
-           'measurement_17', 'feature_1']]
+X = train.drop(columns = ['failure'], axis = 1)
 Y = train['failure']
 
-test = test[['loading', 'measurement_5', 'measurement_6', 
-           'measurement_17', 'feature_1']]
-
 ## Defining the hyper-parameter grid
-RF_param_grid = {'n_estimators': [300],
-                 'max_features': [3, 5, 7],
-                 'max_depth': [3, 5, 7],
-                 'min_samples_split': [5, 7, 10],
-                 'min_samples_leaf': [3, 5, 7],
-                 'class_weight': ['balanced']}
+logistic_param_grid = {'penalty': ['l1', 'l2', 'elasticnet'],
+                       'C': [0.001,0.01,0.1,1,10,100],
+                       'solver': ['liblinear', 'sag', 'saga']}
+#                        'class_weight': ['balanced']}
 
 ## Performing grid search with 5 folds
-RF_grid_search = GridSearchCV(RandomForestClassifier(), RF_param_grid, cv = 5, scoring = 'roc_auc', n_jobs = -1).fit(X, Y)
+logistic_grid_search = GridSearchCV(LogisticRegression(), logistic_param_grid, cv = 5, scoring = 'roc_auc', n_jobs = -1).fit(X, Y)
 
 ## Extracting the best parameters
-best_params = RF_grid_search.best_params_
+best_params = logistic_grid_search.best_params_
 print('The optimal hyper-parameters are:', best_params)
 
 ## Extracting the best score
-best_score = RF_grid_search.best_score_
+best_score = logistic_grid_search.best_score_
 print('The best area under the ROC cure is:', best_score)
 
 ## Extracting the best model
-RF_md = RF_grid_search.best_estimator_
+logistic_md = logistic_grid_search.best_estimator_
 
 ## Predicting on test with best RF model 
-RF_pred = RF_md.predict_proba(test)[:, 1] 
+logistic_pred = logistic_md.predict_proba(test)[:, 1] 
 
 ## Defining data-frame to be exported
 data_out = pd.DataFrame({'id': test_id, 'failure': RF_pred})
 data_out.to_csv('RF_submission_4.csv', index = False)
 
-sess.upload_data(path = 'RF_submission_4.csv', 
+sess.upload_data(path = 'Logistic_submission.csv', 
                  bucket = bucket_name,
                  key_prefix = 'Tabular-Playground-Aug-2022')
