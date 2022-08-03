@@ -56,6 +56,11 @@ test = pd.DataFrame(knn_imputer.fit_transform(test), columns = test.columns)
 X = train.drop(columns = ['failure'], axis = 1)
 Y = train['failure']
 
+## Scaling inputs to 0-1
+scaler = MinMaxScaler()
+X = scaler.fit_transform(X)
+test = scaler.fit_transform(test)
+
 ## Defining the hyper-parameter grid
 logistic_param_grid = {'penalty': ['l1', 'l2', 'elasticnet'],
                        'C': [0.001,0.01,0.1,1,10,100],
