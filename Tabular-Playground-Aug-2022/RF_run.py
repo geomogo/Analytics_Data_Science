@@ -53,13 +53,13 @@ train['feature_1'] = np.where(train['loading'] < 150, 0, 1)
 test['feature_1'] = np.where(test['loading'] < 150, 0, 1)
 
 ## Defining input and target variables
-X = train[['loading', 'measurement_2', 'measurement_4', 'measurement_5',
-           'measurement_6', 'measurement_7', 'measurement_8', 'measurement_15',
+X = train[['loading', 'measurement_4', 'measurement_5',
+           'measurement_6', 'measurement_7', 'measurement_15',
            'measurement_17', 'feature_1']]
 Y = train['failure']
 
-test = test[['loading', 'measurement_2', 'measurement_4', 'measurement_5',
-             'measurement_6', 'measurement_7', 'measurement_8', 'measurement_15',
+test = test[['loading', 'measurement_4', 'measurement_5',
+             'measurement_6', 'measurement_7', 'measurement_15',
              'measurement_17', 'feature_1']]
 
 ## Defining the hyper-parameter grid
