@@ -64,7 +64,7 @@ test = scaler.fit_transform(test)
 
 ## Defining the hyper-parameter grid
 logistic_param_grid = {'penalty': ['l1', 'l2', 'elasticnet'],
-                       'C': [0.001,0.01,0.1,1,10,100],
+                       'C': [0.001, 0.01, 0.1, 1, 10, 100],
                        'solver': ['liblinear', 'sag', 'saga']}
 #                        'class_weight': ['balanced']}
 
