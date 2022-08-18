@@ -85,12 +85,12 @@ for i in range(0, len(clusters)):
     
     print('Working on cluster ', i+1, 'out of', len(clusters))
     
-    train_loop = train[train['cluster'] == i]
+    train_loop = train[train['cluster'] == clusters[i]]
     train_loop = train_loop.drop(columns = ['cluster'], axis = 1)
     train_dummies = pd.get_dummies(train_loop['family'])
     train_loop = pd.concat([train_loop.drop(columns = 'family', axis = 1), train_dummies], axis = 1)
     
-    test_loop = test[test['cluster'] == i]
+    test_loop = test[test['cluster'] == clusters[i]]
     test_ids = test_loop['id']
     test_loop = test_loop.drop(columns = ['cluster', 'id'], axis = 1)
     test_dummies = pd.get_dummies(test_loop['family'])
