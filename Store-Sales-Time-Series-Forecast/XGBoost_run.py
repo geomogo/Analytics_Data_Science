@@ -1,8 +1,8 @@
 import boto3
 import pandas as pd; pd.set_option('display.max_columns', 200)
 import numpy as np
-import matplotlib.pyplot as plt 
-import seaborn as sns
+from sklearn.model_selection import GridSearchCV
+from xgboost import XGBRegressor
 
 s3 = boto3.resource('s3')
 bucket_name = 'analytics-data-science-competitions'
@@ -47,3 +47,40 @@ stores = pd.read_csv(file_content_stream_3)
 transactions = pd.read_csv(file_content_stream_4)
 train = pd.read_csv(file_content_stream_5)
 test = pd.read_csv(file_content_stream_6)
+
+## Changing feature labels in holidays and stores
+holidays.columns = ['date', 'holiday_type', 'locale', 'locale_name', 'description', 'transferred']
+stores.columns = ['store_nbr', 'city', 'state', 'store_type', 'cluster']
+
+## Consolidating train data
+train = pd.merge(train, oil, on = 'date', how = 'left')
+train = pd.merge(train, holidays, on = 'date', how = 'left')
+train = pd.merge(train, stores, on = 'store_nbr', how = 'left')
+train['date'] = pd.to_datetime(train['date'], format = '%Y-%m-%d')
+train = train[train['cluster'] == 3].reset_index(drop = True)
+
+## Consolidating test data
+test = pd.merge(test, holidays, on = 'date', how = 'left')
+test = pd.merge(test, oil, on = 'date', how = 'left')
+test = pd.merge(test, stores, on = 'store_nbr', how = 'left')
+test['date'] = pd.to_datetime(test['date'], format = '%Y-%m-%d')
+test = test[test['cluster'] == 3].reset_index(drop = True)
+
+## Basic feature engineering 
+train['day'] = train['date'].dt.dayofweek
+train['month'] = train['date'].dt.month
+train['is_holiday'] = np.where(train['holiday_type'] == 'Holiday', 1, 0)
+train = train[['onpromotion', 'dcoilwtico', 'is_holiday', 'day', 'month', 'family', 'sales']]
+train_dummies = pd.get_dummies(train['family'])
+train = pd.concat([train.drop(columns = 'family', axis = 1), train_dummies], axis = 1)
+
+test['day'] = test['date'].dt.dayofweek
+test['month'] = test['date'].dt.month
+test['is_holiday'] = np.where(test['holiday_type'] == 'Holiday', 1, 0)
+test = test[['onpromotion', 'dcoilwtico', 'is_holiday', 'day', 'month', 'family']]
+test_dummies = pd.get_dummies(test['family'])
+test = pd.concat([test.drop(columns = 'family', axis = 1), test_dummies], axis = 1)
+
+
+
+    
