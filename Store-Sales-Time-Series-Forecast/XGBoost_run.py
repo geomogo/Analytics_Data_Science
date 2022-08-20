@@ -132,10 +132,11 @@ xgb_pred = XGBoost_md.predict(test)
     
 ## Defining data-frame to store results
 data_out = pd.DataFrame({'id': test_ids, 'sales': xgb_pred})
+data_out.to_csv('XGBoost_baseline_run.csv', index = False)
     
 #     ## Appending results
 #     results.append(data_out)
 
-## Combining results as a single data-frame
-results = pd.DataFrame(results)
-results.to_csv('XGBoost_baseline_run.csv', index = False)
+# ## Combining results as a single data-frame
+# results = pd.DataFrame(results)
+# results.to_csv('XGBoost_baseline_run.csv', index = False)
