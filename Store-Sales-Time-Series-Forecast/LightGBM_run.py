@@ -69,6 +69,22 @@ train['day'] = train['date'].dt.dayofweek
 train['month'] = train['date'].dt.month
 train['is_holiday'] = np.where(train['holiday_type'] == 'Holiday', 1, 0)
 train = train[['onpromotion', 'dcoilwtico', 'is_holiday', 'day', 'month', 'family', 'store_type', 'cluster', 'sales']]
+train['cluster'] = np.where(train['cluster'] == 1, 'cluster_1',
+                   np.where(train['cluster'] == 2, 'cluster_2',
+                   np.where(train['cluster'] == 3, 'cluster_3',
+                   np.where(train['cluster'] == 4, 'cluster_4',
+                   np.where(train['cluster'] == 5, 'cluster_5',
+                   np.where(train['cluster'] == 6, 'cluster_6',
+                   np.where(train['cluster'] == 7, 'cluster_7',
+                   np.where(train['cluster'] == 8, 'cluster_8',
+                   np.where(train['cluster'] == 9, 'cluster_9',
+                   np.where(train['cluster'] == 10, 'cluster_10',
+                   np.where(train['cluster'] == 11, 'cluster_11',
+                   np.where(train['cluster'] == 12, 'cluster_12',
+                   np.where(train['cluster'] == 13, 'cluster_13',
+                   np.where(train['cluster'] == 14, 'cluster_14',
+                   np.where(train['cluster'] == 15, 'cluster_15',
+                   np.where(train['cluster'] == 16, 'cluster_16', 'cluster_17')))))))))))))))
 train_dummies_1 = pd.get_dummies(train['family'])
 train_dummies_2 = pd.get_dummies(train['store_type'])
 train_dummies_3 = pd.get_dummies(train['cluster'])
@@ -79,6 +95,22 @@ test['month'] = test['date'].dt.month
 test['is_holiday'] = np.where(test['holiday_type'] == 'Holiday', 1, 0)
 test_ids = test['id']
 test = test[['onpromotion', 'dcoilwtico', 'is_holiday', 'day', 'month', 'family', 'store_type', 'cluster']]
+test['cluster'] = np.where(test['cluster'] == 1, 'cluster_1',
+                  np.where(test['cluster'] == 2, 'cluster_2',
+                  np.where(test['cluster'] == 3, 'cluster_3',
+                  np.where(test['cluster'] == 4, 'cluster_4',
+                  np.where(test['cluster'] == 5, 'cluster_5',
+                  np.where(test['cluster'] == 6, 'cluster_6',
+                  np.where(test['cluster'] == 7, 'cluster_7',
+                  np.where(test['cluster'] == 8, 'cluster_8',
+                  np.where(test['cluster'] == 9, 'cluster_9',
+                  np.where(test['cluster'] == 10, 'cluster_10',
+                  np.where(test['cluster'] == 11, 'cluster_11',
+                  np.where(test['cluster'] == 12, 'cluster_12',
+                  np.where(test['cluster'] == 13, 'cluster_13',
+                  np.where(test['cluster'] == 14, 'cluster_14',
+                  np.where(test['cluster'] == 15, 'cluster_15',
+                  np.where(test['cluster'] == 16, 'cluster_16', 'cluster_17')))))))))))))))                            
 test_dummies_1 = pd.get_dummies(test['family'])
 test_dummies_2 = pd.get_dummies(test['store_type'])
 test_dummies_3 = pd.get_dummies(test['cluster'])
