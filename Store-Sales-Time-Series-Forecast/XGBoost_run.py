@@ -128,7 +128,7 @@ print('The best mean squared log error:', best_score)
 XGBoost_md = XGBoost_grid_search.best_estimator_
 
 ## Predicting on test with best xgboost model 
-xgb_pred = XGBoost_md.predict(test_loop)
+xgb_pred = XGBoost_md.predict(test)
     
 ## Defining data-frame to store results
 data_out = pd.DataFrame({'id': test_ids, 'sales': xgb_pred})
