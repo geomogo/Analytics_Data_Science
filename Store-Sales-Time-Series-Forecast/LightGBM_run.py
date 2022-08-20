@@ -4,6 +4,8 @@ import numpy as np
 from sklearn.model_selection import GridSearchCV
 from lightgbm import LGBMRegressor
 
+import re
+
 s3 = boto3.resource('s3')
 bucket_name = 'analytics-data-science-competitions'
 bucket = s3.Bucket(bucket_name)
@@ -84,11 +86,13 @@ train['cluster'] = np.where(train['cluster'] == 1, 'cluster_1',
                    np.where(train['cluster'] == 13, 'cluster_13',
                    np.where(train['cluster'] == 14, 'cluster_14',
                    np.where(train['cluster'] == 15, 'cluster_15',
-                   np.where(train['cluster'] == 16, 'cluster_16', 'cluster_17')))))))))))))))
+                   np.where(train['cluster'] == 16, 'cluster_16', 'cluster_17'))))))))))))))))
 train_dummies_1 = pd.get_dummies(train['family'])
 train_dummies_2 = pd.get_dummies(train['store_type'])
 train_dummies_3 = pd.get_dummies(train['cluster'])
 train = pd.concat([train.drop(columns = ['family', 'store_type', 'cluster'], axis = 1), train_dummies_1, train_dummies_2, train_dummies_3], axis = 1)
+train = train.rename(columns = lambda x:re.sub('[^A-Za-z0-9_]+', '', x))
+
 
 test['day'] = test['date'].dt.dayofweek
 test['month'] = test['date'].dt.month
@@ -110,11 +114,12 @@ test['cluster'] = np.where(test['cluster'] == 1, 'cluster_1',
                   np.where(test['cluster'] == 13, 'cluster_13',
                   np.where(test['cluster'] == 14, 'cluster_14',
                   np.where(test['cluster'] == 15, 'cluster_15',
-                  np.where(test['cluster'] == 16, 'cluster_16', 'cluster_17')))))))))))))))                            
+                  np.where(test['cluster'] == 16, 'cluster_16', 'cluster_17'))))))))))))))))                            
 test_dummies_1 = pd.get_dummies(test['family'])
 test_dummies_2 = pd.get_dummies(test['store_type'])
 test_dummies_3 = pd.get_dummies(test['cluster'])
 test = pd.concat([test.drop(columns = ['family', 'store_type', 'cluster'], axis = 1), test_dummies_1, test_dummies_2, test_dummies_3], axis = 1)
+test = test.rename(columns = lambda x:re.sub('[^A-Za-z0-9_]+', '', x))
 
 X = train.drop(columns = ['sales'], axis = 1)
 Y = train['sales']
