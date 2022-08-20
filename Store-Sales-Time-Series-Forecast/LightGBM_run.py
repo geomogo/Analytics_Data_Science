@@ -1,9 +1,10 @@
 import boto3
 import pandas as pd
 import numpy as np
-
 from sklearn.model_selection import GridSearchCV
-from xgboost import XGBRegressor
+from lightgbm import LGBMRegressor
+
+import re
 
 s3 = boto3.resource('s3')
 bucket_name = 'analytics-data-science-competitions'
@@ -70,73 +71,83 @@ train['day'] = train['date'].dt.dayofweek
 train['month'] = train['date'].dt.month
 train['is_holiday'] = np.where(train['holiday_type'] == 'Holiday', 1, 0)
 train = train[['onpromotion', 'dcoilwtico', 'is_holiday', 'day', 'month', 'family', 'store_type', 'cluster', 'sales']]
+train['cluster'] = np.where(train['cluster'] == 1, 'cluster_1',
+                   np.where(train['cluster'] == 2, 'cluster_2',
+                   np.where(train['cluster'] == 3, 'cluster_3',
+                   np.where(train['cluster'] == 4, 'cluster_4',
+                   np.where(train['cluster'] == 5, 'cluster_5',
+                   np.where(train['cluster'] == 6, 'cluster_6',
+                   np.where(train['cluster'] == 7, 'cluster_7',
+                   np.where(train['cluster'] == 8, 'cluster_8',
+                   np.where(train['cluster'] == 9, 'cluster_9',
+                   np.where(train['cluster'] == 10, 'cluster_10',
+                   np.where(train['cluster'] == 11, 'cluster_11',
+                   np.where(train['cluster'] == 12, 'cluster_12',
+                   np.where(train['cluster'] == 13, 'cluster_13',
+                   np.where(train['cluster'] == 14, 'cluster_14',
+                   np.where(train['cluster'] == 15, 'cluster_15',
+                   np.where(train['cluster'] == 16, 'cluster_16', 'cluster_17'))))))))))))))))
 train_dummies_1 = pd.get_dummies(train['family'])
 train_dummies_2 = pd.get_dummies(train['store_type'])
 train_dummies_3 = pd.get_dummies(train['cluster'])
 train = pd.concat([train.drop(columns = ['family', 'store_type', 'cluster'], axis = 1), train_dummies_1, train_dummies_2, train_dummies_3], axis = 1)
+train = train.rename(columns = lambda x:re.sub('[^A-Za-z0-9_]+', '', x))
+
 
 test['day'] = test['date'].dt.dayofweek
 test['month'] = test['date'].dt.month
 test['is_holiday'] = np.where(test['holiday_type'] == 'Holiday', 1, 0)
 test_ids = test['id']
 test = test[['onpromotion', 'dcoilwtico', 'is_holiday', 'day', 'month', 'family', 'store_type', 'cluster']]
+test['cluster'] = np.where(test['cluster'] == 1, 'cluster_1',
+                  np.where(test['cluster'] == 2, 'cluster_2',
+                  np.where(test['cluster'] == 3, 'cluster_3',
+                  np.where(test['cluster'] == 4, 'cluster_4',
+                  np.where(test['cluster'] == 5, 'cluster_5',
+                  np.where(test['cluster'] == 6, 'cluster_6',
+                  np.where(test['cluster'] == 7, 'cluster_7',
+                  np.where(test['cluster'] == 8, 'cluster_8',
+                  np.where(test['cluster'] == 9, 'cluster_9',
+                  np.where(test['cluster'] == 10, 'cluster_10',
+                  np.where(test['cluster'] == 11, 'cluster_11',
+                  np.where(test['cluster'] == 12, 'cluster_12',
+                  np.where(test['cluster'] == 13, 'cluster_13',
+                  np.where(test['cluster'] == 14, 'cluster_14',
+                  np.where(test['cluster'] == 15, 'cluster_15',
+                  np.where(test['cluster'] == 16, 'cluster_16', 'cluster_17'))))))))))))))))                            
 test_dummies_1 = pd.get_dummies(test['family'])
 test_dummies_2 = pd.get_dummies(test['store_type'])
 test_dummies_3 = pd.get_dummies(test['cluster'])
 test = pd.concat([test.drop(columns = ['family', 'store_type', 'cluster'], axis = 1), test_dummies_1, test_dummies_2, test_dummies_3], axis = 1)
+test = test.rename(columns = lambda x:re.sub('[^A-Za-z0-9_]+', '', x))
 
-# ## Defining list to store results
-# results = list()
-
-# for i in range(0, len(clusters)):
-    
-#     print('Working on cluster ', i+1, 'out of', len(clusters))
-    
-#     train_loop = train[train['cluster'] == clusters[i]]
-#     train_loop = train_loop.drop(columns = ['cluster'], axis = 1)
-#     train_dummies = pd.get_dummies(train_loop['family'])
-#     train_loop = pd.concat([train_loop.drop(columns = 'family', axis = 1), train_dummies], axis = 1)
-    
-#     test_loop = test[test['cluster'] == clusters[i]]
-#     test_ids = test_loop['id']
-#     test_loop = test_loop.drop(columns = ['cluster', 'id'], axis = 1)
-#     test_dummies = pd.get_dummies(test_loop['family'])
-#     test_loop = pd.concat([test_loop.drop(columns = 'family', axis = 1), test_dummies], axis = 1)
-
-#     X = train_loop.drop(columns = ['sales'], axis = 1)
-#     Y = train_loop['sales']
 X = train.drop(columns = ['sales'], axis = 1)
 Y = train['sales']
 
 ## Defining the hyper-parameter grid
-XGBoost_param_grid = {'n_estimators': [300],
-                      'max_depth': [5, 7],
-                      'min_child_weight': [5, 7, 10],
-                      'learning_rate': [0.01, 0.001],
-                      'gamma': [0.3, 0.1],
-                      'subsample': [0.8, 1],
-                      'colsample_bytree': [0.8, 1]}
+LightGBM_param_grid = {'n_estimators': [100, 300, 500],
+                       'learning_rate': [0.01, 0.1, 1],
+                       'max_depth': [5, 7, 10],
+                       'num_leaves': [2, 5, 10, 15],
+                       'min_data_in_leaf': [10, 20, 50],
+                       'min_gain_to_split': [1, 5, 10],
+                       'lambda_l1': [0, 1, 10, 100],
+                       'lambda_l2': [0, 1, 10, 100]
+                       }
 
 ## Performing grid search with 5 folds
-XGBoost_grid_search = GridSearchCV(XGBRegressor(), XGBoost_param_grid, cv = 5, scoring = 'neg_mean_squared_log_error', n_jobs = -1, verbose = 4).fit(X, Y)
+LightGBM_grid_search = GridSearchCV(LGBMRegressor(), LightGBM_param_grid, cv = 5, scoring = 'neg_mean_squared_log_error', n_jobs = -1, verbose = 4).fit(X, Y)
 
 ## Extracting the best score
-best_score = XGBoost_grid_search.best_score_
+best_score = LightGBM_grid_search.best_score_
 print('The best mean squared log error:', best_score)
 
 ## Extracting the best model
-XGBoost_md = XGBoost_grid_search.best_estimator_
+LightGBM_md = LightGBM_grid_search.best_estimator_
 
 ## Predicting on test with best xgboost model 
-xgb_pred = XGBoost_md.predict(test)
+LightGBM_pred = LightGBM_md.predict(test)
     
 ## Defining data-frame to store results
-data_out = pd.DataFrame({'id': test_ids, 'sales': xgb_pred})
-data_out.to_csv('XGBoost_baseline_run.csv', index = False)
-    
-#     ## Appending results
-#     results.append(data_out)
-
-# ## Combining results as a single data-frame
-# results = pd.DataFrame(results)
-# results.to_csv('XGBoost_baseline_run.csv', index = False)
+data_out = pd.DataFrame({'id': test_ids, 'sales': LightGBM_pred})
+data_out.to_csv('LightGBM_baseline_run.csv', index = False)
