@@ -1,0 +1,172 @@
+# =========
+# LIBRARIES
+# =========
+import os
+import kaggle
+import zipfile
+import datetime
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+# python -m spacy download en_core_web_lg
+# python -m spacy download en_core_web_sm
+import nltk
+nltk.download('maxent_ne_chunker', quiet=True)
+nltk.download('words', quiet=True)
+nltk.download('treebank', quiet=True)
+nltk.download('maxent_treebank_pos_tagger', quiet=True)
+nltk.download('punkt', quiet=True)
+nltk.download('averaged_perceptron_tagger', quiet=True)
+import spacy
+import locationtagger 
+# from GridEstimator_Class import *
+
+# ===============
+# kAGGLE GET DATA
+# ===============
+# os.environ['KAGGLE_CONFIG_DIR'] = "/home/ec2-user/environment/repo_aws_happy_gm/KAGGLE/ProjectA"
+# "chmod 600 /home/ec2-user/environment/repo_aws_happy_gm/KAGGLE/ProjectA/kaggle.json"
+# {"username": "igeork", "key": "7b1602077b28ff590982ceb6fbbfd636"}
+# os.environ['KAGGLE_USERNAME'] = 'igeork'
+# os.environ['KAGGLE_KEY'] = '7b1602077b28ff590982ceb6fbbfd636'
+#export KAGGLE_USERNAME=igeork
+#export KAGGLE_KEY=7b1602077b28ff590982ceb6fbbfd636
+
+# z= zipfile.ZipFile('/home/ec2-user/environment/repo_aws_happy_gm/KAGGLE/ProjectA/Data/nlp-getting-started.zip')
+# z.extractall()
+
+
+# ==============
+# EXECUTION TIME
+# ==============
+begin_time = datetime.datetime.now()
+
+# ============
+# GETTING DATA
+# ============
+
+data = pd.read_csv('/home/ec2-user/environment/repo_aws_happy_gm/KAGGLE/ProjectA/Data/train.csv')
+y_param = ['target']
+print(data)
+print(data.loc[40])
+
+# ============
+# EXPLORATION
+# ============
+count_target = data[y_param].value_counts(normalize=True)
+print("count_target", count_target)
+
+nan_val = data.isna().sum()
+print("nan_val", nan_val)
+
+zero_val = (data == 0).sum()
+print("zero_val", zero_val)
+
+for col in data.columns:
+    print(col)
+    print(data[col].unique())
+    
+
+# ============
+# FEATURES
+# ============
+X = data[data.columns.drop(y_param)]
+y = data[y_param]
+
+
+my_cities = []
+my_countries = []
+my_regions = []
+for i, row in X.iterrows():
+    txt = locationtagger.find_locations(text = row['text'])
+    cities = txt.cities
+    countries = txt.countries
+    regions = txt.regions
+    my_cities.append(cities)
+    my_countries.append(countries)
+    my_regions.append(regions)
+
+
+X['my_cities'] = pd.DataFrame(my_cities)
+X['my_countries'] = pd.DataFrame(my_countries)
+X['my_regions'] = pd.DataFrame(my_regions)
+
+print(X)
+
+
+# # ==========
+# # MODELLLING 
+# # ==========
+
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42) 
+# my_feat = X.columns
+# my_lst = []
+# for key in estimator:
+#     print("- Running model: ", key)
+#     grid = RandomizedSearchCV(
+#         estimator[key](),
+#         params[key],
+#         cv = 5,
+#         n_jobs = -1 ,
+#         scoring = 'f1',
+#         verbose = 0,
+#         random_state = 0,
+#     )
+#     model = grid.fit(X_train, y_train)
+              
+#     # y_predict =  grid.predict(X_test)
+#     # r2_test = sklearn.metrics.r2_score(y_test.values.ravel(), y_predict)
+#     # rmse_test = np.sqrt(sklearn.metrics.mean_squared_error(y_test.values.ravel(), y_predict))
+    
+#     # r = permutation_importance(model, X_train.values, y_train.values.ravel(), n_repeats=5, random_state=0)
+#     # # print(r)
+#     # # importances = dict(zip(list(X_train.columns), np.around(r.importances_mean,2) ))
+    
+#     # col_lst = []
+#     # for i in r.importances_mean.argsort()[::-1]:
+#     #     if r.importances_mean[i] > 0.05:
+#     #         # print(X_train.columns[i])
+#     #         # print(f" {X_train.columns[i]}", f" | {r.importances_mean[i]:.3f}", f" (± {r.importances_std[i]:.3f})")
+#     #         col_lst.append(X_train.columns[i])
+            
+#     # # print(col_lst)
+#     # model = grid.fit(X_train[col_lst].values, y_train.values.ravel())
+    
+    
+#     # ####
+#     # r = permutation_importance(model, X_train[col_lst].values, y_train.values.ravel(), n_repeats=5, random_state=0)
+#     # col_lst = []
+#     # for i in r.importances_mean.argsort()[::-1]:
+#     #     if r.importances_mean[i] > 0.05:
+#     #         # print(X_train.columns[i])
+#     #         # print(f" {X_train.columns[i]}", f" | {r.importances_mean[i]:.3f}", f" (± {r.importances_std[i]:.3f})")
+#     #         col_lst.append(X_train.columns[i])
+            
+#     # model = grid.fit(X_train[col_lst].values, y_train.values.ravel())
+#     # ##
+      
+#     # y_test_predict =  grid.predict(X_test[col_lst])
+#     # r2_test = sklearn.metrics.r2_score(y_test.values.ravel(), y_test_predict)
+#     # rmse_test = np.sqrt(sklearn.metrics.mean_squared_error(y_test.values.ravel(), y_test_predict))
+#     # y_train_predict =  grid.predict(X_train[col_lst])
+            
+#     # r = permutation_importance(model, X_train[col_lst].values, y_train.values.ravel(), n_repeats=5, random_state=0)
+#     # # print(r)
+#     # importances = dict(zip(list(X_train[col_lst].columns), np.around(r.importances_mean,2) ))             
+
+#     # my_lst.append([
+#     #     key,
+#     #     r2_test,
+#     #     rmse_test,
+#     #     grid.best_score_,
+#     #     grid.best_params_,
+#     #     importances,
+#     #     # Recall,
+#     #     # Precision,
+#     # ])
+
+# ==============
+# EXECUTION TIME
+# ==============
+
+print("Execution time: ", datetime.datetime.now() - begin_time)
